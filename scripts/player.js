@@ -73,7 +73,7 @@
       playerHelp.innerHTML = `
         <p>
           Si Uqload affiche <strong>manifestLoadError</strong>, le flux vidéo distant
-          n’a pas chargé son manifest HLS. Active un VPN ou Cloudflare WARP,
+          n’a pas chargé. Active Cloudflare WARP,
           puis recharge cette page pour relancer l’embed.
         </p>
       `;
