@@ -149,6 +149,20 @@
       .filter((node) => !node.disabled && node.offsetParent !== null);
   }
 
+  function validatePasswordConfirmation() {
+    const password = document.querySelector("#auth-password");
+    const passwordConfirm = document.querySelector("#auth-password-confirm");
+    if (authMode !== "signup" || !password || !passwordConfirm) {
+      passwordConfirm?.setCustomValidity("");
+      return true;
+    }
+
+    const message =
+      password.value === passwordConfirm.value ? "" : "Les mots de passe ne correspondent pas.";
+    passwordConfirm.setCustomValidity(message);
+    return !message;
+  }
+
   function setAuthMode(mode) {
     authMode = mode;
     const isSignup = mode === "signup";
@@ -157,8 +171,10 @@
     const authForm = document.querySelector("#auth-form");
     const profileForm = document.querySelector("#profile-form");
     const nameRow = document.querySelector("#auth-name-row");
+    const confirmRow = document.querySelector("#auth-confirm-row");
     const authSubmit = document.querySelector("#auth-submit");
     const password = document.querySelector("#auth-password");
+    const passwordConfirm = document.querySelector("#auth-password-confirm");
     const authStatus = document.querySelector("#auth-status");
     const profileStatus = document.querySelector("#profile-status");
     const modeSwitch = document.querySelector("#auth-mode-switch");
@@ -176,12 +192,22 @@
       nameRow.hidden = !isSignup;
       document.querySelector("#auth-name").required = isSignup;
     }
+    if (confirmRow && passwordConfirm) {
+      confirmRow.hidden = !isSignup;
+      passwordConfirm.required = isSignup;
+      passwordConfirm.value = "";
+      passwordConfirm.setCustomValidity("");
+    }
     if (authSubmit) {
       authSubmit.textContent = isSignup ? "Créer le compte" : "Connexion";
     }
     if (password) {
       password.autocomplete = isSignup ? "new-password" : "current-password";
       password.placeholder = isSignup ? "6 caractères minimum" : "Mot de passe";
+    }
+    if (passwordConfirm) {
+      passwordConfirm.autocomplete = "new-password";
+      passwordConfirm.placeholder = "Répéter le mot de passe";
     }
     if (modeSwitch) {
       modeSwitch.hidden = isProfile;
@@ -324,6 +350,10 @@
                 <span>Mot de passe</span>
                 <input id="auth-password" type="password" autocomplete="current-password" required minlength="6" placeholder="Mot de passe">
               </label>
+              <label id="auth-confirm-row" hidden>
+                <span>Confirmer le mot de passe</span>
+                <input id="auth-password-confirm" type="password" autocomplete="new-password" minlength="6" placeholder="Répéter le mot de passe">
+              </label>
               <button class="button primary" id="auth-submit" type="submit">Connexion</button>
               <p class="community-status" id="auth-status" aria-live="polite"></p>
               <p class="auth-mode-switch" id="auth-mode-switch">
@@ -362,6 +392,8 @@
     });
     bindDisplayNameInput(document.querySelector("#auth-name"));
     bindDisplayNameInput(document.querySelector("#profile-name"));
+    document.querySelector("#auth-password").addEventListener("input", validatePasswordConfirmation);
+    document.querySelector("#auth-password-confirm").addEventListener("input", validatePasswordConfirmation);
     document.querySelector("#auth-form").addEventListener("submit", handleAuthSubmit);
     document.querySelector("#profile-form").addEventListener("submit", handleProfileSubmit);
     document.querySelector("#profile-avatar").addEventListener("change", handleAvatarPreview);
@@ -499,6 +531,12 @@
 
     if (isSignup && !displayName) {
       setText(authStatus, "Choisis un pseudo avec lettres, chiffres, espaces, - ou _.");
+      return;
+    }
+
+    if (isSignup && !validatePasswordConfirmation()) {
+      setText(authStatus, "Les mots de passe ne correspondent pas.");
+      document.querySelector("#auth-password-confirm").reportValidity();
       return;
     }
 

@@ -73,8 +73,9 @@
       : "";
     const quality = [video.resolution, video.format].filter(Boolean).join(" - ");
     const sourceName = video.sourceName || "Source";
-    const fullDescription = String(video.description || "");
-    const description = fullDescription.slice(0, 112);
+    const tagList = video.tags
+      .map((tag) => `<span class="card-tag">${escapeHtml(tag)}</span>`)
+      .join("");
 
     return `
       <a class="video-card" href="${buildPlayerUrl(video.id)}" data-source="${escapeHtml(sourceName.toLowerCase())}" aria-label="Ouvrir ${escapeHtml(video.title)}">
@@ -89,7 +90,7 @@
             <span class="source-pill">${escapeHtml(sourceName)}</span>
             <span class="duration-pill">${escapeHtml(video.duration)}</span>
           </div>
-          <p class="card-description">${escapeHtml(description)}${fullDescription.length > description.length ? "..." : ""}</p>
+          <div class="card-tags" aria-label="Tags">${tagList}</div>
           <p class="quality-text">${escapeHtml(video.category)} · ${escapeHtml(quality)}</p>
         </div>
       </a>
