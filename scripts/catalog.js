@@ -79,16 +79,15 @@
         <div class="thumb">
           <div class="generated-poster" aria-hidden="true"></div>
           ${poster}
-          <span class="source-pill">${escapeHtml(sourceName)}</span>
-          <span class="play-badge">Lire</span>
-          <span class="duration-pill">${escapeHtml(video.duration)}</span>
+          <span class="play-badge" aria-hidden="true"></span>
         </div>
         <div class="card-body">
-          <div class="card-meta">
-            <span class="category-dot">${escapeHtml(video.category)}</span>
-            <span class="quality-text">${escapeHtml(quality)}</span>
-          </div>
           <h3>${escapeHtml(video.title)}</h3>
+          <div class="card-meta">
+            <span class="source-pill">${escapeHtml(sourceName)}</span>
+            <span class="duration-pill">${escapeHtml(video.duration)}</span>
+          </div>
+          <p class="quality-text">${escapeHtml(video.category)} · ${escapeHtml(quality)}</p>
         </div>
       </a>
     `;

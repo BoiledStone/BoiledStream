@@ -64,12 +64,12 @@ miniatures/silent-hill-revelation.webp
 miniatures/postal-2007.jpg
 ```
 
-3. Pour une image prête à être affichée directement sur les cartes, utiliser de préférence le sous-dossier `miniatures/cards`.
+3. Pour une image prête à être affichée directement sur les cartes, utiliser de préférence le sous-dossier `miniatures/posters`.
 
 4. Dans `scripts/videos.js`, remplacer `posterUrl` par le chemin local:
 
 ```js
-posterUrl: "miniatures/cards/silent-hill.webp",
+posterUrl: "miniatures/posters/silent-hill.webp",
 ```
 
 5. Garder le chemin relatif depuis la racine du site. Ne pas commencer par `/`, sinon GitHub Pages peut chercher l'image au mauvais endroit.

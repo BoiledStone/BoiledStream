@@ -13,7 +13,7 @@ window.BOILED_VIDEOS = [
     sourceUrl: "https://uqload.is/9fyok6ttwrgj.html",
     // Utiliser l'URL d'intégration quand l'hébergeur fournit un player iframe.
     embedUrl: "https://uqload.is/embed-9fyok6ttwrgj.html",
-    posterUrl: "miniatures/cards/project-hail-mary.webp",
+    posterUrl: "miniatures/posters/project-hail-mary.webp",
     description:
       "Vidéo hébergée à l’extérieur et ouverte dans une page player interne au site.",
     tags: ["Film", "HEVC", "1280x720"]
@@ -28,7 +28,7 @@ window.BOILED_VIDEOS = [
     sourceName: "Uqload",
     sourceUrl: "https://uqload.is/8ipcxujsg26z.html",
     embedUrl: "https://uqload.is/embed-8ipcxujsg26z.html",
-    posterUrl: "miniatures/cards/limitless.webp",
+    posterUrl: "miniatures/posters/limitless.webp",
     description:
       "Vidéo hébergée à l’extérieur et ouverte dans une page player interne au site.",
     tags: ["Film", "Français", "1280x720"]
@@ -43,7 +43,7 @@ window.BOILED_VIDEOS = [
     sourceName: "Uqload",
     sourceUrl: "https://uqload.is/amvnri9r8u54.html",
     embedUrl: "https://uqload.is/embed-amvnri9r8u54.html",
-    posterUrl: "miniatures/cards/interstella-5555.webp",
+    posterUrl: "miniatures/posters/interstella-5555.webp",
     description:
       "Vidéo hébergée à l’extérieur et ouverte dans une page player interne au site.",
     tags: ["Film", "Animation", "512x384"]
@@ -58,7 +58,7 @@ window.BOILED_VIDEOS = [
     sourceName: "Uqload",
     sourceUrl: "https://uqload.is/h67yff6g8a5g.html",
     embedUrl: "https://uqload.is/embed-h67yff6g8a5g.html",
-    posterUrl: "miniatures/cards/silent-hill.webp",
+    posterUrl: "miniatures/posters/silent-hill.webp",
     description:
       "Vidéo hébergée à l’extérieur et ouverte dans une page player interne au site.",
     tags: ["Film", "Horreur", "Silent Hill", "1126x504"]
@@ -73,7 +73,7 @@ window.BOILED_VIDEOS = [
     sourceName: "Uqload",
     sourceUrl: "https://uqload.is/av5hef1rja8r.html",
     embedUrl: "https://uqload.is/embed-av5hef1rja8r.html",
-    posterUrl: "miniatures/cards/silent-hill-revelation.webp",
+    posterUrl: "miniatures/posters/silent-hill-revelation.webp",
     description:
       "Vidéo hébergée à l’extérieur et ouverte dans une page player interne au site.",
     tags: ["Film", "Horreur", "Silent Hill", "872x384"]
@@ -88,7 +88,7 @@ window.BOILED_VIDEOS = [
     sourceName: "YouTube",
     sourceUrl: "https://www.youtube.com/watch?v=dBFLgBlm5_E",
     embedUrl: "https://www.youtube.com/embed/dBFLgBlm5_E?si=9hP3mPYvpBnZQB28",
-    posterUrl: "miniatures/cards/postal-2007.webp",
+    posterUrl: "miniatures/posters/postal-2007.webp",
     description:
       "Vidéo YouTube intégrée dans une page player interne au site.",
     tags: ["Film", "YouTube", "Postal", "1080p"]
