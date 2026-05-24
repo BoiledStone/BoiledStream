@@ -11,7 +11,7 @@ window.BOILED_VIDEOS = [
     embedUrl: "https://uqload.is/embed-9fyok6ttwrgj.html",
     posterUrl: "https://e12.uqload.is/i/01/05208/9fyok6ttwrgj_t.jpg",
     description:
-      "Video hebergee a l'exterieur et ouverte dans une page player interne au site.",
+      "Vidéo hébergée à l’extérieur et ouverte dans une page player interne au site.",
     tags: ["Film", "HEVC", "1280x720"]
   }
 ];

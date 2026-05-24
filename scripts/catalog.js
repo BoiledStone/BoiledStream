@@ -74,6 +74,7 @@
         <div class="thumb">
           <div class="generated-poster" aria-hidden="true"></div>
           ${poster}
+          <span class="poster-label">${escapeHtml(video.category)}</span>
           <span class="play-badge">Lire</span>
           <span class="duration-pill">${escapeHtml(video.duration)}</span>
         </div>
@@ -99,7 +100,7 @@
   function renderVideos() {
     const filteredVideos = getFilteredVideos();
     grid.innerHTML = filteredVideos.map(renderCard).join("");
-    resultCount.textContent = `${filteredVideos.length} resultat${filteredVideos.length > 1 ? "s" : ""}`;
+    resultCount.textContent = `${filteredVideos.length} résultat${filteredVideos.length > 1 ? "s" : ""}`;
     emptyState.hidden = filteredVideos.length > 0;
     bindPosterFallbacks();
   }
@@ -121,7 +122,7 @@
   });
 
   videoCount.textContent = String(videos.length);
-  videoCountLabel.textContent = videos.length > 1 ? "videos disponibles" : "video disponible";
+  videoCountLabel.textContent = videos.length > 1 ? "vidéos disponibles" : "vidéo disponible";
   renderFilters();
   renderVideos();
 })();

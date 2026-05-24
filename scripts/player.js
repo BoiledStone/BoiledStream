@@ -42,6 +42,7 @@
         <div class="thumb">
           <div class="generated-poster" aria-hidden="true"></div>
           ${poster}
+          <span class="poster-label">${escapeHtml(item.category)}</span>
           <span class="play-badge">Lire</span>
           <span class="duration-pill">${escapeHtml(item.duration)}</span>
         </div>
@@ -75,7 +76,7 @@
       playerMount.innerHTML = `
         <video class="main-video" controls preload="metadata" playsinline${posterAttribute}>
           <source src="${escapeHtml(item.videoUrl)}" type="video/mp4">
-          Votre navigateur ne prend pas en charge la lecture video HTML5.
+          Votre navigateur ne prend pas en charge la lecture vidéo HTML5.
         </video>
       `;
       return;
@@ -83,7 +84,7 @@
 
     playerMount.innerHTML = `
       <div class="main-video player-error">
-        <p>Aucun player n'est disponible pour cette video.</p>
+        <p>Aucun player n’est disponible pour cette vidéo.</p>
       </div>
     `;
   }
@@ -113,7 +114,7 @@
   playerActions.hidden = videos.length < 2;
   if (videos.length > 1) {
     previousLink.href = buildPlayerUrl(previousVideo.id);
-    previousLink.textContent = `Precedente`;
+    previousLink.textContent = `Précédente`;
     previousLink.setAttribute("aria-label", `Lire ${previousVideo.title}`);
     nextLink.href = buildPlayerUrl(nextVideo.id);
     nextLink.textContent = `Suivante`;

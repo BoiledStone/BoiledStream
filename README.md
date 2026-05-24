@@ -1,11 +1,11 @@
 # BoiledStream
 
-Site statique de presentation video avec:
+Site statique de présentation vidéo avec:
 
 - catalogue de vignettes cliquables;
-- recherche et filtres par categorie;
-- page player dediee pour chaque video;
-- support des players externes integres dans une page interne.
+- recherche et filtres par catégorie;
+- page player dédiée pour chaque vidéo;
+- support des players externes intégrés dans une page interne.
 
 [Ouvrir le site](https://boiledstone.github.io/BoiledStream/)
 
