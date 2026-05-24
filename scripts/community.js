@@ -68,6 +68,11 @@
     return /avatar_url/i.test(error?.message || "") || /avatar_url/i.test(error?.details || "");
   }
 
+  function isMissingAvatarBucketError(error) {
+    const message = `${error?.message || ""} ${error?.details || ""}`.toLowerCase();
+    return message.includes("bucket not found") || message.includes("bucket_not_found");
+  }
+
   function profileColumns() {
     return hasAvatarColumn ? "id, display_name, avatar_url" : "id, display_name";
   }
@@ -478,6 +483,12 @@
     });
 
     if (error) {
+      if (isMissingAvatarBucketError(error)) {
+        throw new Error(
+          "Le bucket Supabase avatars n'existe pas encore. Exécute le fichier supabase-schema.sql au complet dans Supabase."
+        );
+      }
+
       throw error;
     }
 
