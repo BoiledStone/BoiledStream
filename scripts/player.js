@@ -145,10 +145,10 @@
   playerActions.hidden = videos.length < 2;
   if (videos.length > 1) {
     previousLink.href = buildPlayerUrl(previousVideo.id);
-    previousLink.textContent = `Précédente`;
+    previousLink.textContent = `Précédent`;
     previousLink.setAttribute("aria-label", `Lire ${previousVideo.title}`);
     nextLink.href = buildPlayerUrl(nextVideo.id);
-    nextLink.textContent = `Suivante`;
+    nextLink.textContent = `Suivant`;
     nextLink.setAttribute("aria-label", `Lire ${nextVideo.title}`);
   }
   relatedGrid.innerHTML = videos
