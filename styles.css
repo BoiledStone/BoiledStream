@@ -513,6 +513,32 @@ h3 {
   text-align: center;
 }
 
+.player-help {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 14px;
+  padding: 14px;
+  color: var(--muted);
+  background: rgba(239, 90, 60, 0.08);
+  border: 1px solid rgba(239, 90, 60, 0.26);
+  border-radius: var(--radius);
+}
+
+.player-help:empty {
+  display: none;
+}
+
+.player-help p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.player-help strong {
+  color: var(--ink);
+}
+
 .player-details {
   align-self: start;
   padding: 22px;
@@ -695,6 +721,11 @@ h3 {
   }
 
   .player-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .player-help {
     align-items: stretch;
     flex-direction: column;
   }

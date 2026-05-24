@@ -19,6 +19,7 @@
   const nextLink = document.querySelector("#next-link");
   const playerActions = document.querySelector("#player-actions");
   const relatedGrid = document.querySelector("#related-grid");
+  const playerHelp = document.querySelector("#player-help");
 
   function escapeHtml(value) {
     return String(value)
@@ -65,8 +66,19 @@
           src="${escapeHtml(item.embedUrl)}"
           title="${escapeHtml(item.title)}"
           allow="fullscreen; picture-in-picture; encrypted-media"
+          referrerpolicy="origin"
           allowfullscreen
         ></iframe>
+      `;
+      playerHelp.innerHTML = `
+        <p>
+          Si Uqload affiche <strong>manifestLoadError</strong>, le flux vidéo distant
+          n’a pas chargé son manifest HLS. Le problème vient généralement de l’hébergeur,
+          d’un blocage réseau, d’un lien expiré ou d’une extension navigateur.
+        </p>
+        <a class="button primary" href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noreferrer">
+          Ouvrir sur ${escapeHtml(item.sourceName)}
+        </a>
       `;
       return;
     }
@@ -79,6 +91,7 @@
           Votre navigateur ne prend pas en charge la lecture vidéo HTML5.
         </video>
       `;
+      playerHelp.innerHTML = "";
       return;
     }
 
@@ -87,6 +100,9 @@
         <p>Aucun player n’est disponible pour cette vidéo.</p>
       </div>
     `;
+    playerHelp.innerHTML = item.sourceUrl
+      ? `<a class="button primary" href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noreferrer">Ouvrir la source</a>`
+      : "";
   }
 
   function bindPosterFallbacks() {
