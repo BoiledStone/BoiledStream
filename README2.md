@@ -112,7 +112,7 @@ http://127.0.0.1:8765/**
 
 5. Aller dans `SQL Editor` > `New query`.
 
-6. Copier tout le contenu de `supabase-schema.sql`, le coller dans Supabase, puis cliquer `Run`. Si le projet Supabase était déjà configuré avant l'ajout des photos de profil, refaire quand même cette étape pour ajouter `avatar_url`, le bucket `avatars` et ses règles d'accès.
+6. Copier tout le contenu de `supabase-schema.sql`, le coller dans Supabase, puis cliquer `Run`. Si le projet Supabase était déjà configuré avant l'ajout des photos de profil, refaire quand même cette étape pour ajouter `avatar_url`, le bucket `avatars` et ses règles d'accès. Le script termine par `notify pgrst, 'reload schema';` pour forcer Supabase à rafraîchir son cache API.
 
 7. Vérifier que les tables suivantes existent dans `Table Editor`:
 

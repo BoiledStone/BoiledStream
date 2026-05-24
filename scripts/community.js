@@ -14,6 +14,7 @@
   let currentProfile = null;
   let authMode = "signin";
   let lastFocusedElement = null;
+  let hasAvatarColumn = true;
 
   function escapeHtml(value) {
     return String(value || "")
@@ -61,6 +62,26 @@
     if (node) {
       node.textContent = value;
     }
+  }
+
+  function isMissingAvatarColumnError(error) {
+    return /avatar_url/i.test(error?.message || "") || /avatar_url/i.test(error?.details || "");
+  }
+
+  function profileColumns() {
+    return hasAvatarColumn ? "id, display_name, avatar_url" : "id, display_name";
+  }
+
+  function normalizeProfile(profile) {
+    if (!profile) {
+      return null;
+    }
+
+    return {
+      id: profile.id,
+      display_name: profile.display_name,
+      avatar_url: profile.avatar_url || null
+    };
   }
 
   function getAuthPanel() {
@@ -329,11 +350,22 @@
     }
 
     // Keep profile creation separate from sign-in so existing users do not lose their pseudo or avatar.
-    const { data, error } = await supabaseClient
+    let { data, error } = await supabaseClient
       .from("profiles")
-      .select("id, display_name, avatar_url")
+      .select(profileColumns())
       .eq("id", user.id)
       .maybeSingle();
+
+    if (error && hasAvatarColumn && isMissingAvatarColumnError(error)) {
+      hasAvatarColumn = false;
+      const fallback = await supabaseClient
+        .from("profiles")
+        .select(profileColumns())
+        .eq("id", user.id)
+        .maybeSingle();
+      data = fallback.data;
+      error = fallback.error;
+    }
 
     if (error) {
       console.warn("Profil Supabase indisponible:", error.message);
@@ -341,24 +373,33 @@
     }
 
     if (data) {
-      currentProfile = data;
-      return data;
+      currentProfile = normalizeProfile(data);
+      return currentProfile;
     }
 
     const displayName = getDisplayName(user);
-    const created = await supabaseClient
+    let created = await supabaseClient
       .from("profiles")
       .insert({ id: user.id, display_name: displayName })
-      .select("id, display_name, avatar_url")
+      .select(profileColumns())
       .single();
+
+    if (created.error && hasAvatarColumn && isMissingAvatarColumnError(created.error)) {
+      hasAvatarColumn = false;
+      created = await supabaseClient
+        .from("profiles")
+        .insert({ id: user.id, display_name: displayName })
+        .select(profileColumns())
+        .single();
+    }
 
     if (created.error) {
       console.warn("Création du profil impossible:", created.error.message);
       return null;
     }
 
-    currentProfile = created.data;
-    return created.data;
+    currentProfile = normalizeProfile(created.data);
+    return currentProfile;
   }
 
   async function handleAuthSubmit(event) {
@@ -405,6 +446,12 @@
   async function uploadAvatar(file) {
     if (!file) {
       return currentProfile?.avatar_url || null;
+    }
+
+    if (!hasAvatarColumn) {
+      throw new Error(
+        "La base Supabase n'a pas encore la colonne avatar_url. Relance supabase-schema.sql dans Supabase."
+      );
     }
 
     // The SQL storage policy mirrors these client-side limits.
@@ -455,28 +502,52 @@
     setText(profileStatus, "Enregistrement...");
 
     try {
-      const avatarUrl = await uploadAvatar(avatarFile);
-      const { data, error } = await supabaseClient
+      const avatarUrl = hasAvatarColumn ? await uploadAvatar(avatarFile) : currentProfile?.avatar_url || null;
+      const updatePayload = {
+        display_name: displayName,
+        updated_at: new Date().toISOString()
+      };
+      if (hasAvatarColumn) {
+        updatePayload.avatar_url = avatarUrl;
+      }
+
+      let { data, error } = await supabaseClient
         .from("profiles")
-        .update({
-          display_name: displayName,
-          avatar_url: avatarUrl,
-          updated_at: new Date().toISOString()
-        })
+        .update(updatePayload)
         .eq("id", currentSession.user.id)
-        .select("id, display_name, avatar_url")
+        .select(profileColumns())
         .single();
+
+      if (error && hasAvatarColumn && isMissingAvatarColumnError(error)) {
+        hasAvatarColumn = false;
+        const fallback = await supabaseClient
+          .from("profiles")
+          .update({
+            display_name: displayName,
+            updated_at: new Date().toISOString()
+          })
+          .eq("id", currentSession.user.id)
+          .select(profileColumns())
+          .single();
+        data = fallback.data;
+        error = fallback.error;
+      }
 
       if (error) {
         throw error;
       }
 
-      currentProfile = data;
+      currentProfile = normalizeProfile(data);
       document.querySelector("#profile-avatar").value = "";
       hydrateProfileForm();
       renderAccountControls();
       await loadComments();
-      setText(profileStatus, "Profil mis à jour.");
+      setText(
+        profileStatus,
+        hasAvatarColumn
+          ? "Profil mis à jour."
+          : "Pseudo mis à jour. Relance supabase-schema.sql dans Supabase pour activer la photo."
+      );
     } catch (error) {
       setText(profileStatus, error.message || "Mise à jour impossible.");
     }
@@ -603,11 +674,26 @@
       return;
     }
 
-    const { data, error } = await supabaseClient
+    let { data, error } = await supabaseClient
       .from("comments")
-      .select("id, body, user_id, created_at, profiles(display_name, avatar_url)")
+      .select(
+        hasAvatarColumn
+          ? "id, body, user_id, created_at, profiles(display_name, avatar_url)"
+          : "id, body, user_id, created_at, profiles(display_name)"
+      )
       .eq("video_id", getVideoId())
       .order("created_at", { ascending: false });
+
+    if (error && hasAvatarColumn && isMissingAvatarColumnError(error)) {
+      hasAvatarColumn = false;
+      const fallback = await supabaseClient
+        .from("comments")
+        .select("id, body, user_id, created_at, profiles(display_name)")
+        .eq("video_id", getVideoId())
+        .order("created_at", { ascending: false });
+      data = fallback.data;
+      error = fallback.error;
+    }
 
     if (error) {
       commentsList.innerHTML = `<p class="empty-state">Commentaires indisponibles: exécute supabase-schema.sql dans Supabase.</p>`;
