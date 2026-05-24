@@ -1,7 +1,7 @@
 window.BOILED_VIDEOS = [
   {
     id: "project-hail-mary",
-    title: "Project_Hail_Mary_compressed_fast_hevc",
+    title: "Project Hail Mary",
     category: "Film",
     duration: "02:36:22",
     resolution: "1280x720",
