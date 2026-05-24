@@ -73,6 +73,8 @@
       : "";
     const quality = [video.resolution, video.format].filter(Boolean).join(" - ");
     const sourceName = video.sourceName || "Source";
+    const fullDescription = String(video.description || "");
+    const description = fullDescription.slice(0, 112);
 
     return `
       <a class="video-card" href="${buildPlayerUrl(video.id)}" data-source="${escapeHtml(sourceName.toLowerCase())}" aria-label="Ouvrir ${escapeHtml(video.title)}">
@@ -87,6 +89,7 @@
             <span class="source-pill">${escapeHtml(sourceName)}</span>
             <span class="duration-pill">${escapeHtml(video.duration)}</span>
           </div>
+          <p class="card-description">${escapeHtml(description)}${fullDescription.length > description.length ? "..." : ""}</p>
           <p class="quality-text">${escapeHtml(video.category)} · ${escapeHtml(quality)}</p>
         </div>
       </a>
@@ -106,7 +109,7 @@
     // Toute modification de recherche ou de filtre reconstruit uniquement la grille.
     const filteredVideos = getFilteredVideos();
     grid.innerHTML = filteredVideos.map(renderCard).join("");
-    resultCount.textContent = `${filteredVideos.length} résultat${filteredVideos.length > 1 ? "s" : ""}`;
+    resultCount.textContent = `${filteredVideos.length} titre${filteredVideos.length > 1 ? "s" : ""}`;
     emptyState.hidden = filteredVideos.length > 0;
     bindPosterFallbacks();
   }

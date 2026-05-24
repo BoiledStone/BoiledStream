@@ -295,7 +295,7 @@
         <div class="auth-panel" id="auth-panel" hidden>
           <div class="auth-dialog" role="dialog" aria-modal="true" aria-labelledby="auth-title">
             <button class="auth-close" type="button" id="auth-close" aria-label="Fermer">×</button>
-            <p class="section-kicker">Compte BoiledStream</p>
+            <p class="section-kicker">Espace membre</p>
             <h2 id="auth-title">Connexion</h2>
 
             <form class="auth-form" id="auth-form">
@@ -360,7 +360,7 @@
     }
 
     if (!supabaseClient) {
-      accountMount.innerHTML = `<span class="account-note">Compte indisponible</span>`;
+      accountMount.innerHTML = `<span class="account-note">Compte hors ligne</span>`;
       return;
     }
 
@@ -470,7 +470,7 @@
       return;
     }
 
-    setText(authStatus, "Traitement en cours...");
+    setText(authStatus, "Connexion en cours...");
 
     const response = isSignup
       ? await supabaseClient.auth.signUp({
@@ -494,7 +494,7 @@
       closeAuthPanel();
       await refreshCommunity();
     } else {
-      setText(authStatus, "Compte créé. Vérifie ton email avant de te connecter.");
+      setText(authStatus, "Compte créé. Vérifie ton email, puis reviens te connecter.");
     }
   }
 
@@ -561,7 +561,7 @@
       return;
     }
 
-    setText(profileStatus, "Enregistrement...");
+    setText(profileStatus, "Mise à jour du profil...");
 
     try {
       const avatarUrl = hasAvatarColumn ? await uploadAvatar(avatarFile) : currentProfile?.avatar_url || null;
@@ -607,7 +607,7 @@
       setText(
         profileStatus,
         hasAvatarColumn
-          ? "Profil mis à jour."
+          ? "Profil enregistré."
           : "Pseudo mis à jour. Relance supabase-schema.sql dans Supabase pour activer la photo."
       );
     } catch (error) {
@@ -646,7 +646,7 @@
       .eq("video_id", videoId);
 
     if (error) {
-      setText(ratingSummary, "Notes indisponibles: exécute supabase-schema.sql dans Supabase.");
+      setText(ratingSummary, "Score indisponible: exécute supabase-schema.sql dans Supabase.");
       renderStars(0);
       return;
     }
@@ -664,9 +664,9 @@
       ratingSummary,
       count
         ? `${average.toFixed(1)} / 5 avec ${count} vote${count > 1 ? "s" : ""}`
-        : "Aucune note pour ce film."
+        : "Pas encore de score."
     );
-    setText(ratingStatus, currentSession ? "Clique une étoile pour noter." : "Connecte-toi pour noter.");
+    setText(ratingStatus, currentSession ? "Choisis une étoile pour noter." : "Connecte-toi pour noter.");
     renderStars(Number(myScore));
   }
 
@@ -685,7 +685,7 @@
       { onConflict: "video_id,user_id" }
     );
 
-    setText(ratingStatus, error ? error.message : "Note enregistrée.");
+    setText(ratingStatus, error ? error.message : "Score enregistré.");
     await loadRatings();
   }
 
@@ -695,7 +695,7 @@
     }
 
     if (!comments.length) {
-      commentsList.innerHTML = `<p class="empty-state">Aucun commentaire pour ce film.</p>`;
+      commentsList.innerHTML = `<p class="empty-state">Aucun avis pour le moment.</p>`;
       return;
     }
 
@@ -758,7 +758,7 @@
     }
 
     if (error) {
-      commentsList.innerHTML = `<p class="empty-state">Commentaires indisponibles: exécute supabase-schema.sql dans Supabase.</p>`;
+      commentsList.innerHTML = `<p class="empty-state">Avis indisponibles: exécute supabase-schema.sql dans Supabase.</p>`;
       return;
     }
 
@@ -774,7 +774,7 @@
 
     const body = commentBody.value.trim();
     if (!body) {
-      setText(commentStatus, "Écris un commentaire avant de publier.");
+      setText(commentStatus, "Écris un avis avant de publier.");
       return;
     }
 
@@ -790,7 +790,7 @@
     }
 
     commentBody.value = "";
-    setText(commentStatus, "Commentaire publié.");
+    setText(commentStatus, "Avis publié.");
     await loadComments();
   }
 
@@ -800,7 +800,7 @@
     }
 
     const { error } = await supabaseClient.from("comments").delete().eq("id", id);
-    setText(commentStatus, error ? error.message : "Commentaire supprimé.");
+    setText(commentStatus, error ? error.message : "Avis supprimé.");
     await loadComments();
   }
 

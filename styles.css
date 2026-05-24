@@ -241,9 +241,12 @@ iframe {
 
 .home-notice {
   max-width: 1180px;
-  margin: 0 auto;
-  padding: 14px 48px 0;
-  color: var(--quiet);
+  margin: 18px auto 0;
+  padding: 10px 14px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   font-size: 0.82rem;
   font-weight: 750;
   line-height: 1.5;
@@ -263,7 +266,7 @@ iframe {
   align-items: end;
   max-width: 1180px;
   margin: 0 auto;
-  padding: 30px 48px 22px;
+  padding: 28px 48px 22px;
 }
 
 .hero-copy {
@@ -318,7 +321,7 @@ h3 {
 .hero-panel {
   justify-self: end;
   min-width: 180px;
-  padding: 12px 14px;
+  padding: 14px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -448,7 +451,9 @@ h3 {
   --card-accent: var(--accent);
   min-width: 0;
   overflow: hidden;
-  background: var(--surface);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 38%),
+    var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
@@ -586,6 +591,19 @@ h3 {
   font-size: 0.75rem;
   font-weight: 900;
   text-transform: uppercase;
+}
+
+.card-description {
+  display: -webkit-box;
+  min-height: 3.9em;
+  margin: 0;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 650;
+  line-height: 1.3;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
 .quality-text {
@@ -731,6 +749,13 @@ h3 {
 .player-details p:not(.section-kicker) {
   color: var(--muted);
   line-height: 1.65;
+}
+
+.player-description {
+  padding: 13px 14px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
 }
 
 .meta-list {

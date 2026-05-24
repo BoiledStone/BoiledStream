@@ -15,8 +15,8 @@ window.BOILED_VIDEOS = [
     embedUrl: "https://uqload.is/embed-9fyok6ttwrgj.html",
     posterUrl: "miniatures/posters/project-hail-mary.webp",
     description:
-      "Vidéo hébergée à l’extérieur et ouverte dans une page player interne au site.",
-    tags: ["Film", "HEVC", "1280x720"]
+      "Science-fiction spatiale tendue autour d’une mission de survie, d’un vaisseau isolé et d’un mystère capable de décider du sort de la Terre.",
+    tags: ["Film", "Science-fiction", "Espace", "HEVC", "1280x720"]
   },
   {
     id: "limitless",
@@ -30,8 +30,8 @@ window.BOILED_VIDEOS = [
     embedUrl: "https://uqload.is/embed-8ipcxujsg26z.html",
     posterUrl: "miniatures/posters/limitless.webp",
     description:
-      "Vidéo hébergée à l’extérieur et ouverte dans une page player interne au site.",
-    tags: ["Film", "Français", "1280x720"]
+      "Thriller nerveux où une pilule expérimentale décuple les capacités d’un écrivain et l’entraîne dans un jeu de pouvoir dangereux.",
+    tags: ["Film", "Thriller", "Français", "1280x720"]
   },
   {
     id: "interstella-5555",
@@ -45,8 +45,8 @@ window.BOILED_VIDEOS = [
     embedUrl: "https://uqload.is/embed-amvnri9r8u54.html",
     posterUrl: "miniatures/posters/interstella-5555.webp",
     description:
-      "Vidéo hébergée à l’extérieur et ouverte dans une page player interne au site.",
-    tags: ["Film", "Animation", "512x384"]
+      "Odyssée animée et musicale portée par Daft Punk, entre enlèvement interstellaire, pop cosmique et aventure sans dialogue.",
+    tags: ["Film", "Animation", "Musique", "512x384"]
   },
   {
     id: "silent-hill",
@@ -60,8 +60,8 @@ window.BOILED_VIDEOS = [
     embedUrl: "https://uqload.is/embed-h67yff6g8a5g.html",
     posterUrl: "miniatures/posters/silent-hill.webp",
     description:
-      "Vidéo hébergée à l’extérieur et ouverte dans une page player interne au site.",
-    tags: ["Film", "Horreur", "Silent Hill", "1126x504"]
+      "Horreur brumeuse et oppressante autour d’une mère qui cherche sa fille dans une ville fantôme hantée par des visions cauchemardesques.",
+    tags: ["Film", "Horreur", "Survie", "Silent Hill", "1126x504"]
   },
   {
     id: "silent-hill-revelation",
@@ -75,8 +75,8 @@ window.BOILED_VIDEOS = [
     embedUrl: "https://uqload.is/embed-av5hef1rja8r.html",
     posterUrl: "miniatures/posters/silent-hill-revelation.webp",
     description:
-      "Vidéo hébergée à l’extérieur et ouverte dans une page player interne au site.",
-    tags: ["Film", "Horreur", "Silent Hill", "872x384"]
+      "Retour dans l’univers Silent Hill avec une héroïne poursuivie par son passé, des cultes inquiétants et des créatures sorties du brouillard.",
+    tags: ["Film", "Horreur", "Survie", "Silent Hill", "872x384"]
   },
   {
     id: "postal-2007",
@@ -90,7 +90,7 @@ window.BOILED_VIDEOS = [
     embedUrl: "https://www.youtube.com/embed/dBFLgBlm5_E?si=9hP3mPYvpBnZQB28",
     posterUrl: "miniatures/posters/postal-2007.webp",
     description:
-      "Vidéo YouTube intégrée dans une page player interne au site.",
-    tags: ["Film", "YouTube", "Postal", "1080p"]
+      "Comédie noire volontairement excessive, adaptée du jeu culte, avec satire, chaos et humour provocateur en version YouTube intégrée.",
+    tags: ["Film", "Comédie noire", "YouTube", "Postal", "1080p"]
   }
 ];
