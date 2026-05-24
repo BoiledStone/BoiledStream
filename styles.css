@@ -220,6 +220,7 @@ iframe {
 
 .top-nav a,
 .back-link,
+.home-notice a,
 .site-footer a,
 .meta-list a {
   transition: color 160ms ease;
@@ -229,11 +230,30 @@ iframe {
 .top-nav a:focus-visible,
 .back-link:hover,
 .back-link:focus-visible,
+.home-notice a:hover,
+.home-notice a:focus-visible,
 .site-footer a:hover,
 .site-footer a:focus-visible,
 .meta-list a:hover,
 .meta-list a:focus-visible {
   color: var(--accent-strong);
+}
+
+.home-notice {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 14px 48px 0;
+  color: var(--quiet);
+  font-size: 0.82rem;
+  font-weight: 750;
+  line-height: 1.5;
+}
+
+.home-notice a {
+  color: var(--teal);
+  font-weight: 900;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .catalog-hero {
@@ -1080,6 +1100,7 @@ h3 {
 
 @media (max-width: 980px) {
   .site-header,
+  .home-notice,
   .catalog-hero,
   .toolbar,
   .catalog-section,

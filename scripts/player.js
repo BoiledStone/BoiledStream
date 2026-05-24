@@ -64,7 +64,6 @@
   function renderPlayer(item) {
     // Priorité à l'embed externe quand il existe, sinon lecture d'un fichier vidéo direct.
     if (item.embedUrl) {
-      const isUqload = item.sourceName?.toLowerCase() === "uqload";
       playerMount.innerHTML = `
         <iframe
           class="main-video"
@@ -75,15 +74,7 @@
           allowfullscreen
         ></iframe>
       `;
-      playerHelp.innerHTML = isUqload
-        ? `
-          <p>
-            Si Uqload affiche <strong>manifestLoadError</strong>, le flux vidéo distant
-            n’a pas chargé. Active Cloudflare WARP,
-            puis recharge cette page pour relancer l’embed.
-          </p>
-        `
-        : "";
+      playerHelp.innerHTML = "";
       return;
     }
 
