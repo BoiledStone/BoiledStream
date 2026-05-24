@@ -73,8 +73,9 @@
       playerHelp.innerHTML = `
         <p>
           Si Uqload affiche <strong>manifestLoadError</strong>, le flux vidéo distant
-          n’a pas chargé son manifest HLS. Le problème vient généralement de l’hébergeur,
-          d’un blocage réseau, d’un lien expiré ou d’une extension navigateur.
+          n’a pas chargé son manifest HLS. Si la lecture fonctionne avec un VPN ou
+          Cloudflare WARP, le blocage vient de la route réseau, du DNS, du FAI ou
+          d’une restriction Uqload. Cette page ne peut pas corriger ce blocage côté lecteur.
         </p>
         <a class="button primary" href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noreferrer">
           Ouvrir sur ${escapeHtml(item.sourceName)}
