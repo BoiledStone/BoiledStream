@@ -28,7 +28,7 @@ window.BOILED_VIDEOS = [
     sourceName: "Uqload",
     sourceUrl: "https://uqload.is/8ipcxujsg26z.html",
     embedUrl: "https://uqload.is/embed-8ipcxujsg26z.html",
-    posterUrl: "https://strm7.uqload.is/i/02/05208/8ipcxujsg26z_t.jpg",
+    posterUrl: "miniatures/limitless.jpg",
     description:
       "Vidéo hébergée à l’extérieur et ouverte dans une page player interne au site.",
     tags: ["Film", "Français", "1280x720"]
@@ -43,7 +43,7 @@ window.BOILED_VIDEOS = [
     sourceName: "Uqload",
     sourceUrl: "https://uqload.is/amvnri9r8u54.html",
     embedUrl: "https://uqload.is/embed-amvnri9r8u54.html",
-    posterUrl: "https://e12.uqload.is/i/01/05208/amvnri9r8u54_t.jpg",
+    posterUrl: "miniatures/interstella_5555.jpg",
     description:
       "Vidéo hébergée à l’extérieur et ouverte dans une page player interne au site.",
     tags: ["Film", "Animation", "512x384"]
@@ -58,7 +58,7 @@ window.BOILED_VIDEOS = [
     sourceName: "Uqload",
     sourceUrl: "https://uqload.is/h67yff6g8a5g.html",
     embedUrl: "https://uqload.is/embed-h67yff6g8a5g.html",
-    posterUrl: "https://e11.uqload.is/i/01/05208/h67yff6g8a5g_t.jpg",
+    posterUrl: "miniatures/silent_hill.png",
     description:
       "Vidéo hébergée à l’extérieur et ouverte dans une page player interne au site.",
     tags: ["Film", "Horreur", "Silent Hill", "1126x504"]
@@ -73,7 +73,7 @@ window.BOILED_VIDEOS = [
     sourceName: "Uqload",
     sourceUrl: "https://uqload.is/av5hef1rja8r.html",
     embedUrl: "https://uqload.is/embed-av5hef1rja8r.html",
-    posterUrl: "https://e12.uqload.is/i/01/05208/av5hef1rja8r_t.jpg",
+    posterUrl: "miniatures/silent_hill_revelation.jpg",
     description:
       "Vidéo hébergée à l’extérieur et ouverte dans une page player interne au site.",
     tags: ["Film", "Horreur", "Silent Hill", "872x384"]
