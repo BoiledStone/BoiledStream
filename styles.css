@@ -438,10 +438,13 @@ h3 {
   font-weight: 800;
 }
 
+/* MODIFICATION : Agrandissement de la grille et des cartes */
 .video-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 16px;
+  /* Augmente la largeur minimale de la carte (de 150px à 200px) */
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  /* Augmente l'espacement entre les cartes */
+  gap: 24px;
   justify-content: center;
   max-width: 1180px;
   margin: 0 auto;
@@ -512,10 +515,11 @@ h3 {
     transform 220ms ease;
 }
 
+/* MODIFICATION : Zoom plus important au survol (de 1.025 à 1.12) */
 .video-card:hover .thumb img,
 .video-card:focus-visible .thumb img {
   filter: saturate(1.08) contrast(1.04);
-  transform: scale(1.025);
+  transform: scale(1.12);
 }
 
 .source-pill,
@@ -1290,10 +1294,11 @@ h3 {
     font-size: 1.55rem;
   }
 
+  /* MODIFICATION : Ajustement responsive pour mobile */
   .video-grid,
   .video-grid.compact {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 18px;
   }
 
   .card-body {
