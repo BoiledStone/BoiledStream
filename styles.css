@@ -662,9 +662,9 @@ h3 {
 
 .player-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(310px, 410px);
-  gap: 30px;
-  max-width: 1360px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 34px 48px 44px;
 }
@@ -672,6 +672,8 @@ h3 {
 .player-stage {
   display: grid;
   gap: 14px;
+  width: min(100%, 1180px);
+  margin: 0 auto;
   min-width: 0;
 }
 
@@ -683,7 +685,7 @@ h3 {
 }
 
 .player-mount {
-  width: min(100%, calc((100dvh - 172px) * 16 / 9));
+  width: 100%;
   aspect-ratio: 16 / 9;
   margin-inline: auto;
   background: #000;
@@ -737,6 +739,11 @@ h3 {
 
 .player-details {
   align-self: start;
+  display: grid;
+  grid-template-columns: minmax(142px, 210px) minmax(0, 1fr);
+  gap: 10px 24px;
+  width: min(100%, 1180px);
+  margin: 0 auto;
   padding: 22px;
   background: var(--surface);
   border: 1px solid var(--line-strong);
@@ -746,8 +753,10 @@ h3 {
 
 .player-poster {
   position: relative;
-  width: min(100%, 230px);
-  margin: 0 auto 18px;
+  grid-row: 1 / span 6;
+  width: 100%;
+  max-width: 210px;
+  margin: 0;
   aspect-ratio: 2 / 3;
   overflow: hidden;
   background: #0f0f0f;
@@ -776,17 +785,23 @@ h3 {
   font-size: 2.35rem;
 }
 
+.player-details .section-kicker,
+.player-details h1,
+.player-description,
+.meta-list,
+.player-details .tag-row,
+.player-actions {
+  grid-column: 2;
+}
+
 .player-details p:not(.section-kicker) {
   color: var(--muted);
   line-height: 1.65;
 }
 
 .player-description {
-  margin: 0;
-  padding: 13px 14px;
-  background: rgba(255, 255, 255, 0.035);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  margin: 2px 0 0;
+  max-width: 840px;
 }
 
 .meta-list {
@@ -1267,7 +1282,26 @@ h3 {
   }
 
   .player-details {
+    grid-template-columns: 1fr;
+    gap: 14px;
     padding: 18px;
+  }
+
+  .player-poster,
+  .player-details .section-kicker,
+  .player-details h1,
+  .player-description,
+  .meta-list,
+  .player-details .tag-row,
+  .player-actions {
+    grid-column: 1;
+  }
+
+  .player-poster {
+    grid-row: auto;
+    justify-self: center;
+    width: min(100%, 220px);
+    margin: 0 0 4px;
   }
 
   .player-details h1 {
