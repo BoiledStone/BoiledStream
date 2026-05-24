@@ -9,6 +9,9 @@
     <!-- videos.js doit être chargé avant player.js: le player lit le catalogue central. -->
     <script src="scripts/videos.js" defer></script>
     <script src="scripts/player.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="scripts/supabase-config.js" defer></script>
+    <script src="scripts/community.js" defer></script>
   </head>
   <body>
     <header class="site-header">
@@ -16,10 +19,13 @@
         <span class="brand-mark" aria-hidden="true">B</span>
         <span>BoiledStream</span>
       </a>
-      <nav class="top-nav" aria-label="Navigation principale">
-        <a href="index.html#catalogue">Catalogue</a>
-        <a href="index.html#sources">Sources</a>
-      </nav>
+      <div class="header-actions">
+        <nav class="top-nav" aria-label="Navigation principale">
+          <a href="index.html#catalogue">Catalogue</a>
+          <a href="index.html#sources">Sources</a>
+        </nav>
+        <div class="account-controls" id="account-controls" aria-live="polite"></div>
+      </div>
     </header>
 
     <main>
@@ -64,6 +70,35 @@
           </div>
         </div>
         <div class="video-grid compact" id="related-grid"></div>
+      </section>
+
+      <section class="community-section" id="community-section" aria-labelledby="community-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Communauté</p>
+            <h2 id="community-title">Avis et commentaires</h2>
+          </div>
+        </div>
+        <div class="community-grid">
+          <section class="community-card" aria-labelledby="rating-title">
+            <h3 id="rating-title">Note du film</h3>
+            <p class="rating-summary" id="rating-summary">Chargement des notes...</p>
+            <div class="rating-stars" id="rating-stars" aria-label="Noter ce film"></div>
+            <p class="community-status" id="rating-status" aria-live="polite"></p>
+          </section>
+
+          <section class="community-card comments-card" aria-labelledby="comments-title">
+            <h3 id="comments-title">Commentaires</h3>
+            <p class="community-status" id="comment-login-note">Connecte-toi pour publier un commentaire.</p>
+            <form class="comment-form" id="comment-form" hidden>
+              <label for="comment-body">Ajouter un commentaire</label>
+              <textarea id="comment-body" maxlength="1000" rows="4" placeholder="Ton avis sur le film..."></textarea>
+              <button class="button primary" type="submit">Publier</button>
+              <p class="community-status" id="comment-status" aria-live="polite"></p>
+            </form>
+            <div class="comments-list" id="comments-list"></div>
+          </section>
+        </div>
       </section>
     </main>
 

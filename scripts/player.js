@@ -40,20 +40,21 @@
   function renderRelatedCard(item) {
     const poster = item.posterUrl ? `<img src="${escapeHtml(item.posterUrl)}" alt="" loading="lazy">` : "";
     const itemQuality = [item.resolution, item.format].filter(Boolean).join(" - ");
+    const sourceName = item.sourceName || "Source";
 
     return `
-      <a class="video-card" href="${buildPlayerUrl(item.id)}" aria-label="Ouvrir ${escapeHtml(item.title)}">
+      <a class="video-card" href="${buildPlayerUrl(item.id)}" data-source="${escapeHtml(sourceName.toLowerCase())}" aria-label="Ouvrir ${escapeHtml(item.title)}">
         <div class="thumb">
           <div class="generated-poster" aria-hidden="true"></div>
           ${poster}
-          <span class="poster-label">${escapeHtml(item.category)}</span>
+          <span class="source-pill">${escapeHtml(sourceName)}</span>
           <span class="play-badge">Lire</span>
           <span class="duration-pill">${escapeHtml(item.duration)}</span>
         </div>
         <div class="card-body">
           <div class="card-meta">
             <span class="category-dot">${escapeHtml(item.category)}</span>
-            <span>${escapeHtml(itemQuality)}</span>
+            <span class="quality-text">${escapeHtml(itemQuality)}</span>
           </div>
           <h3>${escapeHtml(item.title)}</h3>
         </div>
@@ -64,6 +65,7 @@
   function renderPlayer(item) {
     // Priorité à l'embed externe quand il existe, sinon lecture d'un fichier vidéo direct.
     if (item.embedUrl) {
+      const isUqload = item.sourceName?.toLowerCase() === "uqload";
       playerMount.innerHTML = `
         <iframe
           class="main-video"
@@ -74,13 +76,15 @@
           allowfullscreen
         ></iframe>
       `;
-      playerHelp.innerHTML = `
-        <p>
-          Si Uqload affiche <strong>manifestLoadError</strong>, le flux vidéo distant
-          n’a pas chargé. Active Cloudflare WARP,
-          puis recharge cette page pour relancer l’embed.
-        </p>
-      `;
+      playerHelp.innerHTML = isUqload
+        ? `
+          <p>
+            Si Uqload affiche <strong>manifestLoadError</strong>, le flux vidéo distant
+            n’a pas chargé. Active Cloudflare WARP,
+            puis recharge cette page pour relancer l’embed.
+          </p>
+        `
+        : "";
       return;
     }
 

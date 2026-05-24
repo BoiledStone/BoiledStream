@@ -72,20 +72,21 @@
       ? `<img src="${escapeHtml(video.posterUrl)}" alt="" loading="lazy">`
       : "";
     const quality = [video.resolution, video.format].filter(Boolean).join(" - ");
+    const sourceName = video.sourceName || "Source";
 
     return `
-      <a class="video-card" href="${buildPlayerUrl(video.id)}" aria-label="Ouvrir ${escapeHtml(video.title)}">
+      <a class="video-card" href="${buildPlayerUrl(video.id)}" data-source="${escapeHtml(sourceName.toLowerCase())}" aria-label="Ouvrir ${escapeHtml(video.title)}">
         <div class="thumb">
           <div class="generated-poster" aria-hidden="true"></div>
           ${poster}
-          <span class="poster-label">${escapeHtml(video.category)}</span>
+          <span class="source-pill">${escapeHtml(sourceName)}</span>
           <span class="play-badge">Lire</span>
           <span class="duration-pill">${escapeHtml(video.duration)}</span>
         </div>
         <div class="card-body">
           <div class="card-meta">
             <span class="category-dot">${escapeHtml(video.category)}</span>
-            <span>${escapeHtml(quality)}</span>
+            <span class="quality-text">${escapeHtml(quality)}</span>
           </div>
           <h3>${escapeHtml(video.title)}</h3>
         </div>

@@ -12,6 +12,9 @@
     <!-- videos.js doit être chargé avant catalog.js: il expose window.BOILED_VIDEOS. -->
     <script src="scripts/videos.js" defer></script>
     <script src="scripts/catalog.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="scripts/supabase-config.js" defer></script>
+    <script src="scripts/community.js" defer></script>
   </head>
   <body>
     <header class="site-header">
@@ -19,10 +22,13 @@
         <span class="brand-mark" aria-hidden="true">B</span>
         <span>BoiledStream</span>
       </a>
-      <nav class="top-nav" aria-label="Navigation principale">
-        <a href="#catalogue">Catalogue</a>
-        <a href="#sources">Sources</a>
-      </nav>
+      <div class="header-actions">
+        <nav class="top-nav" aria-label="Navigation principale">
+          <a href="#catalogue">Catalogue</a>
+          <a href="#sources">Sources</a>
+        </nav>
+        <div class="account-controls" id="account-controls" aria-live="polite"></div>
+      </div>
     </header>
 
     <main>

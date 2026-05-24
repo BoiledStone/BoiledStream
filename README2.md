@@ -64,17 +64,19 @@ miniatures/silent-hill-revelation.webp
 miniatures/postal-2007.jpg
 ```
 
-3. Dans `scripts/videos.js`, remplacer `posterUrl` par le chemin local:
+3. Pour une image prête à être affichée directement sur les cartes, utiliser de préférence le sous-dossier `miniatures/cards`.
+
+4. Dans `scripts/videos.js`, remplacer `posterUrl` par le chemin local:
 
 ```js
-posterUrl: "miniatures/silent-hill.jpg",
+posterUrl: "miniatures/cards/silent-hill.webp",
 ```
 
-4. Garder le chemin relatif depuis la racine du site. Ne pas commencer par `/`, sinon GitHub Pages peut chercher l'image au mauvais endroit.
+5. Garder le chemin relatif depuis la racine du site. Ne pas commencer par `/`, sinon GitHub Pages peut chercher l'image au mauvais endroit.
 
-5. Préférer une image horizontale en 16:9, idéalement autour de `1280x720`. Les formats `.jpg`, `.png` et `.webp` fonctionnent.
+6. Préférer une image horizontale en 16:9, idéalement autour de `1280x720`. Le format `.webp` est recommandé pour les cartes, car il garde une bonne qualité avec un poids plus bas.
 
-6. Recharger `index.html` et vérifier que la carte du film affiche bien la nouvelle miniature.
+7. Recharger `index.html` et vérifier que la carte du film affiche bien la nouvelle miniature.
 
 ## Points à contrôler avant publication
 
@@ -84,3 +86,42 @@ posterUrl: "miniatures/silent-hill.jpg",
 - Les tags aident vraiment la recherche.
 - La source externe fonctionne encore.
 - Le player s'ouvre dans `player.html?video=id-du-film`.
+
+## Activer comptes, commentaires et notes
+
+Le site utilise Supabase pour les comptes utilisateurs, les commentaires et les notes. GitHub Pages reste le site statique; Supabase fournit l'authentification et la base de données.
+
+1. Dans Supabase, ouvrir le projet `BoiledStream`.
+
+2. Aller dans `Authentication` > `URL Configuration`.
+
+3. Mettre ces URLs:
+
+```text
+Site URL:
+https://boiledstone.github.io/BoiledStream/
+
+Redirect URLs:
+https://boiledstone.github.io/BoiledStream/
+https://boiledstone.github.io/BoiledStream/**
+http://127.0.0.1:8765/
+http://127.0.0.1:8765/**
+```
+
+4. Aller dans `Authentication` > `Providers` > `Email`, puis activer le provider email.
+
+5. Aller dans `SQL Editor` > `New query`.
+
+6. Copier tout le contenu de `supabase-schema.sql`, le coller dans Supabase, puis cliquer `Run`.
+
+7. Vérifier que les tables suivantes existent dans `Table Editor`:
+
+```text
+profiles
+comments
+ratings
+```
+
+8. Recharger une page `player.html?video=...`: la section `Avis et commentaires` doit permettre la connexion, la note sur 5 étoiles et les commentaires.
+
+Important: la clé dans `scripts/supabase-config.js` est la clé publique `anon`. Ne jamais mettre la clé `service_role` dans le site.
