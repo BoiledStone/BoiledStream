@@ -113,6 +113,19 @@
     };
   }
 
+  function isNoRowsError(error) {
+    return error?.code === "PGRST116" || /0 rows/i.test(error?.message || "");
+  }
+
+  function isMissingProfileRelationError(error) {
+    const message = `${error?.message || ""} ${error?.details || ""}`.toLowerCase();
+    return message.includes("foreign key") || message.includes("profiles");
+  }
+
+  function profileUnavailableMessage() {
+    return "Profil Supabase indisponible. Reconnecte-toi, puis relance supabase-schema.sql si le problème reste.";
+  }
+
   function bindDisplayNameInput(input) {
     input?.addEventListener("input", () => {
       const cleanValue = sanitizeDisplayName(input.value);
@@ -442,6 +455,25 @@
     return currentProfile;
   }
 
+  async function ensureProfileForWrite(statusNode) {
+    if (!currentSession) {
+      return false;
+    }
+
+    if (currentProfile) {
+      return true;
+    }
+
+    const profile = await loadProfile(currentSession.user);
+    if (profile) {
+      renderAccountControls();
+      return true;
+    }
+
+    setText(statusNode, profileUnavailableMessage());
+    return false;
+  }
+
   async function loadAdminUsers() {
     if (!supabaseClient) {
       return;
@@ -490,7 +522,12 @@
 
     if (response.data.session) {
       currentSession = response.data.session;
-      await loadProfile(currentSession.user);
+      const profile = await loadProfile(currentSession.user);
+      if (!profile) {
+        setText(authStatus, profileUnavailableMessage());
+        await refreshCommunity();
+        return;
+      }
       closeAuthPanel();
       await refreshCommunity();
     } else {
@@ -564,12 +601,16 @@
     setText(profileStatus, "Mise à jour du profil...");
 
     try {
+      if (!(await ensureProfileForWrite(profileStatus))) {
+        return;
+      }
+
       const avatarUrl = hasAvatarColumn ? await uploadAvatar(avatarFile) : currentProfile?.avatar_url || null;
       const updatePayload = {
         display_name: displayName,
         updated_at: new Date().toISOString()
       };
-      if (hasAvatarColumn) {
+      if (hasAvatarColumn && avatarFile) {
         updatePayload.avatar_url = avatarUrl;
       }
 
@@ -578,7 +619,25 @@
         .update(updatePayload)
         .eq("id", currentSession.user.id)
         .select(profileColumns())
-        .single();
+        .maybeSingle();
+
+      if (!error && !data) {
+        const insertPayload = {
+          id: currentSession.user.id,
+          display_name: displayName
+        };
+        if (hasAvatarColumn && avatarUrl) {
+          insertPayload.avatar_url = avatarUrl;
+        }
+
+        const inserted = await supabaseClient
+          .from("profiles")
+          .insert(insertPayload)
+          .select(profileColumns())
+          .single();
+        data = inserted.data;
+        error = inserted.error;
+      }
 
       if (error && hasAvatarColumn && isMissingAvatarColumnError(error)) {
         hasAvatarColumn = false;
@@ -590,12 +649,15 @@
           })
           .eq("id", currentSession.user.id)
           .select(profileColumns())
-          .single();
+          .maybeSingle();
         data = fallback.data;
         error = fallback.error;
       }
 
-      if (error) {
+      if (error || !data) {
+        if (!data || isNoRowsError(error)) {
+          throw new Error(profileUnavailableMessage());
+        }
         throw error;
       }
 
@@ -676,14 +738,24 @@
       return;
     }
 
-    const { error } = await supabaseClient.from("ratings").upsert(
-      {
-        video_id: getVideoId(),
-        user_id: currentSession.user.id,
-        score
-      },
-      { onConflict: "video_id,user_id" }
-    );
+    if (!(await ensureProfileForWrite(ratingStatus))) {
+      return;
+    }
+
+    const ratingPayload = {
+      video_id: getVideoId(),
+      user_id: currentSession.user.id,
+      score
+    };
+    const ratingOptions = { onConflict: "video_id,user_id" };
+    let { error } = await supabaseClient.from("ratings").upsert(ratingPayload, ratingOptions);
+
+    if (error && isMissingProfileRelationError(error)) {
+      currentProfile = null;
+      if (await ensureProfileForWrite(ratingStatus)) {
+        ({ error } = await supabaseClient.from("ratings").upsert(ratingPayload, ratingOptions));
+      }
+    }
 
     setText(ratingStatus, error ? error.message : "Score enregistré.");
     await loadRatings();
@@ -778,11 +850,23 @@
       return;
     }
 
-    const { error } = await supabaseClient.from("comments").insert({
+    if (!(await ensureProfileForWrite(commentStatus))) {
+      return;
+    }
+
+    const commentPayload = {
       video_id: getVideoId(),
       user_id: currentSession.user.id,
       body
-    });
+    };
+    let { error } = await supabaseClient.from("comments").insert(commentPayload);
+
+    if (error && isMissingProfileRelationError(error)) {
+      currentProfile = null;
+      if (await ensureProfileForWrite(commentStatus)) {
+        ({ error } = await supabaseClient.from("comments").insert(commentPayload));
+      }
+    }
 
     if (error) {
       setText(commentStatus, error.message);
