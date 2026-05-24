@@ -43,7 +43,7 @@ window.BOILED_VIDEOS = [
     sourceName: "Uqload",
     sourceUrl: "https://uqload.is/amvnri9r8u54.html",
     embedUrl: "https://uqload.is/embed-amvnri9r8u54.html",
-    posterUrl: "miniatures/interstella_5555.jpg",
+    posterUrl: "miniatures/interstella_5555.webp",
     description:
       "Vidéo hébergée à l’extérieur et ouverte dans une page player interne au site.",
     tags: ["Film", "Animation", "512x384"]
