@@ -28,5 +28,20 @@ window.BOILED_VIDEOS = [
     description:
       "Vidéo hébergée à l’extérieur et ouverte dans une page player interne au site.",
     tags: ["Film", "Français", "1280x720"]
+  },
+  {
+    id: "interstella-5555",
+    title: "Interstella 5555",
+    category: "Film",
+    duration: "01:05:35",
+    resolution: "512x384",
+    format: "SD",
+    sourceName: "Uqload",
+    sourceUrl: "https://uqload.is/amvnri9r8u54.html",
+    embedUrl: "https://uqload.is/embed-amvnri9r8u54.html",
+    posterUrl: "https://e12.uqload.is/i/01/05208/amvnri9r8u54_t.jpg",
+    description:
+      "Vidéo hébergée à l’extérieur et ouverte dans une page player interne au site.",
+    tags: ["Film", "Animation", "512x384"]
   }
 ];
