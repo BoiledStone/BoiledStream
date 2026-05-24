@@ -13,7 +13,7 @@ window.BOILED_VIDEOS = [
     sourceUrl: "https://uqload.is/9fyok6ttwrgj.html",
     // Utiliser l'URL d'intégration quand l'hébergeur fournit un player iframe.
     embedUrl: "https://uqload.is/embed-9fyok6ttwrgj.html",
-    posterUrl: "https://e12.uqload.is/i/01/05208/9fyok6ttwrgj_t.jpg",
+    posterUrl: "miniatures/project_hail_mary.png",
     description:
       "Vidéo hébergée à l’extérieur et ouverte dans une page player interne au site.",
     tags: ["Film", "HEVC", "1280x720"]
