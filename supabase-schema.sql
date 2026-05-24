@@ -153,6 +153,10 @@ set
   file_size_limit = excluded.file_size_limit,
   allowed_mime_types = excluded.allowed_mime_types;
 
+grant select on storage.buckets to anon, authenticated;
+grant select on storage.objects to anon;
+grant select, insert, update, delete on storage.objects to authenticated;
+
 drop policy if exists "Avatar images are publicly readable" on storage.objects;
 create policy "Avatar images are publicly readable"
 on storage.objects for select
@@ -163,10 +167,7 @@ drop policy if exists "Users can upload their own avatar" on storage.objects;
 create policy "Users can upload their own avatar"
 on storage.objects for insert
 to authenticated
-with check (
-  bucket_id = 'avatars'
-  and (storage.foldername(name))[1] = (select auth.uid())::text
-);
+with check (bucket_id = 'avatars');
 
 drop policy if exists "Users can update their own avatar" on storage.objects;
 create policy "Users can update their own avatar"
@@ -191,3 +192,7 @@ using (
 );
 
 notify pgrst, 'reload schema';
+
+select id, name, public, file_size_limit, allowed_mime_types
+from storage.buckets
+where id = 'avatars';

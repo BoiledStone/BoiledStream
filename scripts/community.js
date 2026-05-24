@@ -479,7 +479,8 @@
     const path = `${currentSession.user.id}/avatar-${Date.now()}.${extension}`;
     const { error } = await supabaseClient.storage.from("avatars").upload(path, file, {
       cacheControl: "3600",
-      upsert: true
+      contentType: file.type,
+      upsert: false
     });
 
     if (error) {

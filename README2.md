@@ -122,7 +122,7 @@ comments
 ratings
 ```
 
-8. Vérifier dans `Storage` > `Buckets` que le bucket public `avatars` existe. Le script SQL le crée automatiquement et limite les photos de profil à 2 Mo (`jpg`, `png`, `webp` ou `gif`). Si le site affiche `Bucket not found`, le bucket n'a pas été créé: relancer le fichier SQL complet ou créer manuellement un bucket public nommé exactement `avatars`, puis relancer la partie policies du SQL.
+8. Vérifier dans `Storage` > `Buckets` que le bucket public `avatars` existe. Le script SQL le crée automatiquement et limite les photos de profil à 2 Mo (`jpg`, `png`, `webp` ou `gif`). Si le site affiche `Bucket not found` ou `new row violates row-level security policy`, exécuter `supabase-avatar-storage.sql` dans Supabase: le résultat final doit afficher une ligne avec `id = avatars`. Si aucune ligne n'apparaît, le SQL n'a pas été lancé dans le même projet Supabase que celui utilisé par `scripts/supabase-config.js`.
 
 9. Recharger une page `player.html?video=...`: la section `Avis et commentaires` doit permettre la connexion, l'inscription avec pseudo, la note sur 5 étoiles, les commentaires et la modification du pseudo/photo dans le menu du compte.
 
