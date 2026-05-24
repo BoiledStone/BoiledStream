@@ -162,11 +162,16 @@ iframe {
   outline: 0;
 }
 
-.profile-button span:not(.avatar) {
+.profile-button .display-name {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.admin-prefix {
+  color: var(--gold);
+  font-weight: 950;
 }
 
 .account-note {

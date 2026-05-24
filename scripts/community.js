@@ -15,6 +15,7 @@
   let authMode = "signin";
   let lastFocusedElement = null;
   let hasAvatarColumn = true;
+  let adminUserIds = new Set();
 
   function escapeHtml(value) {
     return String(value || "")
@@ -41,13 +42,36 @@
       .slice(0, 2);
   }
 
-  function getDisplayName(user) {
-    const name =
-      currentProfile?.display_name ||
-      user?.user_metadata?.display_name ||
-      user?.email?.split("@")[0] ||
-      "Utilisateur";
-    return String(name).trim().slice(0, 40) || "Utilisateur";
+  function sanitizeDisplayName(value) {
+    return String(value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^A-Za-z0-9 _-]+/g, "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 40);
+  }
+
+  function getBaseDisplayName(user) {
+    return (
+      sanitizeDisplayName(currentProfile?.display_name) ||
+      sanitizeDisplayName(user?.user_metadata?.display_name) ||
+      sanitizeDisplayName(user?.email?.split("@")[0]) ||
+      "Utilisateur"
+    );
+  }
+
+  function isAdminUser(userId) {
+    return Boolean(userId && adminUserIds.has(userId));
+  }
+
+  function renderDisplayName(name, userId) {
+    const safeName = sanitizeDisplayName(name) || "Utilisateur";
+    if (!isAdminUser(userId)) {
+      return escapeHtml(safeName);
+    }
+
+    return `<span class="admin-prefix">[admin]</span> ${escapeHtml(safeName)}`;
   }
 
   function renderAvatar(profile, name, className = "avatar") {
@@ -84,9 +108,18 @@
 
     return {
       id: profile.id,
-      display_name: profile.display_name,
+      display_name: sanitizeDisplayName(profile.display_name) || "Utilisateur",
       avatar_url: profile.avatar_url || null
     };
+  }
+
+  function bindDisplayNameInput(input) {
+    input?.addEventListener("input", () => {
+      const cleanValue = sanitizeDisplayName(input.value);
+      if (input.value !== cleanValue) {
+        input.value = cleanValue;
+      }
+    });
   }
 
   function getAuthPanel() {
@@ -204,7 +237,7 @@
       return;
     }
 
-    const name = getDisplayName(currentSession.user);
+    const name = getBaseDisplayName(currentSession.user);
     const profileName = document.querySelector("#profile-name");
     const avatarPreview = document.querySelector("#profile-avatar-preview");
     if (profileName) {
@@ -268,7 +301,7 @@
             <form class="auth-form" id="auth-form">
               <label id="auth-name-row" hidden>
                 <span>Pseudo</span>
-                <input id="auth-name" type="text" autocomplete="nickname" maxlength="40" placeholder="Pseudo affiché">
+                <input id="auth-name" type="text" autocomplete="nickname" maxlength="40" pattern="[A-Za-z0-9 _-]{1,40}" title="Lettres, chiffres, espaces, tirets et underscores seulement" placeholder="Pseudo affiché">
               </label>
               <label>
                 <span>Email</span>
@@ -290,7 +323,7 @@
               <div class="profile-preview" id="profile-avatar-preview"></div>
               <label>
                 <span>Pseudo</span>
-                <input id="profile-name" type="text" maxlength="40" required>
+                <input id="profile-name" type="text" maxlength="40" pattern="[A-Za-z0-9 _-]{1,40}" title="Lettres, chiffres, espaces, tirets et underscores seulement" required>
               </label>
               <label>
                 <span>Photo de profil</span>
@@ -314,6 +347,8 @@
     document.querySelector("#auth-switch-button").addEventListener("click", (event) => {
       setAuthMode(event.currentTarget.dataset.authMode);
     });
+    bindDisplayNameInput(document.querySelector("#auth-name"));
+    bindDisplayNameInput(document.querySelector("#profile-name"));
     document.querySelector("#auth-form").addEventListener("submit", handleAuthSubmit);
     document.querySelector("#profile-form").addEventListener("submit", handleProfileSubmit);
     document.querySelector("#profile-avatar").addEventListener("change", handleAvatarPreview);
@@ -335,11 +370,11 @@
       return;
     }
 
-    const name = getDisplayName(currentSession.user);
+    const name = getBaseDisplayName(currentSession.user);
     accountMount.innerHTML = `
       <button class="profile-button" type="button" id="account-profile" aria-label="Ouvrir les paramètres du profil">
         ${renderAvatar(currentProfile, name)}
-        <span>${escapeHtml(name)}</span>
+        <span class="display-name">${renderDisplayName(name, currentSession.user.id)}</span>
       </button>
       <button class="account-button" type="button" id="account-signout">Déconnexion</button>
     `;
@@ -382,7 +417,7 @@
       return currentProfile;
     }
 
-    const displayName = getDisplayName(user);
+    const displayName = getBaseDisplayName(user);
     let created = await supabaseClient
       .from("profiles")
       .insert({ id: user.id, display_name: displayName })
@@ -407,16 +442,31 @@
     return currentProfile;
   }
 
+  async function loadAdminUsers() {
+    if (!supabaseClient) {
+      return;
+    }
+
+    const { data, error } = await supabaseClient.from("admin_users").select("user_id");
+    if (error) {
+      console.warn("Liste admin Supabase indisponible:", error.message);
+      adminUserIds = new Set();
+      return;
+    }
+
+    adminUserIds = new Set((data || []).map((row) => row.user_id));
+  }
+
   async function handleAuthSubmit(event) {
     event.preventDefault();
     const email = document.querySelector("#auth-email").value.trim();
     const password = document.querySelector("#auth-password").value;
-    const displayName = document.querySelector("#auth-name").value.trim();
+    const displayName = sanitizeDisplayName(document.querySelector("#auth-name").value);
     const authStatus = document.querySelector("#auth-status");
     const isSignup = authMode === "signup";
 
     if (isSignup && !displayName) {
-      setText(authStatus, "Choisis un pseudo pour créer le compte.");
+      setText(authStatus, "Choisis un pseudo avec lettres, chiffres, espaces, - ou _.");
       return;
     }
 
@@ -503,11 +553,11 @@
     }
 
     const profileStatus = document.querySelector("#profile-status");
-    const displayName = document.querySelector("#profile-name").value.trim().slice(0, 40);
+    const displayName = sanitizeDisplayName(document.querySelector("#profile-name").value);
     const avatarFile = document.querySelector("#profile-avatar").files[0];
 
     if (!displayName) {
-      setText(profileStatus, "Le pseudo est obligatoire.");
+      setText(profileStatus, "Le pseudo doit contenir lettres, chiffres, espaces, - ou _.");
       return;
     }
 
@@ -652,7 +702,7 @@
     commentsList.innerHTML = comments
       .map((comment) => {
         const isOwner = currentSession?.user?.id === comment.user_id;
-        const author = comment.profiles?.display_name || "Utilisateur";
+        const author = sanitizeDisplayName(comment.profiles?.display_name) || "Utilisateur";
         const avatar = renderAvatar(comment.profiles, author, "avatar avatar-comment");
         const date = new Date(comment.created_at).toLocaleDateString("fr-CA", {
           year: "numeric",
@@ -665,7 +715,7 @@
             <div class="comment-heading">
               <div class="comment-author">
                 ${avatar}
-                <strong>${escapeHtml(author)}</strong>
+                <strong>${renderDisplayName(author, comment.user_id)}</strong>
               </div>
               <span>${escapeHtml(date)}</span>
             </div>
@@ -783,6 +833,7 @@
     }
 
     supabaseClient = window.supabase.createClient(config.url, config.anonKey);
+    await loadAdminUsers();
     const { data } = await supabaseClient.auth.getSession();
     currentSession = data.session;
     if (currentSession) {
