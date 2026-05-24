@@ -13,6 +13,7 @@
   let currentSession = null;
   let currentProfile = null;
   let authMode = "signin";
+  let lastFocusedElement = null;
 
   function escapeHtml(value) {
     return String(value || "")
@@ -62,6 +63,20 @@
     }
   }
 
+  function getAuthPanel() {
+    return document.querySelector("#auth-panel");
+  }
+
+  function getFocusableAuthNodes() {
+    const panel = getAuthPanel();
+    if (!panel || panel.hidden) {
+      return [];
+    }
+
+    return [...panel.querySelectorAll("button, input, textarea, select, a[href]")]
+      .filter((node) => !node.disabled && node.offsetParent !== null);
+  }
+
   function setAuthMode(mode) {
     authMode = mode;
     const isSignup = mode === "signup";
@@ -74,15 +89,11 @@
     const password = document.querySelector("#auth-password");
     const authStatus = document.querySelector("#auth-status");
     const profileStatus = document.querySelector("#profile-status");
-    const tabs = document.querySelector("#auth-tabs");
+    const modeSwitch = document.querySelector("#auth-mode-switch");
+    const switchPrompt = document.querySelector("#auth-switch-prompt");
+    const switchButton = document.querySelector("#auth-switch-button");
 
     setText(title, isProfile ? "Paramètres du profil" : isSignup ? "Créer un compte" : "Connexion");
-    if (tabs) {
-      tabs.hidden = isProfile;
-      tabs.querySelectorAll("[data-auth-mode]").forEach((button) => {
-        button.classList.toggle("active", button.dataset.authMode === mode);
-      });
-    }
     if (authForm) {
       authForm.hidden = isProfile;
     }
@@ -98,6 +109,15 @@
     }
     if (password) {
       password.autocomplete = isSignup ? "new-password" : "current-password";
+      password.placeholder = isSignup ? "6 caractères minimum" : "Mot de passe";
+    }
+    if (modeSwitch) {
+      modeSwitch.hidden = isProfile;
+    }
+    setText(switchPrompt, isSignup ? "Déjà un compte ?" : "Pas encore de compte ?");
+    if (switchButton) {
+      switchButton.textContent = isSignup ? "Connexion" : "Inscription";
+      switchButton.dataset.authMode = isSignup ? "signin" : "signup";
     }
     setText(authStatus, "");
     setText(profileStatus, "");
@@ -108,14 +128,49 @@
   }
 
   function openAuthPanel(mode = "signin") {
-    document.querySelector("#auth-panel")?.removeAttribute("hidden");
+    const panel = getAuthPanel();
+    lastFocusedElement = document.activeElement;
+    panel?.removeAttribute("hidden");
+    panel?.scrollTo(0, 0);
+    document.body.classList.add("modal-open");
     setAuthMode(mode);
     const focusTarget = mode === "profile" ? "#profile-name" : "#auth-email";
     document.querySelector(focusTarget)?.focus();
   }
 
   function closeAuthPanel() {
-    document.querySelector("#auth-panel")?.setAttribute("hidden", "");
+    getAuthPanel()?.setAttribute("hidden", "");
+    document.body.classList.remove("modal-open");
+    if (lastFocusedElement instanceof HTMLElement) {
+      lastFocusedElement.focus();
+    }
+  }
+
+  function handleAuthPanelKeydown(event) {
+    if (event.key === "Escape") {
+      closeAuthPanel();
+      return;
+    }
+
+    if (event.key !== "Tab") {
+      return;
+    }
+
+    const focusableNodes = getFocusableAuthNodes();
+    if (!focusableNodes.length) {
+      return;
+    }
+
+    const firstNode = focusableNodes[0];
+    const lastNode = focusableNodes[focusableNodes.length - 1];
+
+    if (event.shiftKey && document.activeElement === firstNode) {
+      event.preventDefault();
+      lastNode.focus();
+    } else if (!event.shiftKey && document.activeElement === lastNode) {
+      event.preventDefault();
+      firstNode.focus();
+    }
   }
 
   function hydrateProfileForm() {
@@ -184,11 +239,6 @@
             <p class="section-kicker">Compte BoiledStream</p>
             <h2 id="auth-title">Connexion</h2>
 
-            <div class="auth-tabs" id="auth-tabs">
-              <button class="auth-tab active" type="button" data-auth-mode="signin">Connexion</button>
-              <button class="auth-tab" type="button" data-auth-mode="signup">Inscription</button>
-            </div>
-
             <form class="auth-form" id="auth-form">
               <label id="auth-name-row" hidden>
                 <span>Pseudo</span>
@@ -200,10 +250,14 @@
               </label>
               <label>
                 <span>Mot de passe</span>
-                <input id="auth-password" type="password" autocomplete="current-password" required minlength="6" placeholder="6 caractères minimum">
+                <input id="auth-password" type="password" autocomplete="current-password" required minlength="6" placeholder="Mot de passe">
               </label>
               <button class="button primary" id="auth-submit" type="submit">Connexion</button>
               <p class="community-status" id="auth-status" aria-live="polite"></p>
+              <p class="auth-mode-switch" id="auth-mode-switch">
+                <span id="auth-switch-prompt">Pas encore de compte ?</span>
+                <button type="button" id="auth-switch-button" data-auth-mode="signup">Inscription</button>
+              </p>
             </form>
 
             <form class="profile-form" id="profile-form" hidden>
@@ -230,11 +284,9 @@
         closeAuthPanel();
       }
     });
-    document.querySelector("#auth-tabs").addEventListener("click", (event) => {
-      const button = event.target.closest("[data-auth-mode]");
-      if (button) {
-        setAuthMode(button.dataset.authMode);
-      }
+    document.querySelector("#auth-panel").addEventListener("keydown", handleAuthPanelKeydown);
+    document.querySelector("#auth-switch-button").addEventListener("click", (event) => {
+      setAuthMode(event.currentTarget.dataset.authMode);
     });
     document.querySelector("#auth-form").addEventListener("submit", handleAuthSubmit);
     document.querySelector("#profile-form").addEventListener("submit", handleProfileSubmit);

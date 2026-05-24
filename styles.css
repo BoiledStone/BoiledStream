@@ -38,6 +38,14 @@ body {
     var(--page);
 }
 
+body.modal-open {
+  overflow: hidden;
+}
+
+[hidden] {
+  display: none !important;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -226,11 +234,11 @@ iframe {
 .catalog-hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(180px, 240px);
-  gap: 32px;
+  gap: 24px;
   align-items: end;
   max-width: 1180px;
   margin: 0 auto;
-  padding: 48px 48px 30px;
+  padding: 30px 48px 22px;
 }
 
 .hero-copy {
@@ -263,7 +271,7 @@ h3 {
 
 h1 {
   max-width: 900px;
-  font-size: 3.35rem;
+  font-size: 2.45rem;
 }
 
 h2 {
@@ -283,17 +291,18 @@ h3 {
 }
 
 .hero-panel {
-  padding: 18px;
-  background: var(--surface);
-  border: 1px solid var(--line-strong);
+  justify-self: end;
+  min-width: 180px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
 }
 
 .panel-number {
   display: block;
   color: var(--ink);
-  font-size: 2.8rem;
+  font-size: 1.9rem;
   font-weight: 950;
   line-height: 1;
 }
@@ -306,6 +315,9 @@ h3 {
 }
 
 .toolbar {
+  position: sticky;
+  top: 64px;
+  z-index: 9;
   display: grid;
   grid-template-columns: minmax(240px, 390px) 1fr;
   gap: 18px;
@@ -400,8 +412,8 @@ h3 {
 
 .video-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
   justify-content: center;
   max-width: 1180px;
   margin: 0 auto;
@@ -626,8 +638,9 @@ h3 {
 }
 
 .player-mount {
-  width: 100%;
+  width: min(100%, calc((100dvh - 172px) * 16 / 9));
   aspect-ratio: 16 / 9;
+  margin-inline: auto;
   background: #000;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius);
@@ -638,6 +651,7 @@ h3 {
 .main-video {
   width: 100%;
   height: 100%;
+  max-height: 100%;
   background: #000;
   border: 0;
 }
@@ -945,11 +959,14 @@ h3 {
   position: fixed;
   inset: 0;
   z-index: 30;
-  display: grid;
-  padding: 24px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 18px;
   background: rgba(0, 0, 0, 0.58);
   backdrop-filter: blur(8px);
-  place-items: center;
 }
 
 .auth-panel[hidden] {
@@ -958,8 +975,11 @@ h3 {
 
 .auth-dialog {
   position: relative;
-  width: min(100%, 440px);
-  padding: 24px;
+  width: min(100%, 400px);
+  max-height: calc(100dvh - 36px);
+  margin: auto 0;
+  overflow-y: auto;
+  padding: 22px;
   background: var(--surface);
   border: 1px solid var(--line-strong);
   border-radius: var(--radius);
@@ -985,42 +1005,11 @@ h3 {
   place-items: center;
 }
 
-.auth-tabs {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-  margin-top: 18px;
-  padding: 4px;
-  background: #0b0f16;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-}
-
-.auth-tab {
-  min-height: 38px;
-  color: var(--muted);
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: calc(var(--radius) - 2px);
-  font: inherit;
-  font-weight: 850;
-  cursor: pointer;
-}
-
-.auth-tab:hover,
-.auth-tab:focus-visible,
-.auth-tab.active {
-  color: #090909;
-  background: var(--gold);
-  border-color: var(--gold);
-  outline: 0;
-}
-
 .auth-form,
 .profile-form {
   display: grid;
   gap: 12px;
-  margin-top: 18px;
+  margin-top: 16px;
 }
 
 .auth-form label,
@@ -1040,6 +1029,11 @@ h3 {
   text-transform: none;
 }
 
+.auth-form .button,
+.profile-form .button {
+  width: 100%;
+}
+
 .profile-form input[type="file"] {
   padding: 10px 12px;
   color: var(--muted);
@@ -1049,6 +1043,34 @@ h3 {
   display: grid;
   margin: 4px 0 2px;
   place-items: center;
+}
+
+.auth-mode-switch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.auth-mode-switch button {
+  padding: 0;
+  color: var(--teal);
+  background: transparent;
+  border: 0;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.auth-mode-switch button:hover,
+.auth-mode-switch button:focus-visible {
+  color: var(--ink);
+  outline: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 @media (max-width: 980px) {
@@ -1072,7 +1094,7 @@ h3 {
   }
 
   h1 {
-    font-size: 3rem;
+    font-size: 2.35rem;
   }
 
   .filter-group {
@@ -1116,6 +1138,10 @@ h3 {
 
   .catalog-hero {
     padding-top: 40px;
+  }
+
+  .toolbar {
+    position: static;
   }
 
   .section-heading {
