@@ -9,6 +9,7 @@
   const nextVideo = videos[(currentIndex + 1) % videos.length];
 
   const playerMount = document.querySelector("#player-mount");
+  const playerPoster = document.querySelector("#player-poster");
   const title = document.querySelector("#player-title");
   const category = document.querySelector("#player-category");
   const description = document.querySelector("#player-description");
@@ -59,6 +60,23 @@
         </div>
       </a>
     `;
+  }
+
+  function renderPlayerPoster(item) {
+    if (!playerPoster) {
+      return;
+    }
+
+    const poster = item.posterUrl
+      ? `<img src="${escapeHtml(item.posterUrl)}" alt="" loading="eager">`
+      : "";
+    playerPoster.innerHTML = `
+      <div class="generated-poster" aria-hidden="true"></div>
+      ${poster}
+    `;
+    playerPoster.querySelector("img")?.addEventListener("error", (event) => {
+      event.currentTarget.remove();
+    });
   }
 
   function renderPlayer(item) {
@@ -114,6 +132,7 @@
   }
 
   document.title = `BoiledStream - ${video.title}`;
+  renderPlayerPoster(video);
   renderPlayer(video);
   title.textContent = video.title;
   category.textContent = video.category;
