@@ -12,6 +12,7 @@
   let supabaseClient = null;
   let currentSession = null;
   let currentProfile = null;
+  let authMode = "signin";
 
   function escapeHtml(value) {
     return String(value || "")
@@ -27,6 +28,17 @@
     return params.get("video") || window.BOILED_VIDEOS?.[0]?.id || "";
   }
 
+  function getInitials(name) {
+    return String(name || "Utilisateur")
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((part) => part[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  }
+
   function getDisplayName(user) {
     const name =
       currentProfile?.display_name ||
@@ -36,19 +48,126 @@
     return String(name).trim().slice(0, 40) || "Utilisateur";
   }
 
+  function renderAvatar(profile, name, className = "avatar") {
+    if (profile?.avatar_url) {
+      return `<span class="${className}"><img src="${escapeHtml(profile.avatar_url)}" alt=""></span>`;
+    }
+
+    return `<span class="${className}" aria-hidden="true">${escapeHtml(getInitials(name))}</span>`;
+  }
+
   function setText(node, value) {
     if (node) {
       node.textContent = value;
     }
   }
 
-  function openAuthPanel() {
+  function setAuthMode(mode) {
+    authMode = mode;
+    const isSignup = mode === "signup";
+    const isProfile = mode === "profile";
+    const title = document.querySelector("#auth-title");
+    const authForm = document.querySelector("#auth-form");
+    const profileForm = document.querySelector("#profile-form");
+    const nameRow = document.querySelector("#auth-name-row");
+    const authSubmit = document.querySelector("#auth-submit");
+    const password = document.querySelector("#auth-password");
+    const authStatus = document.querySelector("#auth-status");
+    const profileStatus = document.querySelector("#profile-status");
+    const tabs = document.querySelector("#auth-tabs");
+
+    setText(title, isProfile ? "Paramètres du profil" : isSignup ? "Créer un compte" : "Connexion");
+    if (tabs) {
+      tabs.hidden = isProfile;
+      tabs.querySelectorAll("[data-auth-mode]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.authMode === mode);
+      });
+    }
+    if (authForm) {
+      authForm.hidden = isProfile;
+    }
+    if (profileForm) {
+      profileForm.hidden = !isProfile;
+    }
+    if (nameRow) {
+      nameRow.hidden = !isSignup;
+      document.querySelector("#auth-name").required = isSignup;
+    }
+    if (authSubmit) {
+      authSubmit.textContent = isSignup ? "Créer le compte" : "Connexion";
+    }
+    if (password) {
+      password.autocomplete = isSignup ? "new-password" : "current-password";
+    }
+    setText(authStatus, "");
+    setText(profileStatus, "");
+
+    if (isProfile) {
+      hydrateProfileForm();
+    }
+  }
+
+  function openAuthPanel(mode = "signin") {
     document.querySelector("#auth-panel")?.removeAttribute("hidden");
-    document.querySelector("#auth-email")?.focus();
+    setAuthMode(mode);
+    const focusTarget = mode === "profile" ? "#profile-name" : "#auth-email";
+    document.querySelector(focusTarget)?.focus();
   }
 
   function closeAuthPanel() {
     document.querySelector("#auth-panel")?.setAttribute("hidden", "");
+  }
+
+  function hydrateProfileForm() {
+    if (!currentSession) {
+      return;
+    }
+
+    const name = getDisplayName(currentSession.user);
+    const profileName = document.querySelector("#profile-name");
+    const avatarPreview = document.querySelector("#profile-avatar-preview");
+    if (profileName) {
+      profileName.value = name;
+    }
+    if (avatarPreview) {
+      avatarPreview.innerHTML = renderAvatar(currentProfile, name, "avatar avatar-large");
+    }
+  }
+
+  function handleAvatarPreview(event) {
+    const file = event.target.files[0];
+    const avatarPreview = document.querySelector("#profile-avatar-preview");
+    const profileStatus = document.querySelector("#profile-status");
+
+    if (!file) {
+      hydrateProfileForm();
+      return;
+    }
+
+    if (!["image/jpeg", "image/png", "image/webp", "image/gif"].includes(file.type)) {
+      event.target.value = "";
+      hydrateProfileForm();
+      setText(profileStatus, "Choisis une image jpg, png, webp ou gif.");
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      event.target.value = "";
+      hydrateProfileForm();
+      setText(profileStatus, "La photo doit faire 2 Mo maximum.");
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(file);
+    if (avatarPreview) {
+      avatarPreview.innerHTML = `<span class="avatar avatar-large"><img src="${previewUrl}" alt=""></span>`;
+      avatarPreview.querySelector("img")?.addEventListener(
+        "load",
+        () => URL.revokeObjectURL(previewUrl),
+        { once: true }
+      );
+    }
+    setText(profileStatus, "");
   }
 
   function renderAuthPanel() {
@@ -64,9 +183,15 @@
             <button class="auth-close" type="button" id="auth-close" aria-label="Fermer">×</button>
             <p class="section-kicker">Compte BoiledStream</p>
             <h2 id="auth-title">Connexion</h2>
+
+            <div class="auth-tabs" id="auth-tabs">
+              <button class="auth-tab active" type="button" data-auth-mode="signin">Connexion</button>
+              <button class="auth-tab" type="button" data-auth-mode="signup">Inscription</button>
+            </div>
+
             <form class="auth-form" id="auth-form">
-              <label>
-                <span>Nom public</span>
+              <label id="auth-name-row" hidden>
+                <span>Pseudo</span>
                 <input id="auth-name" type="text" autocomplete="nickname" maxlength="40" placeholder="Pseudo affiché">
               </label>
               <label>
@@ -77,11 +202,22 @@
                 <span>Mot de passe</span>
                 <input id="auth-password" type="password" autocomplete="current-password" required minlength="6" placeholder="6 caractères minimum">
               </label>
-              <div class="auth-actions">
-                <button class="button primary" type="submit" data-auth-action="signin">Connexion</button>
-                <button class="button secondary" type="submit" data-auth-action="signup">Créer un compte</button>
-              </div>
+              <button class="button primary" id="auth-submit" type="submit">Connexion</button>
               <p class="community-status" id="auth-status" aria-live="polite"></p>
+            </form>
+
+            <form class="profile-form" id="profile-form" hidden>
+              <div class="profile-preview" id="profile-avatar-preview"></div>
+              <label>
+                <span>Pseudo</span>
+                <input id="profile-name" type="text" maxlength="40" required>
+              </label>
+              <label>
+                <span>Photo de profil</span>
+                <input id="profile-avatar" type="file" accept="image/png,image/jpeg,image/webp,image/gif">
+              </label>
+              <button class="button primary" type="submit">Enregistrer</button>
+              <p class="community-status" id="profile-status" aria-live="polite"></p>
             </form>
           </div>
         </div>
@@ -94,7 +230,15 @@
         closeAuthPanel();
       }
     });
+    document.querySelector("#auth-tabs").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-auth-mode]");
+      if (button) {
+        setAuthMode(button.dataset.authMode);
+      }
+    });
     document.querySelector("#auth-form").addEventListener("submit", handleAuthSubmit);
+    document.querySelector("#profile-form").addEventListener("submit", handleProfileSubmit);
+    document.querySelector("#profile-avatar").addEventListener("change", handleAvatarPreview);
   }
 
   function renderAccountControls() {
@@ -109,69 +253,87 @@
 
     if (!currentSession) {
       accountMount.innerHTML = `<button class="account-button" type="button" id="account-open">Connexion</button>`;
-      document.querySelector("#account-open").addEventListener("click", openAuthPanel);
+      document.querySelector("#account-open").addEventListener("click", () => openAuthPanel("signin"));
       return;
     }
 
     const name = getDisplayName(currentSession.user);
     accountMount.innerHTML = `
-      <span class="account-name">${escapeHtml(name)}</span>
+      <button class="profile-button" type="button" id="account-profile" aria-label="Ouvrir les paramètres du profil">
+        ${renderAvatar(currentProfile, name)}
+        <span>${escapeHtml(name)}</span>
+      </button>
       <button class="account-button" type="button" id="account-signout">Déconnexion</button>
     `;
+    document.querySelector("#account-profile").addEventListener("click", () => openAuthPanel("profile"));
     document.querySelector("#account-signout").addEventListener("click", async () => {
       await supabaseClient.auth.signOut();
     });
   }
 
-  async function ensureProfile(user) {
+  async function loadProfile(user) {
     if (!user || !supabaseClient) {
       return null;
     }
 
-    const displayName = getDisplayName(user);
+    // Keep profile creation separate from sign-in so existing users do not lose their pseudo or avatar.
     const { data, error } = await supabaseClient
       .from("profiles")
-      .upsert(
-        {
-          id: user.id,
-          display_name: displayName,
-          updated_at: new Date().toISOString()
-        },
-        { onConflict: "id" }
-      )
-      .select("id, display_name")
-      .single();
+      .select("id, display_name, avatar_url")
+      .eq("id", user.id)
+      .maybeSingle();
 
     if (error) {
       console.warn("Profil Supabase indisponible:", error.message);
       return null;
     }
 
-    currentProfile = data;
-    return data;
+    if (data) {
+      currentProfile = data;
+      return data;
+    }
+
+    const displayName = getDisplayName(user);
+    const created = await supabaseClient
+      .from("profiles")
+      .insert({ id: user.id, display_name: displayName })
+      .select("id, display_name, avatar_url")
+      .single();
+
+    if (created.error) {
+      console.warn("Création du profil impossible:", created.error.message);
+      return null;
+    }
+
+    currentProfile = created.data;
+    return created.data;
   }
 
   async function handleAuthSubmit(event) {
     event.preventDefault();
-    const action = event.submitter?.dataset.authAction || "signin";
     const email = document.querySelector("#auth-email").value.trim();
     const password = document.querySelector("#auth-password").value;
     const displayName = document.querySelector("#auth-name").value.trim();
     const authStatus = document.querySelector("#auth-status");
+    const isSignup = authMode === "signup";
+
+    if (isSignup && !displayName) {
+      setText(authStatus, "Choisis un pseudo pour créer le compte.");
+      return;
+    }
 
     setText(authStatus, "Traitement en cours...");
 
-    const payload = { email, password };
-    const response =
-      action === "signup"
-        ? await supabaseClient.auth.signUp({
-            ...payload,
-            options: {
-              emailRedirectTo: window.location.href,
-              data: { display_name: displayName || email.split("@")[0] }
-            }
-          })
-        : await supabaseClient.auth.signInWithPassword(payload);
+    const response = isSignup
+      ? await supabaseClient.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: window.location.href,
+            data: { display_name: displayName.slice(0, 40) }
+          }
+        })
+      : await supabaseClient.auth.signInWithPassword({ email, password });
 
     if (response.error) {
       setText(authStatus, response.error.message);
@@ -180,11 +342,91 @@
 
     if (response.data.session) {
       currentSession = response.data.session;
-      await ensureProfile(currentSession.user);
+      await loadProfile(currentSession.user);
       closeAuthPanel();
       await refreshCommunity();
     } else {
       setText(authStatus, "Compte créé. Vérifie ton email avant de te connecter.");
+    }
+  }
+
+  async function uploadAvatar(file) {
+    if (!file) {
+      return currentProfile?.avatar_url || null;
+    }
+
+    // The SQL storage policy mirrors these client-side limits.
+    const extensionsByType = {
+      "image/jpeg": "jpg",
+      "image/png": "png",
+      "image/webp": "webp",
+      "image/gif": "gif"
+    };
+    const extension = extensionsByType[file.type];
+
+    if (!extension) {
+      throw new Error("Choisis une image jpg, png, webp ou gif.");
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      throw new Error("La photo doit faire 2 Mo maximum.");
+    }
+
+    const path = `${currentSession.user.id}/avatar-${Date.now()}.${extension}`;
+    const { error } = await supabaseClient.storage.from("avatars").upload(path, file, {
+      cacheControl: "3600",
+      upsert: true
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    return supabaseClient.storage.from("avatars").getPublicUrl(path).data.publicUrl;
+  }
+
+  async function handleProfileSubmit(event) {
+    event.preventDefault();
+    if (!currentSession) {
+      return;
+    }
+
+    const profileStatus = document.querySelector("#profile-status");
+    const displayName = document.querySelector("#profile-name").value.trim().slice(0, 40);
+    const avatarFile = document.querySelector("#profile-avatar").files[0];
+
+    if (!displayName) {
+      setText(profileStatus, "Le pseudo est obligatoire.");
+      return;
+    }
+
+    setText(profileStatus, "Enregistrement...");
+
+    try {
+      const avatarUrl = await uploadAvatar(avatarFile);
+      const { data, error } = await supabaseClient
+        .from("profiles")
+        .update({
+          display_name: displayName,
+          avatar_url: avatarUrl,
+          updated_at: new Date().toISOString()
+        })
+        .eq("id", currentSession.user.id)
+        .select("id, display_name, avatar_url")
+        .single();
+
+      if (error) {
+        throw error;
+      }
+
+      currentProfile = data;
+      document.querySelector("#profile-avatar").value = "";
+      hydrateProfileForm();
+      renderAccountControls();
+      await loadComments();
+      setText(profileStatus, "Profil mis à jour.");
+    } catch (error) {
+      setText(profileStatus, error.message || "Mise à jour impossible.");
     }
   }
 
@@ -245,7 +487,7 @@
 
   async function saveRating(score) {
     if (!currentSession) {
-      openAuthPanel();
+      openAuthPanel("signin");
       return;
     }
 
@@ -276,6 +518,7 @@
       .map((comment) => {
         const isOwner = currentSession?.user?.id === comment.user_id;
         const author = comment.profiles?.display_name || "Utilisateur";
+        const avatar = renderAvatar(comment.profiles, author, "avatar avatar-comment");
         const date = new Date(comment.created_at).toLocaleDateString("fr-CA", {
           year: "numeric",
           month: "short",
@@ -285,7 +528,10 @@
         return `
           <article class="comment-item">
             <div class="comment-heading">
-              <strong>${escapeHtml(author)}</strong>
+              <div class="comment-author">
+                ${avatar}
+                <strong>${escapeHtml(author)}</strong>
+              </div>
               <span>${escapeHtml(date)}</span>
             </div>
             <p>${escapeHtml(comment.body)}</p>
@@ -307,7 +553,7 @@
 
     const { data, error } = await supabaseClient
       .from("comments")
-      .select("id, body, user_id, created_at, profiles(display_name)")
+      .select("id, body, user_id, created_at, profiles(display_name, avatar_url)")
       .eq("video_id", getVideoId())
       .order("created_at", { ascending: false });
 
@@ -322,7 +568,7 @@
   async function handleCommentSubmit(event) {
     event.preventDefault();
     if (!currentSession) {
-      openAuthPanel();
+      openAuthPanel("signin");
       return;
     }
 
@@ -390,13 +636,13 @@
     const { data } = await supabaseClient.auth.getSession();
     currentSession = data.session;
     if (currentSession) {
-      await ensureProfile(currentSession.user);
+      await loadProfile(currentSession.user);
     }
 
     supabaseClient.auth.onAuthStateChange(async (_event, session) => {
       currentSession = session;
       if (currentSession) {
-        await ensureProfile(currentSession.user);
+        await loadProfile(currentSession.user);
       } else {
         currentProfile = null;
       }

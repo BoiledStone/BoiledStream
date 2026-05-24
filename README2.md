@@ -87,9 +87,9 @@ posterUrl: "miniatures/posters/silent-hill.webp",
 - La source externe fonctionne encore.
 - Le player s'ouvre dans `player.html?video=id-du-film`.
 
-## Activer comptes, commentaires et notes
+## Activer comptes, profils, commentaires et notes
 
-Le site utilise Supabase pour les comptes utilisateurs, les commentaires et les notes. GitHub Pages reste le site statique; Supabase fournit l'authentification et la base de données.
+Le site utilise Supabase pour les comptes utilisateurs, les profils avec photo, les commentaires et les notes. GitHub Pages reste le site statique; Supabase fournit l'authentification, la base de données et le stockage des avatars.
 
 1. Dans Supabase, ouvrir le projet `BoiledStream`.
 
@@ -112,7 +112,7 @@ http://127.0.0.1:8765/**
 
 5. Aller dans `SQL Editor` > `New query`.
 
-6. Copier tout le contenu de `supabase-schema.sql`, le coller dans Supabase, puis cliquer `Run`.
+6. Copier tout le contenu de `supabase-schema.sql`, le coller dans Supabase, puis cliquer `Run`. Si le projet Supabase était déjà configuré avant l'ajout des photos de profil, refaire quand même cette étape pour ajouter `avatar_url`, le bucket `avatars` et ses règles d'accès.
 
 7. Vérifier que les tables suivantes existent dans `Table Editor`:
 
@@ -122,6 +122,8 @@ comments
 ratings
 ```
 
-8. Recharger une page `player.html?video=...`: la section `Avis et commentaires` doit permettre la connexion, la note sur 5 étoiles et les commentaires.
+8. Vérifier dans `Storage` > `Buckets` que le bucket public `avatars` existe. Le script SQL le crée automatiquement et limite les photos de profil à 2 Mo (`jpg`, `png`, `webp` ou `gif`).
+
+9. Recharger une page `player.html?video=...`: la section `Avis et commentaires` doit permettre la connexion, l'inscription avec pseudo, la note sur 5 étoiles, les commentaires et la modification du pseudo/photo dans le menu du compte.
 
 Important: la clé dans `scripts/supabase-config.js` est la clé publique `anon`. Ne jamais mettre la clé `service_role` dans le site.
