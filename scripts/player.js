@@ -2,6 +2,7 @@
   const videos = window.BOILED_VIDEOS || [];
   const params = new URLSearchParams(window.location.search);
   const requestedId = params.get("video");
+  // Si l'URL vise un film inexistant, on affiche le premier film disponible.
   const video = videos.find((item) => item.id === requestedId) || videos[0];
   const currentIndex = videos.findIndex((item) => item.id === video.id);
   const previousVideo = videos[(currentIndex - 1 + videos.length) % videos.length];
@@ -21,6 +22,8 @@
   const relatedGrid = document.querySelector("#related-grid");
   const playerHelp = document.querySelector("#player-help");
 
+  // Les données du catalogue sont injectées dans le HTML du player; on les échappe
+  // avant rendu pour garder des attributs et du texte valides.
   function escapeHtml(value) {
     return String(value)
       .replaceAll("&", "&amp;")
@@ -59,6 +62,7 @@
   }
 
   function renderPlayer(item) {
+    // Priorité à l'embed externe quand il existe, sinon lecture d'un fichier vidéo direct.
     if (item.embedUrl) {
       playerMount.innerHTML = `
         <iframe
@@ -111,6 +115,7 @@
   }
 
   if (!requestedId || requestedId !== video.id) {
+    // Normalise l'URL pour que le bouton partage/copier pointe toujours vers le bon id.
     window.history.replaceState(null, "", buildPlayerUrl(video.id));
   }
 

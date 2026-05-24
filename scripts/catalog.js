@@ -12,6 +12,8 @@
     query: ""
   };
 
+  // Les titres, tags et URLs viennent du catalogue; on les échappe avant
+  // injection dans des templates HTML pour éviter de casser la page.
   function escapeHtml(value) {
     return String(value)
       .replaceAll("&", "&amp;")
@@ -25,6 +27,7 @@
     return `player.html?video=${encodeURIComponent(id)}`;
   }
 
+  // La recherche couvre les champs visibles et les tags pour rester simple à maintenir.
   function matchesSearch(video) {
     const query = state.query.trim().toLowerCase();
     if (!query) {
@@ -45,6 +48,7 @@
   }
 
   function renderFilters() {
+    // Les boutons de filtre sont déduits des catégories présentes dans videos.js.
     const categories = ["Toutes", ...new Set(videos.map((video) => video.category))];
     filterGroup.innerHTML = categories
       .map((category) => {
@@ -90,6 +94,7 @@
   }
 
   function bindPosterFallbacks() {
+    // Si une image externe disparaît, le fond généré reste visible à la place.
     grid.querySelectorAll(".thumb img").forEach((image) => {
       image.addEventListener("error", () => {
         image.remove();
@@ -98,6 +103,7 @@
   }
 
   function renderVideos() {
+    // Toute modification de recherche ou de filtre reconstruit uniquement la grille.
     const filteredVideos = getFilteredVideos();
     grid.innerHTML = filteredVideos.map(renderCard).join("");
     resultCount.textContent = `${filteredVideos.length} résultat${filteredVideos.length > 1 ? "s" : ""}`;
