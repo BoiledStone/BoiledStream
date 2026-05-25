@@ -112,7 +112,7 @@ http://127.0.0.1:8765/**
 
 5. Aller dans `SQL Editor` > `New query`.
 
-6. Copier tout le contenu de `supabase-schema.sql`, le coller dans Supabase, puis cliquer `Run`. Si le projet Supabase était déjà configuré avant l'ajout des photos de profil, refaire quand même cette étape pour ajouter `avatar_url`, le bucket `avatars` et ses règles d'accès. Le script termine par `notify pgrst, 'reload schema';` pour forcer Supabase à rafraîchir son cache API.
+6. Copier tout le contenu de `supabase-schema.sql`, le coller dans Supabase, puis cliquer `Run`. Si le projet Supabase était déjà configuré avant l'ajout des photos de profil, refaire quand même cette étape pour ajouter `avatar_url`, le bucket `avatars`, ses règles d'accès et le trigger qui crée automatiquement une ligne `profiles` à chaque nouveau compte. Le script termine par `notify pgrst, 'reload schema';` pour forcer Supabase à rafraîchir son cache API.
 
 7. Vérifier que les tables suivantes existent dans `Table Editor`:
 
@@ -123,7 +123,7 @@ comments
 ratings
 ```
 
-8. Vérifier dans `Storage` > `Buckets` que le bucket public `avatars` existe. Le script SQL le crée automatiquement et limite les photos de profil à 2 Mo (`jpg`, `png`, `webp` ou `gif`). Si le site affiche `Bucket not found` ou `new row violates row-level security policy`, exécuter `supabase-avatar-storage.sql` dans Supabase: le résultat final doit afficher une ligne avec `id = avatars`. Si aucune ligne n'apparaît, le SQL n'a pas été lancé dans le même projet Supabase que celui utilisé par `scripts/supabase-config.js`.
+8. Vérifier dans `Storage` > `Buckets` que le bucket public `avatars` existe. Le script SQL le crée automatiquement et limite les photos de profil à 2 Mo (`jpg`, `png`, `webp` ou `gif`). Les fichiers doivent être stockés dans un dossier nommé avec l'id utilisateur, ce que le site fait automatiquement. Si le site affiche `Bucket not found` ou `new row violates row-level security policy`, exécuter `supabase-avatar-storage.sql` dans Supabase: le résultat final doit afficher une ligne avec `id = avatars`. Si aucune ligne n'apparaît, le SQL n'a pas été lancé dans le même projet Supabase que celui utilisé par `scripts/supabase-config.js`.
 
 9. Pour afficher `[admin]` devant ton pseudo et celui de ton ami, ouvrir `supabase-admin-users.sql`, remplacer les deux emails d'exemple, puis exécuter le fichier dans Supabase. Ce fichier crée aussi `admin_users` si la table n'existe pas encore. Les utilisateurs normaux ne peuvent pas créer ce badge eux-mêmes.
 

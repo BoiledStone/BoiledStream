@@ -15,6 +15,8 @@
   let authMode = "signin";
   let lastFocusedElement = null;
   let hasAvatarColumn = true;
+  let profileLoadPromise = null;
+  let profileLoadUserId = null;
   let adminUserIds = new Set();
 
   function escapeHtml(value) {
@@ -75,17 +77,38 @@
   }
 
   function renderAvatar(profile, name, className = "avatar") {
+    const initials = escapeHtml(getInitials(name));
     if (profile?.avatar_url) {
-      return `<span class="${className}"><img src="${escapeHtml(profile.avatar_url)}" alt=""></span>`;
+      return `<span class="${escapeHtml(className)}" data-initials="${initials}"><img src="${escapeHtml(profile.avatar_url)}" alt=""></span>`;
     }
 
-    return `<span class="${className}" aria-hidden="true">${escapeHtml(getInitials(name))}</span>`;
+    return `<span class="${escapeHtml(className)}" data-initials="${initials}" aria-hidden="true">${initials}</span>`;
   }
 
   function setText(node, value) {
     if (node) {
       node.textContent = value;
     }
+  }
+
+  function bindAvatarFallbacks(root = document) {
+    root.querySelectorAll(".avatar img").forEach((image) => {
+      const fallbackToInitials = () => {
+        const avatar = image.closest(".avatar");
+        if (!avatar) {
+          image.remove();
+          return;
+        }
+
+        avatar.textContent = avatar.dataset.initials || "";
+        avatar.setAttribute("aria-hidden", "true");
+      };
+
+      image.addEventListener("error", fallbackToInitials, { once: true });
+      if (image.complete && image.naturalWidth === 0) {
+        fallbackToInitials();
+      }
+    });
   }
 
   function isMissingAvatarColumnError(error) {
@@ -111,6 +134,14 @@
       display_name: sanitizeDisplayName(profile.display_name) || "Utilisateur",
       avatar_url: profile.avatar_url || null
     };
+  }
+
+  function applyLoadedProfile(userId, profile) {
+    const normalized = normalizeProfile(profile);
+    if (currentSession?.user?.id === userId) {
+      currentProfile = normalized;
+    }
+    return normalized;
   }
 
   function isNoRowsError(error) {
@@ -284,6 +315,7 @@
     }
     if (avatarPreview) {
       avatarPreview.innerHTML = renderAvatar(currentProfile, name, "avatar avatar-large");
+      bindAvatarFallbacks(avatarPreview);
     }
   }
 
@@ -423,22 +455,18 @@
       </button>
       <button class="account-button" type="button" id="account-signout">Déconnexion</button>
     `;
+    bindAvatarFallbacks(accountMount);
     document.querySelector("#account-profile").addEventListener("click", () => openAuthPanel("profile"));
     document.querySelector("#account-signout").addEventListener("click", async () => {
       await supabaseClient.auth.signOut();
     });
   }
 
-  async function loadProfile(user) {
-    if (!user || !supabaseClient) {
-      return null;
-    }
-
-    // Keep profile creation separate from sign-in so existing users do not lose their pseudo or avatar.
+  async function fetchProfile(userId) {
     let { data, error } = await supabaseClient
       .from("profiles")
       .select(profileColumns())
-      .eq("id", user.id)
+      .eq("id", userId)
       .maybeSingle();
 
     if (error && hasAvatarColumn && isMissingAvatarColumnError(error)) {
@@ -446,22 +474,32 @@
       const fallback = await supabaseClient
         .from("profiles")
         .select(profileColumns())
-        .eq("id", user.id)
+        .eq("id", userId)
         .maybeSingle();
       data = fallback.data;
       error = fallback.error;
     }
 
-    if (error) {
-      console.warn("Profil Supabase indisponible:", error.message);
+    return { data, error };
+  }
+
+  function isDuplicateProfileError(error) {
+    return error?.code === "23505" || /duplicate key/i.test(error?.message || "");
+  }
+
+  async function loadProfileNow(user) {
+    const selected = await fetchProfile(user.id);
+    if (selected.error) {
+      console.warn("Profil Supabase indisponible:", selected.error.message);
       return null;
     }
 
-    if (data) {
-      currentProfile = normalizeProfile(data);
-      return currentProfile;
+    if (selected.data) {
+      return applyLoadedProfile(user.id, selected.data);
     }
 
+    // Auth state changes can fire at the same time as the submit handler.
+    // If both paths create the row, the loser re-reads instead of breaking the session.
     const displayName = getBaseDisplayName(user);
     let created = await supabaseClient
       .from("profiles")
@@ -478,13 +516,37 @@
         .single();
     }
 
+    if (created.error && isDuplicateProfileError(created.error)) {
+      const retry = await fetchProfile(user.id);
+      if (!retry.error && retry.data) {
+        return applyLoadedProfile(user.id, retry.data);
+      }
+    }
+
     if (created.error) {
       console.warn("Création du profil impossible:", created.error.message);
       return null;
     }
 
-    currentProfile = normalizeProfile(created.data);
-    return currentProfile;
+    return applyLoadedProfile(user.id, created.data);
+  }
+
+  async function loadProfile(user) {
+    if (!user || !supabaseClient) {
+      return null;
+    }
+
+    if (!profileLoadPromise || profileLoadUserId !== user.id) {
+      profileLoadUserId = user.id;
+      profileLoadPromise = loadProfileNow(user).finally(() => {
+        if (profileLoadUserId === user.id) {
+          profileLoadPromise = null;
+          profileLoadUserId = null;
+        }
+      });
+    }
+
+    return profileLoadPromise;
   }
 
   async function ensureProfileForWrite(statusNode) {
@@ -839,6 +901,7 @@
         `;
       })
       .join("");
+    bindAvatarFallbacks(commentsList);
   }
 
   async function loadComments() {
@@ -846,33 +909,50 @@
       return;
     }
 
-    let { data, error } = await supabaseClient
+    const { data, error } = await supabaseClient
       .from("comments")
-      .select(
-        hasAvatarColumn
-          ? "id, body, user_id, created_at, profiles(display_name, avatar_url)"
-          : "id, body, user_id, created_at, profiles(display_name)"
-      )
+      .select("id, body, user_id, created_at")
       .eq("video_id", getVideoId())
       .order("created_at", { ascending: false });
-
-    if (error && hasAvatarColumn && isMissingAvatarColumnError(error)) {
-      hasAvatarColumn = false;
-      const fallback = await supabaseClient
-        .from("comments")
-        .select("id, body, user_id, created_at, profiles(display_name)")
-        .eq("video_id", getVideoId())
-        .order("created_at", { ascending: false });
-      data = fallback.data;
-      error = fallback.error;
-    }
 
     if (error) {
       commentsList.innerHTML = `<p class="empty-state">Avis indisponibles: exécute supabase-schema.sql dans Supabase.</p>`;
       return;
     }
 
-    renderComments(data || []);
+    const comments = data || [];
+    const userIds = [...new Set(comments.map((comment) => comment.user_id).filter(Boolean))];
+    const profilesById = new Map();
+
+    if (userIds.length) {
+      let profiles = await supabaseClient
+        .from("profiles")
+        .select(profileColumns())
+        .in("id", userIds);
+
+      if (profiles.error && hasAvatarColumn && isMissingAvatarColumnError(profiles.error)) {
+        hasAvatarColumn = false;
+        profiles = await supabaseClient
+          .from("profiles")
+          .select(profileColumns())
+          .in("id", userIds);
+      }
+
+      if (profiles.error) {
+        console.warn("Profils des avis indisponibles:", profiles.error.message);
+      } else {
+        (profiles.data || []).forEach((profile) => {
+          profilesById.set(profile.id, normalizeProfile(profile));
+        });
+      }
+    }
+
+    renderComments(
+      comments.map((comment) => ({
+        ...comment,
+        profiles: profilesById.get(comment.user_id) || null
+      }))
+    );
   }
 
   async function handleCommentSubmit(event) {
@@ -968,6 +1048,8 @@
         await loadProfile(currentSession.user);
       } else {
         currentProfile = null;
+        profileLoadPromise = null;
+        profileLoadUserId = null;
       }
       await refreshCommunity();
     });
