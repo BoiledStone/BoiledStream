@@ -8,7 +8,7 @@
   const videoCountLabel = document.querySelector("#video-count-label");
   const emptyState = document.querySelector("#empty-state");
   const FILTER_ALL = "Tout";
-  const FILTER_ANIMATED = "Animés";
+  const FILTER_ANIMATED = "Animé";
   const state = {
     category: FILTER_ALL,
     query: ""
@@ -29,18 +29,8 @@
     return `player.html?video=${encodeURIComponent(id)}`;
   }
 
-  function normalizeFilterValue(value) {
-    return String(value || "")
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase();
-  }
-
   function hasAnimatedTag(video) {
-    return video.tags.some((tag) => {
-      const normalizedTag = normalizeFilterValue(tag);
-      return ["anime", "animes", "animation"].includes(normalizedTag);
-    });
+    return video.tags.includes("Animé");
   }
 
   // La recherche couvre les champs visibles et les tags pour rester simple à maintenir.
@@ -66,7 +56,7 @@
   }
 
   function renderFilters() {
-    // Le filtre Animés est basé sur les tags; les autres viennent des catégories.
+    // Le filtre Animé est basé sur le tag exact; les autres viennent des catégories.
     const categories = [FILTER_ALL, FILTER_ANIMATED, ...new Set(videos.map((video) => video.category))];
     filterGroup.innerHTML = categories
       .map((category) => {
@@ -150,7 +140,7 @@
   });
 
   videoCount.textContent = String(videos.length);
-  videoCountLabel.textContent = videos.length > 1 ? "vidéos disponibles" : "vidéo disponible";
+  videoCountLabel.textContent = videos.length > 1 ? "médias disponibles" : "média disponible";
   renderFilters();
   renderVideos();
 })();

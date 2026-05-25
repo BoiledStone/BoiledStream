@@ -329,7 +329,10 @@ h3 {
 }
 
 .hero-panel {
+  display: flex;
+  align-items: baseline;
   justify-self: end;
+  gap: 8px;
   min-width: 180px;
   padding: 14px;
   background: rgba(255, 255, 255, 0.04);
@@ -338,7 +341,7 @@ h3 {
 }
 
 .panel-number {
-  display: block;
+  display: inline-block;
   color: var(--ink);
   font-size: 1.9rem;
   font-weight: 950;
@@ -346,8 +349,7 @@ h3 {
 }
 
 .panel-label {
-  display: block;
-  margin-top: 8px;
+  display: inline-block;
   color: var(--muted);
   font-weight: 800;
 }
