@@ -7,8 +7,10 @@
   const videoCount = document.querySelector("#video-count");
   const videoCountLabel = document.querySelector("#video-count-label");
   const emptyState = document.querySelector("#empty-state");
+  const FILTER_ALL = "Tout";
+  const FILTER_ANIMATED = "Animés";
   const state = {
-    category: "Toutes",
+    category: FILTER_ALL,
     query: ""
   };
 
@@ -27,6 +29,20 @@
     return `player.html?video=${encodeURIComponent(id)}`;
   }
 
+  function normalizeFilterValue(value) {
+    return String(value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+  }
+
+  function hasAnimatedTag(video) {
+    return video.tags.some((tag) => {
+      const normalizedTag = normalizeFilterValue(tag);
+      return ["anime", "animes", "animation"].includes(normalizedTag);
+    });
+  }
+
   // La recherche couvre les champs visibles et les tags pour rester simple à maintenir.
   function matchesSearch(video) {
     const query = state.query.trim().toLowerCase();
@@ -42,14 +58,16 @@
 
   function getFilteredVideos() {
     return videos.filter((video) => {
-      const categoryMatches = state.category === "Toutes" || video.category === state.category;
+      const categoryMatches =
+        state.category === FILTER_ALL ||
+        (state.category === FILTER_ANIMATED ? hasAnimatedTag(video) : video.category === state.category);
       return categoryMatches && matchesSearch(video);
     });
   }
 
   function renderFilters() {
-    // Les boutons de filtre sont déduits des catégories présentes dans videos.js.
-    const categories = ["Toutes", ...new Set(videos.map((video) => video.category))];
+    // Le filtre Animés est basé sur les tags; les autres viennent des catégories.
+    const categories = [FILTER_ALL, FILTER_ANIMATED, ...new Set(videos.map((video) => video.category))];
     filterGroup.innerHTML = categories
       .map((category) => {
         const isActive = category === state.category;

@@ -46,7 +46,7 @@ window.BOILED_VIDEOS = [
     posterUrl: "miniatures/posters/interstella-5555.webp",
     description:
       "Odyssée animée et musicale portée par Daft Punk, entre enlèvement interstellaire, pop cosmique et aventure sans dialogue.",
-    tags: ["Film", "Animation", "Musique", "512x384"]
+    tags: ["Film", "Animé", "Musique", "512x384"]
   },
   {
     id: "silent-hill",
