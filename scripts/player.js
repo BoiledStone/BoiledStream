@@ -38,6 +38,24 @@
     return `player.html?video=${encodeURIComponent(id)}`;
   }
 
+  function isUqloadEmbed(item) {
+    const sourceNameMatches = /uqload/i.test(item.sourceName || "");
+    try {
+      return sourceNameMatches || /(^|\.)uqload\./i.test(new URL(item.embedUrl, window.location.href).hostname);
+    } catch (_error) {
+      return sourceNameMatches;
+    }
+  }
+
+  function buildIframePolicy(item) {
+    const allow = "autoplay; fullscreen; picture-in-picture; encrypted-media";
+    const sandbox = isUqloadEmbed(item)
+      ? ' sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"'
+      : "";
+
+    return `allow="${allow}"${sandbox}`;
+  }
+
   function renderRelatedCard(item) {
     const poster = item.posterUrl ? `<img src="${escapeHtml(item.posterUrl)}" alt="" loading="lazy">` : "";
     const itemQuality = [item.resolution, item.format].filter(Boolean).join(" - ");
@@ -87,7 +105,7 @@
           class="main-video"
           src="${escapeHtml(item.embedUrl)}"
           title="${escapeHtml(item.title)}"
-          allow="fullscreen; picture-in-picture; encrypted-media"
+          ${buildIframePolicy(item)}
           referrerpolicy="origin"
           allowfullscreen
         ></iframe>
