@@ -62,7 +62,7 @@
     const sourceName = item.sourceName || "Source";
 
     return `
-      <a class="video-card" href="${buildPlayerUrl(item.id)}" data-source="${escapeHtml(sourceName.toLowerCase())}" aria-label="Ouvrir ${escapeHtml(item.title)}">
+      <a class="video-card" href="${buildPlayerUrl(item.id)}" data-video-id="${escapeHtml(item.id)}" data-source="${escapeHtml(sourceName.toLowerCase())}" aria-label="Ouvrir ${escapeHtml(item.title)}">
         <div class="thumb">
           <div class="generated-poster" aria-hidden="true"></div>
           ${poster}
@@ -107,7 +107,6 @@
           title="${escapeHtml(item.title)}"
           ${buildIframePolicy(item)}
           referrerpolicy="origin"
-          allowfullscreen
         ></iframe>
       `;
       playerHelp.innerHTML = "";

@@ -78,7 +78,7 @@
       .join("");
 
     return `
-      <a class="video-card" href="${buildPlayerUrl(video.id)}" data-source="${escapeHtml(sourceName.toLowerCase())}" aria-label="Ouvrir ${escapeHtml(video.title)}">
+      <a class="video-card" href="${buildPlayerUrl(video.id)}" data-video-id="${escapeHtml(video.id)}" data-source="${escapeHtml(sourceName.toLowerCase())}" aria-label="Ouvrir ${escapeHtml(video.title)}">
         <div class="thumb">
           <div class="generated-poster" aria-hidden="true"></div>
           ${poster}

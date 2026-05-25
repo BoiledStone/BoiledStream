@@ -74,7 +74,7 @@ posterUrl: "miniatures/posters/silent-hill.webp",
 
 5. Garder le chemin relatif depuis la racine du site. Ne pas commencer par `/`, sinon GitHub Pages peut chercher l'image au mauvais endroit.
 
-6. Préférer une image horizontale en 16:9, idéalement autour de `1280x720`. Le format `.webp` est recommandé pour les cartes, car il garde une bonne qualité avec un poids plus bas.
+6. Préférer une affiche verticale en 2:3, idéalement autour de `640x960` ou plus. Évite les captures 16:9 avec bandes floues: elles donnent des cartes irrégulières et moins propres. Le format `.webp` est recommandé pour les cartes, car il garde une bonne qualité avec un poids plus bas.
 
 7. Recharger `index.html` et vérifier que la carte du film affiche bien la nouvelle miniature.
 
@@ -109,6 +109,65 @@ http://127.0.0.1:8765/**
 ```
 
 4. Aller dans `Authentication` > `Providers` > `Email`, puis activer le provider email.
+
+## Mots de passe plus forts
+
+Le formulaire du site bloque déjà les nouvelles inscriptions faibles: 12 caractères minimum, une minuscule, une majuscule, un chiffre et un symbole.
+
+Pour appliquer la même règle côté serveur Supabase:
+
+1. Aller dans `Authentication` > `Security` ou `Auth settings` > `Password protection`.
+
+2. Mettre la longueur minimale à `12`.
+
+3. Activer les caractères requis: lowercase, uppercase, digits et symbols.
+
+4. Si ton plan Supabase le permet, activer aussi la protection contre les mots de passe déjà leakés.
+
+Les anciens comptes peuvent encore se connecter avec leur ancien mot de passe. La règle forte s'applique surtout aux nouvelles inscriptions et aux prochains changements de mot de passe.
+
+Référence Supabase: https://supabase.com/docs/guides/auth/password-security
+
+## Emails d'authentification BoiledStream
+
+Pour que les emails d'inscription ne ressemblent plus à des emails Supabase, il faut configurer les templates et l'expéditeur dans Supabase. Le code du site envoie déjà `app_name: "BoiledStream"` dans les métadonnées d'inscription, mais Supabase contrôle l'email final.
+
+1. Aller dans `Authentication` > `Emails` > `Templates`.
+
+2. Ouvrir le template `Confirm signup`.
+
+3. Mettre un sujet comme:
+
+```text
+Confirme ton compte BoiledStream
+```
+
+4. Mettre un contenu HTML simple:
+
+```html
+<h2>BoiledStream</h2>
+<p>Bienvenue sur BoiledStream. Confirme ton email pour activer ton compte.</p>
+<p><a href="{{ .ConfirmationURL }}">Confirmer mon email</a></p>
+<p>Si tu n'as pas demandé ce compte, ignore ce message.</p>
+```
+
+5. Répéter le même style pour `Reset password`, `Magic link` et `Change email address` si ces emails sont activés.
+
+6. Aller dans `Authentication` > `SMTP Settings`.
+
+7. Configurer un vrai service SMTP avec:
+
+```text
+Sender name: BoiledStream
+Sender email: no-reply@ton-domaine.com
+```
+
+Sans SMTP personnalisé, Supabase peut garder un expéditeur ou des limites liées à Supabase. Pour un rendu propre, utilise un domaine à toi et configure SPF, DKIM et DMARC chez ton fournisseur d'email.
+
+Références Supabase:
+
+- https://supabase.com/docs/guides/auth/auth-email-templates
+- https://supabase.com/docs/guides/auth/auth-smtp
 
 5. Aller dans `SQL Editor` > `New query`.
 

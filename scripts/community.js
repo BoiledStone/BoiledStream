@@ -18,6 +18,28 @@
   let profileLoadPromise = null;
   let profileLoadUserId = null;
   let adminUserIds = new Set();
+  const passwordRules = [
+    {
+      label: "12 caractères minimum",
+      test: (value) => value.length >= 12
+    },
+    {
+      label: "une minuscule",
+      test: (value) => /[a-z]/.test(value)
+    },
+    {
+      label: "une majuscule",
+      test: (value) => /[A-Z]/.test(value)
+    },
+    {
+      label: "un chiffre",
+      test: (value) => /\d/.test(value)
+    },
+    {
+      label: "un symbole",
+      test: (value) => /[^A-Za-z0-9]/.test(value)
+    }
+  ];
 
   function escapeHtml(value) {
     return String(value || "")
@@ -170,6 +192,47 @@
     return document.querySelector("#auth-panel");
   }
 
+  function getPasswordIssues(password) {
+    return passwordRules
+      .filter((rule) => !rule.test(password))
+      .map((rule) => rule.label);
+  }
+
+  function renderPasswordRules() {
+    const rules = document.querySelector("#password-rules");
+    const password = document.querySelector("#auth-password")?.value || "";
+    if (!rules) {
+      return;
+    }
+
+    rules.hidden = authMode !== "signup";
+    rules.innerHTML = passwordRules
+      .map((rule) => {
+        const isMet = rule.test(password);
+        return `<span class="${isMet ? "met" : ""}">${escapeHtml(rule.label)}</span>`;
+      })
+      .join("");
+  }
+
+  function validateSignupPassword() {
+    const password = document.querySelector("#auth-password");
+    if (!password) {
+      return true;
+    }
+
+    if (authMode !== "signup") {
+      password.setCustomValidity("");
+      renderPasswordRules();
+      return true;
+    }
+
+    const issues = getPasswordIssues(password.value);
+    const message = issues.length ? `Mot de passe trop faible: ${issues.join(", ")}.` : "";
+    password.setCustomValidity(message);
+    renderPasswordRules();
+    return !message;
+  }
+
   function getFocusableAuthNodes() {
     const panel = getAuthPanel();
     if (!panel || panel.hidden) {
@@ -183,15 +246,16 @@
   function validatePasswordConfirmation() {
     const password = document.querySelector("#auth-password");
     const passwordConfirm = document.querySelector("#auth-password-confirm");
+    const passwordIsStrong = validateSignupPassword();
     if (authMode !== "signup" || !password || !passwordConfirm) {
       passwordConfirm?.setCustomValidity("");
-      return true;
+      return passwordIsStrong;
     }
 
     const message =
       password.value === passwordConfirm.value ? "" : "Les mots de passe ne correspondent pas.";
     passwordConfirm.setCustomValidity(message);
-    return !message;
+    return passwordIsStrong && !message;
   }
 
   function setAuthMode(mode) {
@@ -226,6 +290,7 @@
     if (confirmRow && passwordConfirm) {
       confirmRow.hidden = !isSignup;
       passwordConfirm.required = isSignup;
+      passwordConfirm.minLength = isSignup ? 12 : 1;
       passwordConfirm.value = "";
       passwordConfirm.setCustomValidity("");
     }
@@ -234,7 +299,9 @@
     }
     if (password) {
       password.autocomplete = isSignup ? "new-password" : "current-password";
-      password.placeholder = isSignup ? "6 caractères minimum" : "Mot de passe";
+      password.minLength = isSignup ? 12 : 1;
+      password.placeholder = isSignup ? "12 caractères, majuscule, chiffre, symbole" : "Mot de passe";
+      password.setCustomValidity("");
     }
     if (passwordConfirm) {
       passwordConfirm.autocomplete = "new-password";
@@ -250,6 +317,7 @@
     }
     setText(authStatus, "");
     setText(profileStatus, "");
+    renderPasswordRules();
 
     if (isProfile) {
       hydrateProfileForm();
@@ -380,11 +448,12 @@
               </label>
               <label>
                 <span>Mot de passe</span>
-                <input id="auth-password" type="password" autocomplete="current-password" required minlength="6" placeholder="Mot de passe">
+                <input id="auth-password" type="password" autocomplete="current-password" required minlength="1" title="Inscription: 12 caractères minimum, minuscule, majuscule, chiffre et symbole." placeholder="Mot de passe">
               </label>
+              <p class="password-rules" id="password-rules" hidden></p>
               <label id="auth-confirm-row" hidden>
                 <span>Confirmer le mot de passe</span>
-                <input id="auth-password-confirm" type="password" autocomplete="new-password" minlength="6" placeholder="Répéter le mot de passe">
+                <input id="auth-password-confirm" type="password" autocomplete="new-password" minlength="12" placeholder="Répéter le mot de passe">
               </label>
               <button class="button primary" id="auth-submit" type="submit">Connexion</button>
               <p class="community-status" id="auth-status" aria-live="polite"></p>
@@ -597,12 +666,19 @@
     }
 
     if (isSignup && !validatePasswordConfirmation()) {
-      setText(authStatus, "Les mots de passe ne correspondent pas.");
-      document.querySelector("#auth-password-confirm").reportValidity();
+      const passwordIssues = getPasswordIssues(password);
+      setText(
+        authStatus,
+        passwordIssues.length
+          ? `Mot de passe trop faible: ${passwordIssues.join(", ")}.`
+          : "Les mots de passe ne correspondent pas."
+      );
+      (passwordIssues.length ? document.querySelector("#auth-password") : document.querySelector("#auth-password-confirm"))
+        .reportValidity();
       return;
     }
 
-    setText(authStatus, "Connexion en cours...");
+    setText(authStatus, isSignup ? "Création du compte..." : "Connexion en cours...");
 
     const response = isSignup
       ? await supabaseClient.auth.signUp({
@@ -610,7 +686,7 @@
           password,
           options: {
             emailRedirectTo: window.location.href,
-            data: { display_name: displayName.slice(0, 40) }
+            data: { app_name: "BoiledStream", display_name: displayName.slice(0, 40) }
           }
         })
       : await supabaseClient.auth.signInWithPassword({ email, password });
