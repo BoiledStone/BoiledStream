@@ -169,7 +169,7 @@
       date: "2017",
       posterUrl: POSTERS.bladeRunner2049,
       description:
-        "En 2049, la société est fragilisée par les nombreuses tensions entre les humains et leurs esclaves créés par bioingénierie. L'officier K est un Blade Runner chargé de trouver et d'éliminer ceux qui n'obéissent pas aux ordres des humains. Lorsqu'il découvre un secret capable de changer le monde, les plus hautes instances décident que c'est à son tour d'être traqué.",
+        "En 2049, la société est fragilisée par les tensions entre humains et réplicants. L'officier K découvre un secret capable de changer le monde.",
       tags: ["Science-fiction"]
     }),
     uqload({
@@ -182,9 +182,22 @@
       date: "1982",
       posterUrl: POSTERS.bladeRunner,
       description:
-        "2019, Los Angeles. Dans une Terre surpeuplée, les colonies spatiales utilisent des Replicants impossibles à distinguer des humains. Rick Deckard, ancien Blade Runner, reprend du service pour retrouver quatre fugitifs revenus sur Terre.",
+        "Los Angeles, 2019. Rick Deckard traque des réplicants en fuite dans une société déshumanisée.",
       tags: ["Science-fiction"]
-    })
+    }),
+
+    {
+      id: "return-to-silent-hill",
+      title: "Return to Silent Hill",
+      category: "Film",
+      sourceName: "Vaplayer",
+      sourceUrl: "https://vaplayer.ru/embed/movie/680493",
+      embedUrl: "https://vaplayer.ru/embed/movie/680493",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BOWVjYjU0ZTAtNGVlNi00NGM1LTgzZjctNTZjMjAyYTc4N2VlXkEyXkFqcGc@._V1_FMjpg_UY2998_.jpg",
+      description:
+        "Retour dans l’univers Silent Hill, exploration psychologique et horreur atmosphérique centrée sur la mémoire, la perte et les manifestations de la ville.",
+      tags: ["Horreur", "Silent Hill"]
+    }
   ];
 
   window.BOILED_VIDEOS = Object.freeze(videos.map(freezeVideo));
