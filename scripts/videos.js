@@ -128,5 +128,101 @@ window.BOILED_VIDEOS = [
     posterUrl: "https://image.tmdb.org/t/p/w400/tDR1V8PbwSGrvi9D7eZneku7Rj.jpg",
     description: "2019, Los Angeles. La Terre est surpeuplée et l’humanité est partie coloniser l’espace. Les nouveaux colons sont assistés de Replicants, androïdes que rien ne peut distinguer de l'être humain. Conçus comme de nouveaux esclaves, certains parmi les plus évolués s’affranchissent de leurs chaînes et s’enfuient. Rick Deckard, un ancien Blade Runner, catégorie spéciale de policiers chargés de retirer ces replicants, accepte une nouvelle mission consistant à retrouver quatre de ces individus qui viennent de regagner la Terre après avoir volé une navette spatiale.",
     tags: ["Science-fiction"]
+  },
+  {
+    id: "elephants-dream",
+    title: "Elephants Dream",
+    category: "Animé",
+    duration: "00:09:00",
+    resolution: "1920x1080",
+    language: "En",
+    date: "2006",
+    sourceName: "YouTube",
+    sourceUrl: "https://www.youtube.com/watch?v=TLkA0RELQ1g",
+    embedUrl: "https://www.youtube.com/embed/TLkA0RELQ1g",
+    posterUrl: "https://i.ytimg.com/vi/TLkA0RELQ1g/hqdefault.jpg",
+    description:
+      "Court-métrage expérimental et surréaliste produit par la Blender Foundation, vitrine des capacités de Blender.",
+    tags: ["Court-métrage", "Creative Commons", "Science-fiction"]
+  },
+  {
+    id: "big-buck-bunny",
+    title: "Big Buck Bunny",
+    category: "Animé",
+    duration: "00:10:35",
+    resolution: "1920x1080",
+    language: "En",
+    date: "2008",
+    sourceName: "YouTube",
+    sourceUrl: "https://www.youtube.com/watch?v=4-Ddumty4mk",
+    embedUrl: "https://www.youtube.com/embed/4-Ddumty4mk",
+    posterUrl: "https://i.ytimg.com/vi/4-Ddumty4mk/hqdefault.jpg",
+    description:
+      "Comédie animée en open content: un lapin tranquille se rebiffe face à des rongeurs insupportables.",
+    tags: ["Court-métrage", "Creative Commons", "Comédie"]
+  },
+  {
+    id: "sintel-open-movie",
+    title: "Sintel",
+    category: "Animé",
+    duration: "00:14:48",
+    resolution: "1920x1080",
+    language: "En",
+    date: "2010",
+    sourceName: "YouTube",
+    sourceUrl: "https://www.youtube.com/watch?v=eRsGyueVLvQ",
+    embedUrl: "https://www.youtube.com/embed/eRsGyueVLvQ",
+    posterUrl: "https://i.ytimg.com/vi/eRsGyueVLvQ/hqdefault.jpg",
+    description:
+      "Fantasy sombre et émouvante en Creative Commons, centrée sur la quête d’une jeune femme et d’un dragon.",
+    tags: ["Court-métrage", "Creative Commons", "Fantasy"]
+  },
+  {
+    id: "tears-of-steel",
+    title: "Tears of Steel",
+    category: "Film",
+    duration: "00:12:14",
+    resolution: "1920x1080",
+    language: "En",
+    date: "2012",
+    sourceName: "YouTube",
+    sourceUrl: "https://www.youtube.com/watch?v=41hv2tW5Lc4",
+    embedUrl: "https://www.youtube.com/embed/41hv2tW5Lc4",
+    posterUrl: "https://i.ytimg.com/vi/41hv2tW5Lc4/hqdefault.jpg",
+    description:
+      "Open movie VFX mêlant prise de vue réelle et CGI, réalisé pour pousser la chaîne d’effets spéciaux de Blender.",
+    tags: ["Court-métrage", "Creative Commons", "Science-fiction"]
+  },
+  {
+    id: "cosmos-laundromat",
+    title: "Cosmos Laundromat: First Cycle",
+    category: "Animé",
+    duration: "00:12:00",
+    resolution: "1920x1080",
+    language: "En",
+    date: "2015",
+    sourceName: "YouTube",
+    sourceUrl: "https://www.youtube.com/watch?v=Y-rmzh0PI3c",
+    embedUrl: "https://www.youtube.com/embed/Y-rmzh0PI3c",
+    posterUrl: "https://i.ytimg.com/vi/Y-rmzh0PI3c/hqdefault.jpg",
+    description:
+      "Conte absurde et mélancolique en Creative Commons: un mouton dépressif se voit proposer une seconde chance.",
+    tags: ["Court-métrage", "Creative Commons", "Fantastique"]
+  },
+  {
+    id: "agent-327-operation-barbershop",
+    title: "Agent 327: Operation Barbershop",
+    category: "Animé",
+    duration: "00:03:51",
+    resolution: "1920x1080",
+    language: "En",
+    date: "2017",
+    sourceName: "YouTube",
+    sourceUrl: "https://www.youtube.com/watch?v=mN0zPOpADL4",
+    embedUrl: "https://www.youtube.com/embed/mN0zPOpADL4",
+    posterUrl: "https://i.ytimg.com/vi/mN0zPOpADL4/hqdefault.jpg",
+    description:
+      "Court-métrage d’action/espionnage en Creative Commons: l’agent 327 infiltre un salon de barbier louche.",
+    tags: ["Court-métrage", "Creative Commons", "Action"]
   }
 ];

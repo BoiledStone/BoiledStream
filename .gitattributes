@@ -1,0 +1,10 @@
+# Keep consistent text file endings in the repository (avoids LF/CRLF churn).
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+
