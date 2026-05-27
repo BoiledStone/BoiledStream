@@ -1,6 +1,3 @@
-// Catalogue central: chaque entrée publiée ici apparaît automatiquement
-// dans l'accueil, la recherche, les filtres, le player et la communauté.
-
   function uqload({
     id,
     title,
