@@ -105,7 +105,7 @@ window.BOILED_VIDEOS = [
     embedUrl: "https://uqload.is/embed-q2m84hf41l6c.html",
     posterUrl: "miniatures/posters/blade-runner-2049.jpg",
     description: "Blade Runner 2049 is a sequel to the classic Blade Runner, set in a dystopian future where blade runners hunt down replicants.",
-    tags: ["Film", "Science-fiction", "Français", "864x360", "2017"]
+    tags: ["Film", "Science-fiction", "FranÃ§ais", "864x360", "2017"]
   },
   {
     id: "blade-runner",
@@ -119,6 +119,6 @@ window.BOILED_VIDEOS = [
     embedUrl: "https://uqload.is/embed-7huxxpyzzxwa.html",
     posterUrl: "miniatures/posters/blade-runner.jpg",
     description: "Blade Runner is a 1982 science fiction film directed by Ridley Scott, depicting a dystopian Los Angeles in 2019 where synthetic humans known as replicants are hunted by blade runners.",
-    tags: ["Film", "Science-fiction", "Français", "480x272", "1982"]
+    tags: ["Film", "Science-fiction", "FranÃ§ais", "480x272", "1982"]
   }
 ];
