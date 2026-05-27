@@ -1,5 +1,6 @@
+// Catalogue central: chaque entrée publiée ici apparaît automatiquement
+// dans l'accueil, la recherche, les filtres, le player et la communauté.
 (function () {
-
   const POSTERS = {
     projectHailMary: "miniatures/posters/project-hail-mary.webp",
     limitless: "miniatures/posters/limitless.webp",
@@ -11,50 +12,74 @@
     bladeRunner: "https://image.tmdb.org/t/p/w400/tDR1V8PbwSGrvi9D7eZneku7Rj.jpg"
   };
 
-  function makeVideo(data) {
+  function uqload({
+    id,
+    title,
+    fileId,
+    category = "Film",
+    duration,
+    resolution,
+    language,
+    date,
+    posterUrl,
+    description,
+    tags = []
+  }) {
     return {
-      id: data.id,
-      title: data.title,
-      category: data.category || "Film",
-      duration: data.duration,
-      resolution: data.resolution,
-      language: data.language,
-      date: data.date,
-      posterUrl: data.posterUrl,
-      description: data.description,
-      tags: data.tags || [],
-
-      sourceName: data.sourceName,
-      sourceUrl: data.sourceUrl,
-      embedUrl: data.embedUrl
+      id,
+      title,
+      category,
+      duration,
+      resolution,
+      language,
+      date,
+      sourceName: "Uqload",
+      sourceUrl: `https://uqload.is/${fileId}.html`,
+      embedUrl: `https://uqload.is/embed-${fileId}.html`,
+      posterUrl,
+      description,
+      tags
     };
   }
 
-  function uqload(data) {
-    return makeVideo({
-      ...data,
-      sourceName: "Uqload",
-      sourceUrl: `https://uqload.is/${data.fileId}.html`,
-      embedUrl: `https://uqload.is/embed-${data.fileId}.html`
-    });
-  }
-
-  function youtube(data) {
-    return makeVideo({
-      ...data,
+  function youtube({
+    id,
+    title,
+    videoId,
+    category = "Film",
+    duration,
+    resolution,
+    language,
+    date,
+    posterUrl,
+    description,
+    tags = []
+  }) {
+    return {
+      id,
+      title,
+      category,
+      duration,
+      resolution,
+      language,
+      date,
       sourceName: "YouTube",
-      sourceUrl: `https://www.youtube.com/watch?v=${data.videoId}`,
-      embedUrl: `https://www.youtube.com/embed/${data.videoId}`
-    });
+      sourceUrl: `https://www.youtube.com/watch?v=${videoId}`,
+      embedUrl: `https://www.youtube.com/embed/${videoId}`,
+      posterUrl,
+      description,
+      tags
+    };
   }
 
-  function freeze(video) {
-    Object.freeze(video.tags);
+  function freezeVideo(video) {
+    if (Array.isArray(video.tags)) {
+      Object.freeze(video.tags);
+    }
     return Object.freeze(video);
   }
 
   const videos = [
-
     uqload({
       id: "project-hail-mary",
       title: "Project Hail Mary",
@@ -65,10 +90,9 @@
       date: "2026",
       posterUrl: POSTERS.projectHailMary,
       description:
-        "Mission de survie spatiale autour d’un mystère cosmique.",
+        "Science-fiction spatiale tendue autour d'une mission de survie, d'un vaisseau isolé et d'un mystère capable de décider du sort de la Terre.",
       tags: ["Science-fiction", "Espace"]
     }),
-
     uqload({
       id: "limitless",
       title: "Limitless",
@@ -79,10 +103,9 @@
       date: "2011",
       posterUrl: POSTERS.limitless,
       description:
-        "Une pilule qui booste le cerveau et détruit la vie d’un écrivain.",
+        "Thriller nerveux où une pilule expérimentale décuple les capacités d'un écrivain et l'entraîne dans un jeu de pouvoir dangereux.",
       tags: ["Thriller"]
     }),
-
     uqload({
       id: "interstella-5555",
       title: "Interstella 5555",
@@ -94,10 +117,9 @@
       date: "2003",
       posterUrl: POSTERS.interstella5555,
       description:
-        "Film musical de Daft Punk sans dialogue.",
+        "Odyssée animée et musicale portée par Daft Punk, entre enlèvement interstellaire, pop cosmique et aventure sans dialogue.",
       tags: ["Animé", "Musique"]
     }),
-
     uqload({
       id: "silent-hill",
       title: "Silent Hill",
@@ -108,10 +130,9 @@
       date: "2006",
       posterUrl: POSTERS.silentHill,
       description:
-        "Une mère dans une ville cauchemardesque.",
-      tags: ["Horreur", "Survie"]
+        "Horreur brumeuse et oppressante autour d'une mère qui cherche sa fille dans une ville fantôme hantée par des visions cauchemardesques.",
+      tags: ["Horreur", "Survie", "Silent Hill"]
     }),
-
     uqload({
       id: "silent-hill-revelation",
       title: "Silent Hill Revelation",
@@ -122,10 +143,9 @@
       date: "2012",
       posterUrl: POSTERS.silentHillRevelation,
       description:
-        "Retour dans Silent Hill et ses cultes.",
-      tags: ["Horreur", "Survie"]
+        "Retour dans l'univers Silent Hill avec une héroïne poursuivie par son passé, des cultes inquiétants et des créatures sorties du brouillard.",
+      tags: ["Horreur", "Survie", "Silent Hill"]
     }),
-
     youtube({
       id: "postal-2007",
       title: "Postal",
@@ -136,10 +156,9 @@
       date: "2007",
       posterUrl: POSTERS.postal2007,
       description:
-        "Satire violente et absurde.",
-      tags: ["Comédie noire"]
+        "Comédie noire volontairement excessive, adaptée du jeu culte, avec satire, chaos et humour provocateur en version YouTube intégrée.",
+      tags: ["Comédie noire", "Postal"]
     }),
-
     uqload({
       id: "blade-runner-2049",
       title: "Blade Runner 2049",
@@ -150,10 +169,9 @@
       date: "2017",
       posterUrl: POSTERS.bladeRunner2049,
       description:
-        "Un Blade Runner découvre un secret dangereux.",
+        "En 2049, la société est fragilisée par les tensions entre humains et réplicants. L'officier K découvre un secret capable de changer le monde.",
       tags: ["Science-fiction"]
     }),
-    
     uqload({
       id: "blade-runner",
       title: "Blade Runner",
@@ -164,30 +182,24 @@
       date: "1982",
       posterUrl: POSTERS.bladeRunner,
       description:
-        "Chasse aux réplicants à Los Angeles.",
+        "Los Angeles, 2019. Rick Deckard traque des réplicants en fuite dans une société déshumanisée.",
       tags: ["Science-fiction"]
     }),
 
-    makeVideo({
+    // NOUVEAU FILM AJOUTÉ
+    {
       id: "return-to-silent-hill",
       title: "Return to Silent Hill",
       category: "Film",
-      duration: "01:45:26",
-      resolution: "1080p",
-      language: "En",
-      date: "2026",
-      posterUrl:
-        "https://m.media-amazon.com/images/M/MV5BOWVjYjU0ZTAtNGVlNi00NGM1LTgzZjctNTZjMjAyYTc4N2VlXkEyXkFqcGc@._V1_FMjpg_UY2998_.jpg",
-      description:
-        "Horreur psychologique dans Silent Hill.",
-      tags: ["Horreur", "Silent Hill"],
       sourceName: "Vaplayer",
       sourceUrl: "https://vaplayer.ru/embed/movie/680493",
-      embedUrl: "https://vaplayer.ru/embed/movie/680493"
-    })
-
+      embedUrl: "https://vaplayer.ru/embed/movie/680493",
+      posterUrl: null,
+      description:
+        "Retour dans l’univers Silent Hill, exploration psychologique et horreur atmosphérique centrée sur la mémoire, la perte et les manifestations de la ville.",
+      tags: ["Horreur", "Silent Hill"]
+    }
   ];
 
-  window.BOILED_VIDEOS = Object.freeze(videos.map(freeze));
-
+  window.BOILED_VIDEOS = Object.freeze(videos.map(freezeVideo));
 })();
