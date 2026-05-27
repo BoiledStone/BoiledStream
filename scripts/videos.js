@@ -9,7 +9,7 @@
     silentHillRevelation: "miniatures/posters/silent-hill-revelation.webp",
     postal2007: "miniatures/posters/postal-2007.webp",
     bladeRunner2049: "https://image.tmdb.org/t/p/w400/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg",
-    bladeRunner: "https://image.tmdb.org/t/p/w400/tDR1V8PbwSGrvi9D7eZneku7Rj.jpg"
+    bladeRunner: "https://image.tmdb.org/t/p/w400/tDR1V8PbwSGrvi9D7eZneku7Rj.jpg",
     returnToSilentHill: "https://m.media-amazon.com/images/M/MV5BOWVjYjU0ZTAtNGVlNi00NGM1LTgzZjctNTZjMjAyYTc4N2VlXkEyXkFqcGc@._V1_FMjpg_UY2998_.jpg"
   };
 
@@ -186,6 +186,8 @@
         "Los Angeles, 2019. Rick Deckard traque des réplicants en fuite dans une société déshumanisée.",
       tags: ["Science-fiction"]
     }),
+
+    
     {
       id: "return-to-silent-hill",
       title: "Return to Silent Hill",
