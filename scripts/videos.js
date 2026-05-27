@@ -1,16 +1,5 @@
 // Catalogue central: chaque entrée publiée ici apparaît automatiquement
 // dans l'accueil, la recherche, les filtres, le player et la communauté.
-(function () {
-  const POSTERS = {
-    projectHailMary: "miniatures/posters/project-hail-mary.webp",
-    limitless: "miniatures/posters/limitless.webp",
-    interstella5555: "miniatures/posters/interstella-5555.webp",
-    silentHill: "miniatures/posters/silent-hill.webp",
-    silentHillRevelation: "miniatures/posters/silent-hill-revelation.webp",
-    postal2007: "miniatures/posters/postal-2007.webp",
-    bladeRunner2049: "https://image.tmdb.org/t/p/w400/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg",
-    bladeRunner: "https://image.tmdb.org/t/p/w400/tDR1V8PbwSGrvi9D7eZneku7Rj.jpg"
-  };
 
   function uqload({
     id,
@@ -88,7 +77,7 @@
       resolution: "1280x720",
       language: "En",
       date: "2026",
-      posterUrl: POSTERS.projectHailMary,
+      posterUrl: "miniatures/posters/project-hail-mary.webp",
       description:
         "Science-fiction spatiale tendue autour d'une mission de survie, d'un vaisseau isolé et d'un mystère capable de décider du sort de la Terre.",
       tags: ["Science-fiction", "Espace"]
@@ -101,7 +90,7 @@
       resolution: "1280x720",
       language: "Fr",
       date: "2011",
-      posterUrl: POSTERS.limitless,
+      posterUrl: "miniatures/posters/limitless.webp",
       description:
         "Thriller nerveux où une pilule expérimentale décuple les capacités d'un écrivain et l'entraîne dans un jeu de pouvoir dangereux.",
       tags: ["Thriller"]
@@ -115,7 +104,7 @@
       resolution: "512x384",
       language: "En",
       date: "2003",
-      posterUrl: POSTERS.interstella5555,
+      posterUrl: "miniatures/posters/interstella-5555.webp",
       description:
         "Odyssée animée et musicale portée par Daft Punk, entre enlèvement interstellaire, pop cosmique et aventure sans dialogue.",
       tags: ["Animé", "Musique"]
@@ -128,7 +117,7 @@
       resolution: "1126x504",
       language: "Fr",
       date: "2006",
-      posterUrl: POSTERS.silentHill,
+      posterUrl: "miniatures/posters/silent-hill.webp",
       description:
         "Horreur brumeuse et oppressante autour d'une mère qui cherche sa fille dans une ville fantôme hantée par des visions cauchemardesques.",
       tags: ["Horreur", "Survie", "Silent Hill"]
@@ -141,7 +130,7 @@
       resolution: "872x384",
       language: "Fr",
       date: "2012",
-      posterUrl: POSTERS.silentHillRevelation,
+      posterUrl: "miniatures/posters/silent-hill-revelation.webp",
       description:
         "Retour dans l'univers Silent Hill avec une héroïne poursuivie par son passé, des cultes inquiétants et des créatures sorties du brouillard.",
       tags: ["Horreur", "Survie", "Silent Hill"]
@@ -154,7 +143,7 @@
       resolution: "1920x1080",
       language: "En",
       date: "2007",
-      posterUrl: POSTERS.postal2007,
+      posterUrl: "miniatures/posters/postal-2007.webp",
       description:
         "Comédie noire volontairement excessive, adaptée du jeu culte, avec satire, chaos et humour provocateur en version YouTube intégrée.",
       tags: ["Comédie noire", "Postal"]
@@ -167,7 +156,7 @@
       resolution: "864x360",
       language: "Fr",
       date: "2017",
-      posterUrl: POSTERS.bladeRunner2049,
+      posterUrl: "https://image.tmdb.org/t/p/w400/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg",
       description:
         "En 2049, la société est fragilisée par les tensions entre humains et réplicants. L'officier K découvre un secret capable de changer le monde.",
       tags: ["Science-fiction"]
@@ -180,7 +169,7 @@
       resolution: "480x272",
       language: "Fr",
       date: "1982",
-      posterUrl: POSTERS.bladeRunner,
+      posterUrl: "https://image.tmdb.org/t/p/w400/tDR1V8PbwSGrvi9D7eZneku7Rj.jpg",
       description:
         "Los Angeles, 2019. Rick Deckard traque des réplicants en fuite dans une société déshumanisée.",
       tags: ["Science-fiction"]
