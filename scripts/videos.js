@@ -92,5 +92,33 @@ window.BOILED_VIDEOS = [
     description:
       "Comédie noire volontairement excessive, adaptée du jeu culte, avec satire, chaos et humour provocateur en version YouTube intégrée.",
     tags: ["Film", "Comédie noire", "YouTube", "Postal", "1080p"]
+  },
+  {
+    id: "blade-runner-2049",
+    title: "Blade Runner 2049",
+    category: "Film",
+    duration: "02:43:27",
+    resolution: "864x360",
+    format: "FR",
+    sourceName: "Uqload",
+    sourceUrl: "https://uqload.is/q2m84hf41l6c.html",
+    embedUrl: "https://uqload.is/embed-q2m84hf41l6c.html",
+    posterUrl: "miniatures/posters/blade-runner-2049.jpg",
+    description: "Blade Runner 2049 is a sequel to the classic Blade Runner, set in a dystopian future where blade runners hunt down replicants.",
+    tags: ["Film", "Science-fiction", "Fran�ais", "864x360", "2017"]
+  },
+  {
+    id: "blade-runner",
+    title: "Blade Runner",
+    category: "Film",
+    duration: "01:51:48",
+    resolution: "480x272",
+    format: "FR",
+    sourceName: "Uqload",
+    sourceUrl: "https://uqload.is/7huxxpyzzxwa.html",
+    embedUrl: "https://uqload.is/embed-7huxxpyzzxwa.html",
+    posterUrl: "miniatures/posters/blade-runner.jpg",
+    description: "Blade Runner is a 1982 science fiction film directed by Ridley Scott, depicting a dystopian Los Angeles in 2019 where synthetic humans known as replicants are hunted by blade runners.",
+    tags: ["Film", "Science-fiction", "Fran�ais", "480x272", "1982"]
   }
 ];
