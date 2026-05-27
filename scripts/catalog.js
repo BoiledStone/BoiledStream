@@ -48,7 +48,7 @@
       return true;
     }
 
-    return [video.title, video.category, video.description, ...video.tags]
+    return [video.title, video.category, video.description, ...(video.tags || [])]
       .join(" ")
       .toLowerCase()
       .includes(query);
@@ -93,7 +93,8 @@
       "hevc","sd","hd","uhd","4k","youtube","uqload"
     ]);
 
-    const tagList = video.tags
+    const tagList = (video.tags || [])
+      .filter((tag) => String(tag || "").trim())
       .filter((tag) => {
         const lower = normalizeTagKey(tag);
         return !hiddenTags.has(lower) && !/^\d+x\d+$/i.test(lower) && !/^(19|20)\d{2}$/.test(lower);
