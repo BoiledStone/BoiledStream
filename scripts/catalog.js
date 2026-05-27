@@ -57,7 +57,7 @@
 
   function renderFilters() {
     // Le filtre Animé est basé sur le tag exact; les autres viennent des catégories.
-    const categories = [FILTER_ALL, FILTER_ANIMATED, ...new Set(videos.map((video) => video.category))];
+    const categories = [...new Set([FILTER_ALL, FILTER_ANIMATED, ...videos.map((video) => video.category)])];
     filterGroup.innerHTML = categories
       .map((category) => {
         const isActive = category === state.category;

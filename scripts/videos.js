@@ -38,7 +38,7 @@ window.BOILED_VIDEOS = [
   {
     id: "interstella-5555",
     title: "Interstella 5555",
-    category: "Anime",
+    category: "Animé",
     duration: "01:05:35",
     resolution: "512x384",
     language: "En",
@@ -126,7 +126,7 @@ window.BOILED_VIDEOS = [
     sourceUrl: "https://uqload.is/7huxxpyzzxwa.html",
     embedUrl: "https://uqload.is/embed-7huxxpyzzxwa.html",
     posterUrl: "https://image.tmdb.org/t/p/w400/tDR1V8PbwSGrvi9D7eZneku7Rj.jpg",
-    description: "2019, Los Angeles. La Terre est surpeuplée et l’humanité est partie coloniser l’espace. Les nouveaux colons sont assistés de Replicants, androïdes que rien ne peut distinguer de l'être humain. Conçus comme de nouveaux esclaves, certains parmi les plus évolués s’affranchissent de leurs chaînes et s’enfuient. Rick Deckard, un ancien Blade Runner, catégorie spéciale de policiers chargés de "retirer" ces replicants, accepte une nouvelle mission consistant à retrouver quatre de ces individus qui viennent de regagner la Terre après avoir volé une navette spatiale.",
+    description: "2019, Los Angeles. La Terre est surpeuplée et l’humanité est partie coloniser l’espace. Les nouveaux colons sont assistés de Replicants, androïdes que rien ne peut distinguer de l'être humain. Conçus comme de nouveaux esclaves, certains parmi les plus évolués s’affranchissent de leurs chaînes et s’enfuient. Rick Deckard, un ancien Blade Runner, catégorie spéciale de policiers chargés de retirer ces replicants, accepte une nouvelle mission consistant à retrouver quatre de ces individus qui viennent de regagner la Terre après avoir volé une navette spatiale.",
     tags: ["Science-fiction"]
   }
 ];

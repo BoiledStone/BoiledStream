@@ -16,6 +16,7 @@
   const duration = document.querySelector("#player-duration");
   const quality = document.querySelector("#player-quality");
   const source = document.querySelector("#player-source");
+  const playerLanguage = document.querySelector("#player-language");
   const tags = document.querySelector("#player-tags");
   const previousLink = document.querySelector("#previous-link");
   const nextLink = document.querySelector("#next-link");
@@ -24,6 +25,10 @@
   const relatedGrid = document.querySelector("#related-grid");
   const playerHelp = document.querySelector("#player-help");
   const language = (() => {
+    if (video.language) {
+      return video.language;
+    }
+
     const possible = ["FR","VF","VOSTFR","EN","JP","MULTI","Français"];
     const found = (video.tags || []).filter((tag) => possible.includes(String(tag).toUpperCase()) || String(tag).toLowerCase()==="français");
     return found.length ? found.join(" / ") : "FR";
@@ -169,6 +174,9 @@
   description.insertAdjacentElement("afterend", infoMeta);
   duration.textContent = video.duration;
   quality.textContent = [video.resolution, video.format].filter(Boolean).join(" - ");
+  if (playerLanguage) {
+    playerLanguage.textContent = language;
+  }
   source.href = video.sourceUrl;
   source.textContent = video.sourceName;
   tags.innerHTML = video.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
