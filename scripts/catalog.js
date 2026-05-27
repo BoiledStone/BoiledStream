@@ -29,40 +29,6 @@
     return `player.html?video=${encodeURIComponent(id)}`;
   }
 
-  const TECH_TAGS = ["Film","Série","Serie","Animé","Anime","FR","VOSTFR","EN","VF","HD","SD","HEVC","BluRay","WEB-DL","YouTube","1080p","720p","2160p"];
-
-  function getVideoType(video) {
-    if (video.type) return video.type;
-    if (video.tags.includes("Animé")) return "Animé";
-    return video.category || "Film";
-  }
-
-  function getVideoYear(video) {
-    return video.year || (video.tags.find((tag) => /^\d{4}$/.test(tag)) || "—");
-  }
-
-  function getVideoLanguages(video) {
-    if (Array.isArray(video.languages) && video.languages.length) {
-      return video.languages.join("/");
-    }
-
-    const languageTags = video.tags.filter((tag) =>
-      ["FR","EN","VF","VOSTFR","JP"].includes(tag) ||
-      /fran/i.test(tag)
-    );
-
-    return languageTags.length ? languageTags.join("/") : "Multi";
-  }
-
-  function getDisplayTags(video) {
-    return video.tags.filter((tag) =>
-      !TECH_TAGS.includes(tag) &&
-      !/^\d{3,4}x\d{3,4}$/.test(tag) &&
-      !/^\d{4}$/.test(tag)
-    ).slice(0, 3);
-  }
-
-
   function hasAnimatedTag(video) {
     return video.tags.includes("Animé");
   }
@@ -113,12 +79,19 @@
     const poster = video.posterUrl
       ? `<img src="${escapeHtml(video.posterUrl)}" alt="" loading="lazy">`
       : "";
-    const quality = [video.resolution, video.format].filter(Boolean).join(" • ");
     const sourceName = video.sourceName || "Source";
-    const tagList = getDisplayTags(video)
+    const hiddenTags = new Set([
+      "film","série","serie","animé","anime","français","vf","vostfr","multi","hevc","sd","hd","uhd","4k"
+    ]);
+
+    const tagList = video.tags
+      .filter((tag) => {
+        const lower = String(tag).toLowerCase();
+        return !hiddenTags.has(lower) && !/^\d+x\d+$/i.test(lower);
+      })
+      .slice(0, 3)
       .map((tag) => `<span class="card-tag">${escapeHtml(tag)}</span>`)
       .join("");
-    const metadataLine = `${getVideoType(video)} • ${getVideoYear(video)} • ${getVideoLanguages(video)}`;
 
     return `
       <a class="video-card" href="${buildPlayerUrl(video.id)}" data-video-id="${escapeHtml(video.id)}" data-source="${escapeHtml(sourceName.toLowerCase())}" aria-label="Ouvrir ${escapeHtml(video.title)}">
@@ -134,7 +107,6 @@
             <span class="duration-pill">${escapeHtml(video.duration)}</span>
           </div>
           <div class="card-tags" aria-label="Tags">${tagList}</div>
-          <p class="quality-text">${escapeHtml(quality)}</p><p class="media-text">${escapeHtml(metadataLine)}</p>
         </div>
       </a>
     `;

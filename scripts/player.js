@@ -20,8 +20,15 @@
   const previousLink = document.querySelector("#previous-link");
   const nextLink = document.querySelector("#next-link");
   const playerActions = document.querySelector("#player-actions");
+  const metaList = document.querySelector(".meta-list");
   const relatedGrid = document.querySelector("#related-grid");
   const playerHelp = document.querySelector("#player-help");
+  const language = (() => {
+    const possible = ["FR","VF","VOSTFR","EN","JP","MULTI","Français"];
+    const found = (video.tags || []).filter((tag) => possible.includes(String(tag).toUpperCase()) || String(tag).toLowerCase()==="français");
+    return found.length ? found.join(" / ") : "FR";
+  })();
+
 
   // Les données du catalogue sont injectées dans le HTML du player; on les échappe
   // avant rendu pour garder des attributs et du texte valides.
@@ -37,40 +44,6 @@
   function buildPlayerUrl(id) {
     return `player.html?video=${encodeURIComponent(id)}`;
   }
-
-  const TECH_TAGS = ["Film","Série","Serie","Animé","Anime","FR","VOSTFR","EN","VF","HD","SD","HEVC","BluRay","WEB-DL","YouTube","1080p","720p","2160p"];
-
-  function getVideoType(video) {
-    if (video.type) return video.type;
-    if (video.tags.includes("Animé")) return "Animé";
-    return video.category || "Film";
-  }
-
-  function getVideoYear(video) {
-    return video.year || (video.tags.find((tag) => /^\d{4}$/.test(tag)) || "—");
-  }
-
-  function getVideoLanguages(video) {
-    if (Array.isArray(video.languages) && video.languages.length) {
-      return video.languages.join("/");
-    }
-
-    const languageTags = video.tags.filter((tag) =>
-      ["FR","EN","VF","VOSTFR","JP"].includes(tag) ||
-      /fran/i.test(tag)
-    );
-
-    return languageTags.length ? languageTags.join("/") : "Multi";
-  }
-
-  function getDisplayTags(video) {
-    return video.tags.filter((tag) =>
-      !TECH_TAGS.includes(tag) &&
-      !/^\d{3,4}x\d{3,4}$/.test(tag) &&
-      !/^\d{4}$/.test(tag)
-    );
-  }
-
 
   function isUqloadEmbed(item) {
     const sourceNameMatches = /uqload/i.test(item.sourceName || "");
@@ -92,7 +65,6 @@
 
   function renderRelatedCard(item) {
     const poster = item.posterUrl ? `<img src="${escapeHtml(item.posterUrl)}" alt="" loading="lazy">` : "";
-    const itemQuality = [item.resolution, item.format].filter(Boolean).join(" • ");
     const sourceName = item.sourceName || "Source";
 
     return `
@@ -108,7 +80,6 @@
             <span class="source-pill">${escapeHtml(sourceName)}</span>
             <span class="duration-pill">${escapeHtml(item.duration)}</span>
           </div>
-          <p class="quality-text">${escapeHtml(itemQuality)}</p><p class="media-text">${escapeHtml(`${getVideoType(item)} • ${getVideoYear(item)} • ${getVideoLanguages(item)}`)}</p>
         </div>
       </a>
     `;
@@ -188,11 +159,19 @@
   title.textContent = video.title;
   category.textContent = video.category;
   description.textContent = video.description;
+
+  const infoMeta = document.createElement("div");
+  infoMeta.className = "player-extra-meta";
+  infoMeta.innerHTML = `
+    <span>${escapeHtml(video.category || "Film")}</span>
+    <span>${escapeHtml(language)}</span>
+  `;
+  description.insertAdjacentElement("afterend", infoMeta);
   duration.textContent = video.duration;
   quality.textContent = [video.resolution, video.format].filter(Boolean).join(" - ");
   source.href = video.sourceUrl;
   source.textContent = video.sourceName;
-  tags.innerHTML = getDisplayTags(video).map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
+  tags.innerHTML = video.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
   playerActions.hidden = videos.length < 2;
   if (videos.length > 1) {
     previousLink.href = buildPlayerUrl(previousVideo.id);
