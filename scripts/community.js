@@ -1,5 +1,6 @@
 (function () {
   const config = window.BOILED_SUPABASE;
+  const utils = window.BOILED_UTILS || {};
   const accountMount = document.querySelector("#account-controls");
   const communitySection = document.querySelector("#community-section");
   const ratingSummary = document.querySelector("#rating-summary");
@@ -41,14 +42,14 @@
     }
   ];
 
-  function escapeHtml(value) {
+  const escapeHtml = utils.escapeHtml || function escapeHtmlFallback(value) {
     return String(value || "")
       .replaceAll("&", "&amp;")
       .replaceAll("<", "&lt;")
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
-  }
+  };
 
   function getVideoId() {
     const params = new URLSearchParams(window.location.search);

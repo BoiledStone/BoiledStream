@@ -1,132 +1,191 @@
-// Catalogue central du site: chaque film ajouté ici apparaît automatiquement
-// dans la page d'accueil, les filtres, la recherche et la page player.
-window.BOILED_VIDEOS = [
-  {
-    // L'id doit rester unique et stable, car il est utilisé dans l'URL player.html?video=...
-    id: "project-hail-mary",
-    title: "Project Hail Mary",
-    category: "Film",
-    duration: "02:36:22",
-    resolution: "1280x720",
-    language: "En",
-    date: "2026",
-    sourceName: "Uqload",
-    sourceUrl: "https://uqload.is/9fyok6ttwrgj.html",
-    // Utiliser l'URL d'intégration quand l'hébergeur fournit un player iframe.
-    embedUrl: "https://uqload.is/embed-9fyok6ttwrgj.html",
-    posterUrl: "miniatures/posters/project-hail-mary.webp",
-    description:
-      "Science-fiction spatiale tendue autour d’une mission de survie, d’un vaisseau isolé et d’un mystère capable de décider du sort de la Terre.",
-    tags: ["Science-fiction", "Espace"]
-  },
-  {
-    id: "limitless",
-    title: "Limitless",
-    category: "Film",
-    duration: "01:38:39",
-    resolution: "1280x720",
-    language: "Fr",
-    date: "2011",
-    sourceName: "Uqload",
-    sourceUrl: "https://uqload.is/8ipcxujsg26z.html",
-    embedUrl: "https://uqload.is/embed-8ipcxujsg26z.html",
-    posterUrl: "miniatures/posters/limitless.webp",
-    description:
-      "Thriller nerveux où une pilule expérimentale décuple les capacités d’un écrivain et l’entraîne dans un jeu de pouvoir dangereux.",
-    tags: ["Thriller"]
-  },
-  {
-    id: "interstella-5555",
-    title: "Interstella 5555",
-    category: "Animé",
-    duration: "01:05:35",
-    resolution: "512x384",
-    language: "En",
-    date: "2003",
-    sourceName: "Uqload",
-    sourceUrl: "https://uqload.is/amvnri9r8u54.html",
-    embedUrl: "https://uqload.is/embed-amvnri9r8u54.html",
-    posterUrl: "miniatures/posters/interstella-5555.webp",
-    description:
-      "Odyssée animée et musicale portée par Daft Punk, entre enlèvement interstellaire, pop cosmique et aventure sans dialogue.",
-    tags: ["Animé", "Musique"]
-  },
-  {
-    id: "silent-hill",
-    title: "Silent Hill",
-    category: "Film",
-    duration: "02:05:21",
-    resolution: "1126x504",
-    language: "Fr",
-    date: "2006",
-    sourceName: "Uqload",
-    sourceUrl: "https://uqload.is/h67yff6g8a5g.html",
-    embedUrl: "https://uqload.is/embed-h67yff6g8a5g.html",
-    posterUrl: "miniatures/posters/silent-hill.webp",
-    description:
-      "Horreur brumeuse et oppressante autour d’une mère qui cherche sa fille dans une ville fantôme hantée par des visions cauchemardesques.",
-    tags: ["Horreur", "Survie", "Silent Hill"]
-  },
-  {
-    id: "silent-hill-revelation",
-    title: "Silent Hill Revelation",
-    category: "Film",
-    duration: "01:34:47",
-    resolution: "872x384",
-    language: "Fr",
-    date: "2012",
-    sourceName: "Uqload",
-    sourceUrl: "https://uqload.is/av5hef1rja8r.html",
-    embedUrl: "https://uqload.is/embed-av5hef1rja8r.html",
-    posterUrl: "miniatures/posters/silent-hill-revelation.webp",
-    description:
-      "Retour dans l’univers Silent Hill avec une héroïne poursuivie par son passé, des cultes inquiétants et des créatures sorties du brouillard.",
-    tags: ["Horreur", "Survie", "Silent Hill"]
-  },
-  {
-    id: "postal-2007",
-    title: "Postal",
-    category: "Film",
-    duration: "01:57:26",
-    resolution: "1920x1080",
-    language: "En",
-    date: "2007",
-    sourceName: "YouTube",
-    sourceUrl: "https://www.youtube.com/watch?v=dBFLgBlm5_E",
-    embedUrl: "https://www.youtube.com/embed/dBFLgBlm5_E?si=9hP3mPYvpBnZQB28",
-    posterUrl: "miniatures/posters/postal-2007.webp",
-    description:
-      "Comédie noire volontairement excessive, adaptée du jeu culte, avec satire, chaos et humour provocateur en version YouTube intégrée.",
-    tags: ["Comédie noire", "YouTube", "Postal"]
-  },
-  {
-    id: "blade-runner-2049",
-    title: "Blade Runner 2049",
-    category: "Film",
-    duration: "02:43:27",
-    resolution: "864x360",
-    language: "Fr",
-    date: "2017",
-    sourceName: "Uqload",
-    sourceUrl: "https://uqload.is/q2m84hf41l6c.html",
-    embedUrl: "https://uqload.is/embed-q2m84hf41l6c.html",
-    posterUrl: "https://image.tmdb.org/t/p/w400/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg",
-    description: "En 2049, la société est fragilisée par les nombreuses tensions entre les humains et leurs esclaves créés par bioingénierie. L’officier K est un Blade Runner : il fait partie d’une force d’intervention d’élite chargée de trouver et d’éliminer ceux qui n’obéissent pas aux ordres des humains. Lorsqu’il découvre un secret enfoui depuis longtemps et capable de changer le monde, les plus hautes instances décident que c’est à son tour d’être traqué et éliminé.",
-    tags: ["Film", "Science-fiction", "Français", "864x360", "2017"]
-  },
-  {
-    id: "blade-runner",
-    title: "Blade Runner",
-    category: "Film",
-    duration: "01:51:48",
-    resolution: "480x272",
-    language: "Fr",
-    date: "1982",
-    sourceName: "Uqload",
-    sourceUrl: "https://uqload.is/7huxxpyzzxwa.html",
-    embedUrl: "https://uqload.is/embed-7huxxpyzzxwa.html",
-    posterUrl: "https://image.tmdb.org/t/p/w400/tDR1V8PbwSGrvi9D7eZneku7Rj.jpg",
-    description: "2019, Los Angeles. La Terre est surpeuplée et l’humanité est partie coloniser l’espace. Les nouveaux colons sont assistés de Replicants, androïdes que rien ne peut distinguer de l'être humain. Conçus comme de nouveaux esclaves, certains parmi les plus évolués s’affranchissent de leurs chaînes et s’enfuient. Rick Deckard, un ancien Blade Runner, catégorie spéciale de policiers chargés de retirer ces replicants, accepte une nouvelle mission consistant à retrouver quatre de ces individus qui viennent de regagner la Terre après avoir volé une navette spatiale.",
-    tags: ["Science-fiction"]
+// Catalogue central: chaque entrée publiée ici apparaît automatiquement
+// dans l'accueil, la recherche, les filtres, le player et la communauté.
+(function () {
+  const POSTERS = {
+    projectHailMary: "miniatures/posters/project-hail-mary.webp",
+    limitless: "miniatures/posters/limitless.webp",
+    interstella5555: "miniatures/posters/interstella-5555.webp",
+    silentHill: "miniatures/posters/silent-hill.webp",
+    silentHillRevelation: "miniatures/posters/silent-hill-revelation.webp",
+    postal2007: "miniatures/posters/postal-2007.webp",
+    bladeRunner2049: "https://image.tmdb.org/t/p/w400/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg",
+    bladeRunner: "https://image.tmdb.org/t/p/w400/tDR1V8PbwSGrvi9D7eZneku7Rj.jpg"
+  };
+
+  function uqload({
+    id,
+    title,
+    fileId,
+    category = "Film",
+    duration,
+    resolution,
+    language,
+    date,
+    posterUrl,
+    description,
+    tags = []
+  }) {
+    return {
+      id,
+      title,
+      category,
+      duration,
+      resolution,
+      language,
+      date,
+      sourceName: "Uqload",
+      sourceUrl: `https://uqload.is/${fileId}.html`,
+      embedUrl: `https://uqload.is/embed-${fileId}.html`,
+      posterUrl,
+      description,
+      tags
+    };
   }
-];
+
+  function youtube({
+    id,
+    title,
+    videoId,
+    category = "Film",
+    duration,
+    resolution,
+    language,
+    date,
+    posterUrl,
+    description,
+    tags = []
+  }) {
+    return {
+      id,
+      title,
+      category,
+      duration,
+      resolution,
+      language,
+      date,
+      sourceName: "YouTube",
+      sourceUrl: `https://www.youtube.com/watch?v=${videoId}`,
+      embedUrl: `https://www.youtube.com/embed/${videoId}`,
+      posterUrl,
+      description,
+      tags
+    };
+  }
+
+  function freezeVideo(video) {
+    if (Array.isArray(video.tags)) {
+      Object.freeze(video.tags);
+    }
+    return Object.freeze(video);
+  }
+
+  const videos = [
+    uqload({
+      id: "project-hail-mary",
+      title: "Project Hail Mary",
+      fileId: "9fyok6ttwrgj",
+      duration: "02:36:22",
+      resolution: "1280x720",
+      language: "En",
+      date: "2026",
+      posterUrl: POSTERS.projectHailMary,
+      description:
+        "Science-fiction spatiale tendue autour d'une mission de survie, d'un vaisseau isolé et d'un mystère capable de décider du sort de la Terre.",
+      tags: ["Science-fiction", "Espace"]
+    }),
+    uqload({
+      id: "limitless",
+      title: "Limitless",
+      fileId: "8ipcxujsg26z",
+      duration: "01:38:39",
+      resolution: "1280x720",
+      language: "Fr",
+      date: "2011",
+      posterUrl: POSTERS.limitless,
+      description:
+        "Thriller nerveux où une pilule expérimentale décuple les capacités d'un écrivain et l'entraîne dans un jeu de pouvoir dangereux.",
+      tags: ["Thriller"]
+    }),
+    uqload({
+      id: "interstella-5555",
+      title: "Interstella 5555",
+      fileId: "amvnri9r8u54",
+      category: "Animé",
+      duration: "01:05:35",
+      resolution: "512x384",
+      language: "En",
+      date: "2003",
+      posterUrl: POSTERS.interstella5555,
+      description:
+        "Odyssée animée et musicale portée par Daft Punk, entre enlèvement interstellaire, pop cosmique et aventure sans dialogue.",
+      tags: ["Animé", "Musique"]
+    }),
+    uqload({
+      id: "silent-hill",
+      title: "Silent Hill",
+      fileId: "h67yff6g8a5g",
+      duration: "02:05:21",
+      resolution: "1126x504",
+      language: "Fr",
+      date: "2006",
+      posterUrl: POSTERS.silentHill,
+      description:
+        "Horreur brumeuse et oppressante autour d'une mère qui cherche sa fille dans une ville fantôme hantée par des visions cauchemardesques.",
+      tags: ["Horreur", "Survie", "Silent Hill"]
+    }),
+    uqload({
+      id: "silent-hill-revelation",
+      title: "Silent Hill Revelation",
+      fileId: "av5hef1rja8r",
+      duration: "01:34:47",
+      resolution: "872x384",
+      language: "Fr",
+      date: "2012",
+      posterUrl: POSTERS.silentHillRevelation,
+      description:
+        "Retour dans l'univers Silent Hill avec une héroïne poursuivie par son passé, des cultes inquiétants et des créatures sorties du brouillard.",
+      tags: ["Horreur", "Survie", "Silent Hill"]
+    }),
+    youtube({
+      id: "postal-2007",
+      title: "Postal",
+      videoId: "dBFLgBlm5_E",
+      duration: "01:57:26",
+      resolution: "1920x1080",
+      language: "En",
+      date: "2007",
+      posterUrl: POSTERS.postal2007,
+      description:
+        "Comédie noire volontairement excessive, adaptée du jeu culte, avec satire, chaos et humour provocateur en version YouTube intégrée.",
+      tags: ["Comédie noire", "Postal"]
+    }),
+    uqload({
+      id: "blade-runner-2049",
+      title: "Blade Runner 2049",
+      fileId: "q2m84hf41l6c",
+      duration: "02:43:27",
+      resolution: "864x360",
+      language: "Fr",
+      date: "2017",
+      posterUrl: POSTERS.bladeRunner2049,
+      description:
+        "En 2049, la société est fragilisée par les nombreuses tensions entre les humains et leurs esclaves créés par bioingénierie. L'officier K est un Blade Runner chargé de trouver et d'éliminer ceux qui n'obéissent pas aux ordres des humains. Lorsqu'il découvre un secret capable de changer le monde, les plus hautes instances décident que c'est à son tour d'être traqué.",
+      tags: ["Science-fiction"]
+    }),
+    uqload({
+      id: "blade-runner",
+      title: "Blade Runner",
+      fileId: "7huxxpyzzxwa",
+      duration: "01:51:48",
+      resolution: "480x272",
+      language: "Fr",
+      date: "1982",
+      posterUrl: POSTERS.bladeRunner,
+      description:
+        "2019, Los Angeles. Dans une Terre surpeuplée, les colonies spatiales utilisent des Replicants impossibles à distinguer des humains. Rick Deckard, ancien Blade Runner, reprend du service pour retrouver quatre fugitifs revenus sur Terre.",
+      tags: ["Science-fiction"]
+    })
+  ];
+
+  window.BOILED_VIDEOS = Object.freeze(videos.map(freezeVideo));
+})();

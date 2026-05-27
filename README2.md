@@ -1,44 +1,59 @@
 # Ajouter un film sur BoiledStream
 
-Le catalogue du site est centralisé dans `scripts/videos.js`. Ajouter un objet dans ce fichier suffit pour que le film apparaisse sur la page d'accueil, dans la recherche, dans les filtres et dans le player.
+Le catalogue du site est centralisé dans `scripts/videos.js`. Ajouter une entrée dans le tableau `videos` suffit pour que le film apparaisse sur la page d'accueil, dans la recherche, dans les filtres, dans le player et dans la communauté.
 
 ## Étapes
 
 1. Ouvrir `scripts/videos.js`.
 
-2. Copier un bloc de film existant, depuis `{` jusqu'à `}`, puis le coller dans le tableau `window.BOILED_VIDEOS`.
+2. Copier une entrée existante `uqload({ ... })` ou `youtube({ ... })`, puis la coller dans le tableau `videos`.
 
 3. Mettre une virgule entre les blocs. Tous les films du tableau doivent être séparés par une virgule.
 
-4. Remplir les champs du nouveau film:
+4. Remplir les champs du nouveau film. Pour Uqload, utiliser seulement l'id du fichier dans `fileId`: le site construit `sourceUrl` et `embedUrl` automatiquement.
 
 ```js
-{
+uqload({
   id: "mon-film",
   title: "Mon Film",
-  category: "Film",
+  fileId: "code-uqload",
   duration: "01:42:00",
   resolution: "1280x720",
-  format: "FR",
-  sourceName: "Uqload",
-  sourceUrl: "https://uqload.is/page-du-film.html",
-  embedUrl: "https://uqload.is/embed-code-du-film.html",
+  language: "Fr",
+  date: "2024",
   posterUrl: "https://exemple.com/image-du-film.jpg",
-  description: "Courte description affichée sur la page du player.",
-  tags: ["Film", "Français", "1280x720"]
-}
+  description: "Courte description affichée sur la page player.",
+  tags: ["Action", "Science-fiction"]
+})
+```
+
+Pour YouTube, utiliser `videoId`:
+
+```js
+youtube({
+  id: "mon-film-youtube",
+  title: "Mon Film YouTube",
+  videoId: "ID_YOUTUBE",
+  duration: "01:42:00",
+  resolution: "1920x1080",
+  language: "Fr",
+  date: "2024",
+  posterUrl: "miniatures/posters/mon-film.webp",
+  description: "Courte description affichée sur la page player.",
+  tags: ["Comédie"]
+})
 ```
 
 5. Vérifier que `id` est unique. Il doit être court, sans espace, et stable, par exemple `interstella-5555` ou `project-hail-mary`.
 
 6. Vérifier les URLs:
 
-- `sourceUrl` ouvre la page originale chez l'hébergeur.
-- `embedUrl` doit être l'URL du player intégrable, souvent au format `https://uqload.is/embed-xxxxx.html`.
+- `fileId` doit être le morceau entre `https://uqload.is/` et `.html`.
+- `videoId` doit être l'id YouTube, pas l'URL complète.
 - `posterUrl` est l'image de vignette. Si elle ne charge pas, le site affiche automatiquement un fond de secours.
-- Pour YouTube, utiliser `sourceUrl: "https://www.youtube.com/watch?v=ID"` et `embedUrl: "https://www.youtube.com/embed/ID"`.
+- Les tags doivent décrire le film. Éviter les tags redondants comme `Film`, `Français`, `1280x720` ou l'année: ces infos ont déjà leurs champs dédiés.
 
-7. Pour une vidéo hébergée directement en `.mp4`, remplacer `embedUrl` par `videoUrl`:
+7. Pour une vidéo hébergée directement en `.mp4`, ajouter un objet complet avec `videoUrl` au lieu d'utiliser `uqload()` ou `youtube()`:
 
 ```js
 videoUrl: "https://exemple.com/mon-film.mp4",
