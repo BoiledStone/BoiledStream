@@ -1529,23 +1529,6 @@ h3 {
   display:none;
 }
 
-.player-extra-meta{
-  display:flex;
-  gap:12px;
-  margin-top:14px;
-  flex-wrap:wrap;
-}
-
-.player-extra-meta span{
-  padding:8px 14px;
-  border-radius:999px;
-  border:1px solid var(--line);
-  background:rgba(255,255,255,.05);
-  color:var(--ink);
-  font-size:.82rem;
-  font-weight:800;
-}
-
 @media (max-width: 620px) {
   .video-grid,
   .video-grid.compact {

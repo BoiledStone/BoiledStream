@@ -13,6 +13,7 @@
   const title = document.querySelector("#player-title");
   const category = document.querySelector("#player-category");
   const description = document.querySelector("#player-description");
+  const playerDate = document.querySelector("#player-date");
   const duration = document.querySelector("#player-duration");
   const quality = document.querySelector("#player-quality");
   const source = document.querySelector("#player-source");
@@ -26,12 +27,14 @@
   const playerHelp = document.querySelector("#player-help");
   const language = (() => {
     if (video.language) {
-      return video.language;
+      return formatLanguage(video.language);
     }
 
     const possible = ["FR","VF","VOSTFR","EN","JP","MULTI","Français"];
-    const found = (video.tags || []).filter((tag) => possible.includes(String(tag).toUpperCase()) || String(tag).toLowerCase()==="français");
-    return found.length ? found.join(" / ") : "FR";
+    const found = (video.tags || [])
+      .filter((tag) => possible.includes(String(tag).toUpperCase()) || normalizeTagKey(tag) === "francais")
+      .map(formatLanguage);
+    return found.length ? found.join(" / ") : "Français";
   })();
 
 
@@ -48,6 +51,39 @@
 
   function buildPlayerUrl(id) {
     return `player.html?video=${encodeURIComponent(id)}`;
+  }
+
+  function normalizeTagKey(value) {
+    return String(value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+  }
+
+  function formatLanguage(value) {
+    const key = normalizeTagKey(value);
+    const labels = {
+      en: "Anglais",
+      english: "Anglais",
+      fr: "Français",
+      francais: "Français",
+      vf: "Français",
+      jp: "Japonais",
+      multi: "Multi",
+      vostfr: "VOSTFR"
+    };
+
+    return labels[key] || String(value || "").trim() || "Français";
+  }
+
+  function isDisplayTag(tag) {
+    const key = normalizeTagKey(tag);
+    const hiddenTags = new Set([
+      "film","serie","anime","francais","anglais","english","vf","vostfr","multi",
+      "hevc","sd","hd","uhd","4k","youtube","uqload"
+    ]);
+
+    return !hiddenTags.has(key) && !/^\d+x\d+$/i.test(key) && !/^(19|20)\d{2}$/.test(key);
   }
 
   function isUqloadEmbed(item) {
@@ -162,16 +198,11 @@
   renderPlayerPoster(video);
   renderPlayer(video);
   title.textContent = video.title;
-  category.textContent = video.category;
+  category.textContent = "Lecture";
   description.textContent = video.description;
-
-  const infoMeta = document.createElement("div");
-  infoMeta.className = "player-extra-meta";
-  infoMeta.innerHTML = `
-    <span>${escapeHtml(video.category || "Film")}</span>
-    <span>${escapeHtml(language)}</span>
-  `;
-  description.insertAdjacentElement("afterend", infoMeta);
+  if (playerDate) {
+    playerDate.textContent = video.date || "Non renseignée";
+  }
   duration.textContent = video.duration;
   quality.textContent = [video.resolution, video.format].filter(Boolean).join(" - ");
   if (playerLanguage) {
@@ -179,7 +210,9 @@
   }
   source.href = video.sourceUrl;
   source.textContent = video.sourceName;
-  tags.innerHTML = video.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
+  const visibleTags = (video.tags || []).filter(isDisplayTag);
+  tags.hidden = visibleTags.length === 0;
+  tags.innerHTML = visibleTags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
   playerActions.hidden = videos.length < 2;
   if (videos.length > 1) {
     previousLink.href = buildPlayerUrl(previousVideo.id);

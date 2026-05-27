@@ -29,8 +29,16 @@
     return `player.html?video=${encodeURIComponent(id)}`;
   }
 
+  function normalizeTagKey(value) {
+    return String(value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+  }
+
   function hasAnimatedTag(video) {
-    return video.tags.includes("Animé");
+    return normalizeTagKey(video.category) === "anime" ||
+      (video.tags || []).some((tag) => normalizeTagKey(tag) === "anime");
   }
 
   // La recherche couvre les champs visibles et les tags pour rester simple à maintenir.
@@ -81,15 +89,16 @@
       : "";
     const sourceName = video.sourceName || "Source";
     const hiddenTags = new Set([
-      "film","série","serie","animé","anime","français","vf","vostfr","multi","hevc","sd","hd","uhd","4k"
+      "film","serie","anime","francais","anglais","english","vf","vostfr","multi",
+      "hevc","sd","hd","uhd","4k","youtube","uqload"
     ]);
 
     const tagList = video.tags
       .filter((tag) => {
-        const lower = String(tag).toLowerCase();
-        return !hiddenTags.has(lower) && !/^\d+x\d+$/i.test(lower);
+        const lower = normalizeTagKey(tag);
+        return !hiddenTags.has(lower) && !/^\d+x\d+$/i.test(lower) && !/^(19|20)\d{2}$/.test(lower);
       })
-      .slice(0, 3)
+      .slice(0, 2)
       .map((tag) => `<span class="card-tag">${escapeHtml(tag)}</span>`)
       .join("");
 
