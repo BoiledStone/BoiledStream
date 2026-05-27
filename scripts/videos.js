@@ -186,11 +186,14 @@
         "Los Angeles, 2019. Rick Deckard traque des réplicants en fuite dans une société déshumanisée.",
       tags: ["Science-fiction"]
     }),
-    
     {
       id: "return-to-silent-hill",
       title: "Return to Silent Hill",
       category: "Film",
+      duration: "01:45:26",
+      resolution: "1080x720",
+      language: "En",
+      date: "2026",
       sourceName: "Vaplayer",
       sourceUrl: "https://vaplayer.ru/embed/movie/680493",
       embedUrl: "https://vaplayer.ru/embed/movie/680493",
