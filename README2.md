@@ -65,9 +65,11 @@ embedUrl:  https://uqload.is/embed-9fyok6ttwrgj.html
 
 Dans `player.html`, les sources Uqload ne sont pas injectées directement dans la
 page: `scripts/player.js` affiche d'abord un player intermédiaire BoiledStream,
-puis charge l'iframe Uqload dans une sandbox sans permission de pop-up ni de
-navigation de page. Cela bloque les fenêtres externes et redirections imposées
-par le navigateur, sans extraire le flux vidéo du service tiers.
+puis charge l'iframe Uqload dans une sandbox stricte, sans permission de pop-up,
+de navigation de page, de referrer ni d'accès aux cookies du site parent. Cela
+bloque ce que le navigateur permet de bloquer sans extraire le flux vidéo du
+service tiers. Les publicités dessinées directement dans le player Uqload peuvent
+encore apparaître, car elles restent dans une iframe cross-origin.
 
 ## Ajouter Un Film YouTube
 

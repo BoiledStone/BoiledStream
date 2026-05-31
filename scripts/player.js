@@ -104,9 +104,9 @@
       <div class="main-video custom-embed-player" data-provider="uqload">
         <div class="embed-gate">
           <div class="embed-gate-content">
-            <span class="embed-provider">Uqload isolé</span>
+            <span class="embed-provider">Uqload strict</span>
             <h2>${escapeHtml(item.title)}</h2>
-            <p>Lecture via le player intermédiaire BoiledStream, avec pop-ups et redirections externes bloquées.</p>
+            <p>Lecture isolée par BoiledStream: pop-ups, redirections externes et referrer bloqués.</p>
             <button class="button primary embed-launch" type="button">Lancer la lecture</button>
           </div>
         </div>
@@ -116,12 +116,7 @@
     const customPlayer = playerMount.querySelector(".custom-embed-player");
     const launchButton = playerMount.querySelector(".embed-launch");
     if (playerHelp) {
-      playerHelp.innerHTML = `
-        <p>
-          <strong>Player Uqload sandboxé.</strong>
-          Les pop-ups et changements de page sont bloqués par le navigateur; les éléments affichés directement dans le player Uqload peuvent encore apparaître.
-        </p>
-      `;
+      playerHelp.innerHTML = "";
     }
 
     launchButton?.addEventListener("click", () => {
@@ -130,9 +125,12 @@
       iframe.src = embedUrl;
       iframe.title = item.title;
       iframe.allow = "autoplay; fullscreen; picture-in-picture; encrypted-media";
-      iframe.sandbox = "allow-scripts allow-same-origin allow-forms allow-presentation";
-      iframe.referrerPolicy = "origin";
+      iframe.sandbox = "allow-scripts allow-presentation";
+      iframe.referrerPolicy = "no-referrer";
       iframe.allowFullscreen = true;
+      if ("credentialless" in iframe) {
+        iframe.credentialless = true;
+      }
       customPlayer?.replaceChildren(iframe);
     });
   }

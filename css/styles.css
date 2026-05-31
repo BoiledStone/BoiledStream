@@ -1488,6 +1488,13 @@ h3 {
     padding: 18px;
   }
 
+  .player-stage,
+  .player-mount,
+  .player-help,
+  .player-details {
+    max-width: calc(100vw - 56px);
+  }
+
   .player-poster,
   .player-details .section-kicker,
   .player-details h1,
