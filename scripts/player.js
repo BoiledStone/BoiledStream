@@ -208,7 +208,7 @@
               <span>${escapeHtml(item.duration || "Durée externe")}</span>
             </div>
             <h2>${escapeHtml(item.title)}</h2>
-            <p>Player Boiledstream</p>
+            <p>Player Externe</p>
             <div class="embed-actions">
               <button class="button primary embed-launch" type="button">Lancer</button>
               <button class="button secondary embed-fullscreen" type="button">Plein écran</button>
