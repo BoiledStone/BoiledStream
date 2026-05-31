@@ -10,3 +10,5 @@ Site statique de présentation vidéo avec:
 [Ouvrir le site](https://boiledstone.github.io/BoiledStream/)
 
 Ouvrir `index.html` dans un navigateur pour tester le site.
+
+Voir `README2.md` pour l'organisation du projet et la procédure d'ajout d'un film.

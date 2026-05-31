@@ -59,21 +59,82 @@
   }
 
   function isUqloadEmbed(item) {
-    const sourceNameMatches = /uqload/i.test(item.sourceName || "");
     try {
-      return sourceNameMatches || /(^|\.)uqload\./i.test(new URL(item.embedUrl, window.location.href).hostname);
+      return /(^|\.)uqload\./i.test(new URL(item.embedUrl, window.location.href).hostname);
     } catch (_error) {
-      return sourceNameMatches;
+      return /uqload/i.test(item.sourceName || "");
     }
   }
 
-  function buildIframePolicy(item) {
-    const allow = "autoplay; fullscreen; picture-in-picture; encrypted-media";
-    const sandbox = isUqloadEmbed(item)
-      ? ' sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"'
-      : "";
+  function getSafeUqloadEmbedUrl(item) {
+    try {
+      const embedUrl = new URL(item.embedUrl, window.location.href);
+      const isUqloadHost = /(^|\.)uqload\./i.test(embedUrl.hostname);
 
-    return `allow="${allow}"${sandbox}`;
+      return embedUrl.protocol === "https:" && isUqloadHost ? embedUrl.toString() : "";
+    } catch (_error) {
+      return "";
+    }
+  }
+
+  function buildIframePolicy() {
+    const allow = "autoplay; fullscreen; picture-in-picture; encrypted-media";
+
+    return `allow="${allow}" allowfullscreen`;
+  }
+
+  function renderUqloadProxy(item) {
+    const embedUrl = getSafeUqloadEmbedUrl(item);
+
+    if (!embedUrl) {
+      playerMount.innerHTML = `
+        <div class="main-video player-error">
+          <p>Le player Uqload n'a pas pu être validé.</p>
+        </div>
+      `;
+      if (playerHelp) {
+        playerHelp.innerHTML = item.sourceUrl
+          ? `<a class="button primary" href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noreferrer">Ouvrir la source</a>`
+          : "";
+      }
+      return;
+    }
+
+    playerMount.innerHTML = `
+      <div class="main-video custom-embed-player" data-provider="uqload">
+        <div class="embed-gate">
+          <div class="embed-gate-content">
+            <span class="embed-provider">Uqload isolé</span>
+            <h2>${escapeHtml(item.title)}</h2>
+            <p>Lecture via le player intermédiaire BoiledStream, avec pop-ups et redirections externes bloquées.</p>
+            <button class="button primary embed-launch" type="button">Lancer la lecture</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const customPlayer = playerMount.querySelector(".custom-embed-player");
+    const launchButton = playerMount.querySelector(".embed-launch");
+    if (playerHelp) {
+      playerHelp.innerHTML = `
+        <p>
+          <strong>Player Uqload sandboxé.</strong>
+          Les pop-ups et changements de page sont bloqués par le navigateur; les éléments affichés directement dans le player Uqload peuvent encore apparaître.
+        </p>
+      `;
+    }
+
+    launchButton?.addEventListener("click", () => {
+      const iframe = document.createElement("iframe");
+      iframe.className = "custom-embed-frame";
+      iframe.src = embedUrl;
+      iframe.title = item.title;
+      iframe.allow = "autoplay; fullscreen; picture-in-picture; encrypted-media";
+      iframe.sandbox = "allow-scripts allow-same-origin allow-forms allow-presentation";
+      iframe.referrerPolicy = "origin";
+      iframe.allowFullscreen = true;
+      customPlayer?.replaceChildren(iframe);
+    });
   }
 
   function renderPlayerPoster(item) {
@@ -90,12 +151,17 @@
 
   function renderPlayer(item) {
     if (item.embedUrl) {
+      if (isUqloadEmbed(item)) {
+        renderUqloadProxy(item);
+        return;
+      }
+
       playerMount.innerHTML = `
         <iframe
           class="main-video"
           src="${escapeHtml(item.embedUrl)}"
           title="${escapeHtml(item.title)}"
-          ${buildIframePolicy(item)}
+          ${buildIframePolicy()}
           referrerpolicy="origin"
         ></iframe>
       `;

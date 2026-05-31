@@ -781,6 +781,68 @@ h3 {
   border: 0;
 }
 
+.custom-embed-player {
+  position: relative;
+  display: grid;
+  place-items: stretch;
+  overflow: hidden;
+}
+
+.embed-gate {
+  display: grid;
+  min-height: 100%;
+  padding: 28px;
+  background:
+    linear-gradient(135deg, rgba(217, 91, 67, 0.18), transparent 42%),
+    linear-gradient(315deg, rgba(78, 183, 166, 0.14), transparent 46%),
+    #050505;
+  place-items: center;
+}
+
+.embed-gate-content {
+  display: grid;
+  width: min(100%, 520px);
+  gap: 14px;
+  justify-items: center;
+  text-align: center;
+}
+
+.embed-provider {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  padding: 0 10px;
+  color: #090909;
+  background: var(--gold);
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.embed-gate h2 {
+  font-size: 1.5rem;
+}
+
+.embed-gate p {
+  max-width: 430px;
+  margin: 0;
+  color: var(--muted);
+  font-weight: 750;
+  line-height: 1.55;
+}
+
+.embed-launch {
+  margin-top: 4px;
+}
+
+.custom-embed-frame {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  border: 0;
+}
+
 .player-error {
   display: grid;
   place-items: center;
@@ -1344,7 +1406,8 @@ h3 {
   }
 
   .top-nav {
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 22px;
   }
 
   .account-controls {
@@ -1458,5 +1521,37 @@ h3 {
 
   .button {
     width: 100%;
+  }
+
+  .embed-gate {
+    padding: 12px;
+  }
+
+  .embed-gate-content {
+    gap: 7px;
+  }
+
+  .embed-provider {
+    min-height: 22px;
+    padding: 0 8px;
+    font-size: 0.62rem;
+  }
+
+  .embed-gate h2 {
+    font-size: 1.18rem;
+  }
+
+  .embed-gate p {
+    max-width: 270px;
+    font-size: 0.76rem;
+    line-height: 1.25;
+  }
+
+  .embed-launch {
+    width: auto;
+    min-width: 124px;
+    min-height: 32px;
+    padding: 0 12px;
+    font-size: 0.78rem;
   }
 }

@@ -9,14 +9,14 @@
       content="Catalogue vidéo avec vignettes cliquables et player dédié pour chaque contenu."
     >
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="styles.css?v=20260527-structure">
-    <script src="scripts/app-utils.js?v=20260527-structure" defer></script>
+    <link rel="stylesheet" href="css/styles.css?v=20260531-uqload">
+    <script src="scripts/app-utils.js?v=20260531-uqload" defer></script>
     <!-- videos.js doit être chargé avant catalog.js: il expose window.BOILED_VIDEOS. -->
-    <script src="scripts/videos.js?v=20260527-structure" defer></script>
-    <script src="scripts/catalog.js?v=20260527-structure" defer></script>
+    <script src="scripts/videos.js?v=20260531-uqload" defer></script>
+    <script src="scripts/catalog.js?v=20260531-uqload" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <script src="scripts/supabase-config.js?v=20260527-structure" defer></script>
-    <script src="scripts/community.js?v=20260527-structure" defer></script>
+    <script src="scripts/supabase-config.js?v=20260531-uqload" defer></script>
+    <script src="scripts/community.js?v=20260531-uqload" defer></script>
   </head>
   <body>
     <header class="site-header">
@@ -37,8 +37,8 @@
       <p class="home-notice">
         Message d'erreur sur un player ? Active
         <a href="https://one.one.one.one/" target="_blank" rel="noreferrer">Cloudflare WARP</a>
-        puis recharge. Pour limiter les pubs et pop-ups, utilisez
-        <a href="https://brave.com/download/" target="_blank" rel="noreferrer">Brave</a>.
+        puis recharge. Les players Uqload passent par une couche interne sandboxée
+        pour limiter les pop-ups et redirections.
       </p>
 
       <section class="catalog-hero" aria-labelledby="page-title">

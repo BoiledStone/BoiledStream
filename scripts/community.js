@@ -177,7 +177,7 @@
   }
 
   function profileUnavailableMessage() {
-    return "Profil Supabase indisponible. Reconnecte-toi, puis relance supabase-schema.sql si le problème reste.";
+    return "Profil Supabase indisponible. Reconnecte-toi, puis relance scripts/sqlSupabase/supabase-schema.sql si le problème reste.";
   }
 
   function bindDisplayNameInput(input) {
@@ -719,7 +719,7 @@
 
     if (!hasAvatarColumn) {
       throw new Error(
-        "La base Supabase n'a pas encore la colonne avatar_url. Relance supabase-schema.sql dans Supabase."
+        "La base Supabase n'a pas encore la colonne avatar_url. Relance scripts/sqlSupabase/supabase-schema.sql dans Supabase."
       );
     }
 
@@ -750,7 +750,7 @@
     if (error) {
       if (isMissingAvatarBucketError(error)) {
         throw new Error(
-          "Le bucket Supabase avatars n'existe pas encore. Exécute le fichier supabase-schema.sql au complet dans Supabase."
+          "Le bucket Supabase avatars n'existe pas encore. Exécute scripts/sqlSupabase/supabase-schema.sql au complet dans Supabase."
         );
       }
 
@@ -847,7 +847,7 @@
         profileStatus,
         hasAvatarColumn
           ? "Profil enregistré."
-          : "Pseudo mis à jour. Relance supabase-schema.sql dans Supabase pour activer la photo."
+          : "Pseudo mis à jour. Relance scripts/sqlSupabase/supabase-schema.sql dans Supabase pour activer la photo."
       );
     } catch (error) {
       setText(profileStatus, error.message || "Mise à jour impossible.");
@@ -885,7 +885,7 @@
       .eq("video_id", videoId);
 
     if (error) {
-      setText(ratingSummary, "Score indisponible: exécute supabase-schema.sql dans Supabase.");
+      setText(ratingSummary, "Score indisponible: exécute scripts/sqlSupabase/supabase-schema.sql dans Supabase.");
       renderStars(0);
       return;
     }
@@ -993,7 +993,7 @@
       .order("created_at", { ascending: false });
 
     if (error) {
-      commentsList.innerHTML = `<p class="empty-state">Avis indisponibles: exécute supabase-schema.sql dans Supabase.</p>`;
+      commentsList.innerHTML = `<p class="empty-state">Avis indisponibles: exécute scripts/sqlSupabase/supabase-schema.sql dans Supabase.</p>`;
       return;
     }
 

@@ -1,206 +1,191 @@
-# Ajouter un film sur BoiledStream
+# Guide BoiledStream
 
-Le catalogue du site est centralisé dans `scripts/videos.js`. Ajouter une entrée dans le tableau `videos` suffit pour que le film apparaisse sur la page d'accueil, dans la recherche, dans les filtres, dans le player et dans la communauté.
+Ce fichier sert de guide pratique pour modifier le site sans casser le player.
 
-## Étapes
+## Organisation
+
+```text
+index.html                         page d'accueil / catalogue
+player.html                        page lecteur d'un film
+css/styles.css                     style du site
+scripts/videos.js                  catalogue des films, fichier principal à modifier
+scripts/app-utils.js               fonctions partagées par le catalogue et le player
+scripts/catalog.js                 rendu de la page d'accueil
+scripts/player.js                  rendu de la page lecteur
+scripts/community.js               comptes, notes et commentaires Supabase
+scripts/supabase-config.js         configuration publique Supabase
+scripts/sqlSupabase/*.sql          scripts SQL à lancer dans Supabase
+miniatures/posters/                affiches locales des films
+```
+
+Pour ajouter un film, modifier seulement `scripts/videos.js` et ajouter l'image dans `miniatures/posters/` si tu veux une affiche locale.
+
+## Ajouter Un Film Uqload
 
 1. Ouvrir `scripts/videos.js`.
+2. Aller dans le tableau `catalogue`.
+3. Copier un bloc existant avec `provider: "uqload"`.
+4. Coller le bloc à la fin du tableau, avant le `];`.
+5. Modifier les champs du nouveau film.
 
-2. Copier une entrée existante `uqload({ ... })` ou `youtube({ ... })`, puis la coller dans le tableau `videos`.
-
-3. Mettre une virgule entre les blocs. Tous les films du tableau doivent être séparés par une virgule.
-
-4. Remplir les champs du nouveau film. Pour Uqload, utiliser seulement l'id du fichier dans `fileId`: le site construit `sourceUrl` et `embedUrl` automatiquement.
+Exemple:
 
 ```js
-uqload({
+{
+  provider: "uqload",
   id: "mon-film",
   title: "Mon Film",
   fileId: "code-uqload",
+  category: "Film",
   duration: "01:42:00",
   resolution: "1280x720",
   language: "Fr",
   date: "2024",
-  posterUrl: "https://exemple.com/image-du-film.jpg",
-  description: "Courte description affichée sur la page player.",
+  posterUrl: "miniatures/posters/mon-film.webp",
+  description: "Résumé court affiché dans la page player.",
   tags: ["Action", "Science-fiction"]
-})
+}
 ```
 
-Pour YouTube, utiliser `videoId`:
+Pour Uqload, ne mets pas l'URL complète. Mets seulement le code dans `fileId`.
+
+Exemple:
+
+```text
+URL Uqload: https://uqload.is/9fyok6ttwrgj.html
+fileId: "9fyok6ttwrgj"
+```
+
+Le site construit automatiquement:
+
+```text
+sourceUrl: https://uqload.is/9fyok6ttwrgj.html
+embedUrl:  https://uqload.is/embed-9fyok6ttwrgj.html
+```
+
+Dans `player.html`, les sources Uqload ne sont pas injectées directement dans la
+page: `scripts/player.js` affiche d'abord un player intermédiaire BoiledStream,
+puis charge l'iframe Uqload dans une sandbox sans permission de pop-up ni de
+navigation de page. Cela bloque les fenêtres externes et redirections imposées
+par le navigateur, sans extraire le flux vidéo du service tiers.
+
+## Ajouter Un Film YouTube
+
+Copier un bloc avec `provider: "youtube"` et mettre seulement l'id YouTube dans `videoId`.
 
 ```js
-youtube({
+{
+  provider: "youtube",
   id: "mon-film-youtube",
   title: "Mon Film YouTube",
   videoId: "ID_YOUTUBE",
+  category: "Film",
   duration: "01:42:00",
   resolution: "1920x1080",
   language: "Fr",
   date: "2024",
-  posterUrl: "miniatures/posters/mon-film.webp",
-  description: "Courte description affichée sur la page player.",
+  posterUrl: "miniatures/posters/mon-film-youtube.webp",
+  description: "Résumé court affiché dans la page player.",
   tags: ["Comédie"]
-})
+}
 ```
 
-5. Vérifier que `id` est unique. Il doit être court, sans espace, et stable, par exemple `interstella-5555` ou `project-hail-mary`.
+Exemple:
 
-6. Vérifier les URLs:
+```text
+URL YouTube: https://www.youtube.com/watch?v=dBFLgBlm5_E
+videoId: "dBFLgBlm5_E"
+```
 
-- `fileId` doit être le morceau entre `https://uqload.is/` et `.html`.
-- `videoId` doit être l'id YouTube, pas l'URL complète.
-- `posterUrl` est l'image de vignette. Si elle ne charge pas, le site affiche automatiquement un fond de secours.
-- Les tags doivent décrire le film. Éviter les tags redondants comme `Film`, `Français`, `1280x720` ou l'année: ces infos ont déjà leurs champs dédiés.
+## Ajouter Une Vidéo Directe
 
-7. Pour une vidéo hébergée directement en `.mp4`, ajouter un objet complet avec `videoUrl` au lieu d'utiliser `uqload()` ou `youtube()`:
+Utiliser `provider: "direct"` seulement pour une vraie URL `.mp4` ou compatible navigateur.
 
 ```js
-videoUrl: "https://exemple.com/mon-film.mp4",
+{
+  provider: "direct",
+  id: "ma-video-directe",
+  title: "Ma Vidéo Directe",
+  videoUrl: "https://exemple.com/video.mp4",
+  sourceName: "Serveur direct",
+  category: "Film",
+  duration: "01:10:00",
+  resolution: "1280x720",
+  language: "Fr",
+  date: "2024",
+  posterUrl: "miniatures/posters/ma-video-directe.webp",
+  description: "Résumé court affiché dans la page player.",
+  tags: ["Drame"]
+}
 ```
 
-8. Ouvrir `index.html` dans un navigateur et vérifier que la nouvelle vignette apparaît.
+## Règles Des Champs
 
-9. Cliquer sur la vignette ou ouvrir directement `player.html?video=mon-film` pour vérifier la page de lecture.
+- `id`: unique, en minuscules, sans espace, par exemple `silent-hill`.
+- `title`: titre affiché sur la carte et dans le player.
+- `category`: généralement `Film` ou `Animé`.
+- `duration`: format `HH:MM:SS`.
+- `resolution`: exemple `1280x720`.
+- `language`: `Fr`, `En`, `VOSTFR` ou `Multi`.
+- `date`: année de sortie.
+- `posterUrl`: image verticale de préférence en 2:3.
+- `description`: courte, 1 ou 2 phrases.
+- `tags`: genres utiles à la recherche. Éviter `Film`, `Français`, la résolution et l'année.
 
-10. Tester la recherche avec le titre et un tag pour confirmer que le film est bien indexé.
+## Affiches
 
-## Miniatures custom
+Pour une affiche locale:
 
-Le dossier `miniatures` sert à stocker des images plus propres que les previews automatiques des hébergeurs.
+1. Mettre l'image dans `miniatures/posters/`.
+2. Nommer le fichier sans espace ni accent, par exemple `mon-film.webp`.
+3. Utiliser ce chemin dans `posterUrl`: `miniatures/posters/mon-film.webp`.
 
-1. Ajouter l'image dans `miniatures`.
+Formats recommandés: `.webp` ou `.jpg`, vertical 2:3, environ `640x960`.
 
-2. Nommer le fichier simplement, sans espace ni accent, par exemple:
+## Vérifier Après Ajout
+
+1. Ouvrir `index.html` et vérifier que la carte apparaît.
+2. Chercher le titre dans la barre de recherche.
+3. Cliquer sur la carte.
+4. Vérifier que `player.html?video=id-du-film` affiche le bon titre, l'année, la durée, la qualité et les tags.
+5. Si la vignette ne charge pas, vérifier le chemin `posterUrl`.
+
+Commande rapide de validation:
+
+```powershell
+node -e "global.window={}; require('vm').runInThisContext(require('fs').readFileSync('scripts/videos.js','utf8')); console.log(window.BOILED_VIDEOS.length)"
+```
+
+## Supabase
+
+Supabase est optionnel pour le catalogue, mais nécessaire pour les comptes, notes et commentaires.
+
+Les fichiers SQL sont dans `scripts/sqlSupabase/`:
 
 ```text
-miniatures/silent-hill.jpg
-miniatures/silent-hill-revelation.webp
-miniatures/postal-2007.jpg
+scripts/sqlSupabase/supabase-schema.sql
+scripts/sqlSupabase/supabase-avatar-storage.sql
+scripts/sqlSupabase/supabase-admin-users.sql
 ```
 
-3. Pour une image prête à être affichée directement sur les cartes, utiliser de préférence le sous-dossier `miniatures/posters`.
+Ordre conseillé:
 
-4. Dans `scripts/videos.js`, remplacer `posterUrl` par le chemin local:
+1. Exécuter `scripts/sqlSupabase/supabase-schema.sql` dans Supabase SQL Editor.
+2. Si les avatars affichent `Bucket not found`, exécuter `scripts/sqlSupabase/supabase-avatar-storage.sql`.
+3. Pour activer les badges `[admin]`, modifier les emails dans `scripts/sqlSupabase/supabase-admin-users.sql`, puis exécuter le fichier.
 
-```js
-posterUrl: "miniatures/posters/silent-hill.webp",
+La clé dans `scripts/supabase-config.js` doit rester une clé publique `anon`. Ne jamais mettre une clé `service_role` dans le site.
+
+## Publication
+
+Après modification:
+
+```powershell
+git status --short
+git add .
+git commit -m "Update catalog"
+git push origin main
+git push origin main:gh-pages
 ```
 
-5. Garder le chemin relatif depuis la racine du site. Ne pas commencer par `/`, sinon GitHub Pages peut chercher l'image au mauvais endroit.
-
-6. Préférer une affiche verticale en 2:3, idéalement autour de `640x960` ou plus. Évite les captures 16:9 avec bandes floues: elles donnent des cartes irrégulières et moins propres. Le format `.webp` est recommandé pour les cartes, car il garde une bonne qualité avec un poids plus bas.
-
-7. Recharger `index.html` et vérifier que la carte du film affiche bien la nouvelle miniature.
-
-## Points à contrôler avant publication
-
-- Le titre est lisible et sans faute.
-- La durée correspond au film.
-- La catégorie est cohérente avec les autres films.
-- Les tags aident vraiment la recherche.
-- La source externe fonctionne encore.
-- Le player s'ouvre dans `player.html?video=id-du-film`.
-
-## Activer comptes, profils, commentaires et notes
-
-Le site utilise Supabase pour les comptes utilisateurs, les profils avec photo, les commentaires et les notes. GitHub Pages reste le site statique; Supabase fournit l'authentification, la base de données et le stockage des avatars.
-
-1. Dans Supabase, ouvrir le projet `BoiledStream`.
-
-2. Aller dans `Authentication` > `URL Configuration`.
-
-3. Mettre ces URLs:
-
-```text
-Site URL:
-https://boiledstone.github.io/BoiledStream/
-
-Redirect URLs:
-https://boiledstone.github.io/BoiledStream/
-https://boiledstone.github.io/BoiledStream/**
-http://127.0.0.1:8765/
-http://127.0.0.1:8765/**
-```
-
-4. Aller dans `Authentication` > `Providers` > `Email`, puis activer le provider email.
-
-## Mots de passe plus forts
-
-Le formulaire du site bloque déjà les nouvelles inscriptions faibles: 12 caractères minimum, une minuscule, une majuscule, un chiffre et un symbole.
-
-Pour appliquer la même règle côté serveur Supabase:
-
-1. Aller dans `Authentication` > `Security` ou `Auth settings` > `Password protection`.
-
-2. Mettre la longueur minimale à `12`.
-
-3. Activer les caractères requis: lowercase, uppercase, digits et symbols.
-
-4. Si ton plan Supabase le permet, activer aussi la protection contre les mots de passe déjà leakés.
-
-Les anciens comptes peuvent encore se connecter avec leur ancien mot de passe. La règle forte s'applique surtout aux nouvelles inscriptions et aux prochains changements de mot de passe.
-
-Référence Supabase: https://supabase.com/docs/guides/auth/password-security
-
-## Emails d'authentification BoiledStream
-
-Pour que les emails d'inscription ne ressemblent plus à des emails Supabase, il faut configurer les templates et l'expéditeur dans Supabase. Le code du site envoie déjà `app_name: "BoiledStream"` dans les métadonnées d'inscription, mais Supabase contrôle l'email final.
-
-1. Aller dans `Authentication` > `Emails` > `Templates`.
-
-2. Ouvrir le template `Confirm signup`.
-
-3. Mettre un sujet comme:
-
-```text
-Confirme ton compte BoiledStream
-```
-
-4. Mettre un contenu HTML simple:
-
-```html
-<h2>BoiledStream</h2>
-<p>Bienvenue sur BoiledStream. Confirme ton email pour activer ton compte.</p>
-<p><a href="{{ .ConfirmationURL }}">Confirmer mon email</a></p>
-<p>Si tu n'as pas demandé ce compte, ignore ce message.</p>
-```
-
-5. Répéter le même style pour `Reset password`, `Magic link` et `Change email address` si ces emails sont activés.
-
-6. Aller dans `Authentication` > `SMTP Settings`.
-
-7. Configurer un vrai service SMTP avec:
-
-```text
-Sender name: BoiledStream
-Sender email: no-reply@ton-domaine.com
-```
-
-Sans SMTP personnalisé, Supabase peut garder un expéditeur ou des limites liées à Supabase. Pour un rendu propre, utilise un domaine à toi et configure SPF, DKIM et DMARC chez ton fournisseur d'email.
-
-Références Supabase:
-
-- https://supabase.com/docs/guides/auth/auth-email-templates
-- https://supabase.com/docs/guides/auth/auth-smtp
-
-5. Aller dans `SQL Editor` > `New query`.
-
-6. Copier tout le contenu de `supabase-schema.sql`, le coller dans Supabase, puis cliquer `Run`. Si le projet Supabase était déjà configuré avant l'ajout des photos de profil, refaire quand même cette étape pour ajouter `avatar_url`, le bucket `avatars`, ses règles d'accès et le trigger qui crée automatiquement une ligne `profiles` à chaque nouveau compte. Le script termine par `notify pgrst, 'reload schema';` pour forcer Supabase à rafraîchir son cache API.
-
-7. Vérifier que les tables suivantes existent dans `Table Editor`:
-
-```text
-profiles
-admin_users
-comments
-ratings
-```
-
-8. Vérifier dans `Storage` > `Buckets` que le bucket public `avatars` existe. Le script SQL le crée automatiquement et limite les photos de profil à 2 Mo (`jpg`, `png`, `webp` ou `gif`). Les fichiers doivent être stockés dans un dossier nommé avec l'id utilisateur, ce que le site fait automatiquement. Si le site affiche `Bucket not found` ou `new row violates row-level security policy`, exécuter `supabase-avatar-storage.sql` dans Supabase: le résultat final doit afficher une ligne avec `id = avatars`. Si aucune ligne n'apparaît, le SQL n'a pas été lancé dans le même projet Supabase que celui utilisé par `scripts/supabase-config.js`.
-
-9. Pour afficher `[admin]` devant ton pseudo et celui de ton ami, ouvrir `supabase-admin-users.sql`, remplacer les deux emails d'exemple, puis exécuter le fichier dans Supabase. Ce fichier crée aussi `admin_users` si la table n'existe pas encore. Les utilisateurs normaux ne peuvent pas créer ce badge eux-mêmes.
-
-10. Recharger une page `player.html?video=...`: la section `Avis et commentaires` doit permettre la connexion, l'inscription avec pseudo, la note sur 5 étoiles, les commentaires et la modification du pseudo/photo dans le menu du compte.
-
-Important: la clé dans `scripts/supabase-config.js` est la clé publique `anon`. Ne jamais mettre la clé `service_role` dans le site.
+Si GitHub Pages affiche encore une ancienne version, attendre quelques minutes ou ouvrir le site avec un paramètre de cache, par exemple `?v=nouveau-commit`.
