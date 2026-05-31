@@ -45,6 +45,8 @@
   const currentIndex = videos.findIndex((item) => item.id === video.id);
   const previousVideo = videos[(currentIndex - 1 + videos.length) % videos.length];
   const nextVideo = videos[(currentIndex + 1) % videos.length];
+  let fullscreenButtons = [];
+  let isPseudoFullscreen = false;
 
   function inferLanguage(item) {
     if (item.language) {
@@ -83,6 +85,102 @@
     return `allow="${allow}" allowfullscreen`;
   }
 
+  function getFullscreenElement() {
+    return document.fullscreenElement || document.webkitFullscreenElement || null;
+  }
+
+  function updateFullscreenButton() {
+    fullscreenButtons = fullscreenButtons.filter((button) => document.contains(button));
+    const isFullscreen = getFullscreenElement() === playerMount || isPseudoFullscreen;
+
+    fullscreenButtons.forEach((button) => {
+      const isCompact = button.classList.contains("player-control-button");
+      button.textContent = isCompact
+        ? isFullscreen
+          ? "×"
+          : "⛶"
+        : isFullscreen
+          ? "Quitter"
+          : "Plein écran";
+      button.setAttribute(
+        "aria-label",
+        isFullscreen ? "Quitter le plein écran" : "Afficher le player en plein écran"
+      );
+      button.title = isFullscreen ? "Quitter le plein écran" : "Plein écran";
+    });
+  }
+
+  function enterPseudoFullscreen() {
+    isPseudoFullscreen = true;
+    document.body.classList.add("player-pseudo-fullscreen-active");
+    playerMount.classList.add("player-pseudo-fullscreen");
+    updateFullscreenButton();
+  }
+
+  function exitPseudoFullscreen() {
+    isPseudoFullscreen = false;
+    document.body.classList.remove("player-pseudo-fullscreen-active");
+    playerMount.classList.remove("player-pseudo-fullscreen");
+    updateFullscreenButton();
+  }
+
+  async function togglePlayerFullscreen() {
+    if (!playerMount) {
+      return;
+    }
+
+    try {
+      if (isPseudoFullscreen) {
+        exitPseudoFullscreen();
+        return;
+      }
+
+      if (getFullscreenElement()) {
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+        return;
+      }
+
+      if (playerMount.requestFullscreen) {
+        await playerMount.requestFullscreen();
+      } else if (playerMount.webkitRequestFullscreen) {
+        playerMount.webkitRequestFullscreen();
+      } else {
+        enterPseudoFullscreen();
+      }
+    } catch (_error) {
+      enterPseudoFullscreen();
+    } finally {
+      updateFullscreenButton();
+    }
+  }
+
+  function renderPlayerChrome() {
+    playerMount.querySelector(".player-floating-controls")?.remove();
+    playerMount.insertAdjacentHTML(
+      "beforeend",
+      `
+        <div class="player-floating-controls" aria-label="Contrôles du player">
+          <button class="player-control-button" type="button" data-player-fullscreen>Plein écran</button>
+        </div>
+      `
+    );
+    bindFullscreenButton(playerMount.querySelector("[data-player-fullscreen]"));
+    updateFullscreenButton();
+  }
+
+  function bindFullscreenButton(button) {
+    if (!button) {
+      return;
+    }
+
+    fullscreenButtons.push(button);
+    button.addEventListener("click", togglePlayerFullscreen);
+  }
+
   function renderUqloadProxy(item) {
     const embedUrl = getSafeUqloadEmbedUrl(item);
 
@@ -104,10 +202,17 @@
       <div class="main-video custom-embed-player" data-provider="uqload">
         <div class="embed-gate">
           <div class="embed-gate-content">
-            <span class="embed-provider">Uqload strict</span>
+            <div class="embed-meta-row" aria-label="Informations de lecture">
+              <span class="embed-provider">Uqload</span>
+              <span>${escapeHtml(item.resolution || "Qualité externe")}</span>
+              <span>${escapeHtml(item.duration || "Durée externe")}</span>
+            </div>
             <h2>${escapeHtml(item.title)}</h2>
-            <p>Lecture isolée par BoiledStream: pop-ups, redirections externes et referrer bloqués.</p>
-            <button class="button primary embed-launch" type="button">Lancer la lecture</button>
+            <p>Player Boiledstream</p>
+            <div class="embed-actions">
+              <button class="button primary embed-launch" type="button">Lancer</button>
+              <button class="button secondary embed-fullscreen" type="button">Plein écran</button>
+            </div>
           </div>
         </div>
       </div>
@@ -115,9 +220,13 @@
 
     const customPlayer = playerMount.querySelector(".custom-embed-player");
     const launchButton = playerMount.querySelector(".embed-launch");
+    const fullscreenGateButton = playerMount.querySelector(".embed-fullscreen");
     if (playerHelp) {
       playerHelp.innerHTML = "";
     }
+
+    bindFullscreenButton(fullscreenGateButton);
+    updateFullscreenButton();
 
     launchButton?.addEventListener("click", () => {
       const iframe = document.createElement("iframe");
@@ -132,6 +241,7 @@
         iframe.credentialless = true;
       }
       customPlayer?.replaceChildren(iframe);
+      renderPlayerChrome();
     });
   }
 
@@ -163,6 +273,7 @@
           referrerpolicy="origin"
         ></iframe>
       `;
+      renderPlayerChrome();
       if (playerHelp) {
         playerHelp.innerHTML = "";
       }
@@ -177,6 +288,7 @@
           Votre navigateur ne prend pas en charge la lecture vidéo HTML5.
         </video>
       `;
+      renderPlayerChrome();
       if (playerHelp) {
         playerHelp.innerHTML = "";
       }
@@ -188,6 +300,7 @@
         <p>Aucun player n'est disponible pour cette vidéo.</p>
       </div>
     `;
+    renderPlayerChrome();
     if (playerHelp) {
       playerHelp.innerHTML = item.sourceUrl
         ? `<a class="button primary" href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noreferrer">Ouvrir la source</a>`
@@ -270,4 +383,12 @@
   renderMetadata(video);
   renderNavigation();
   renderRelated();
+
+  document.addEventListener("fullscreenchange", updateFullscreenButton);
+  document.addEventListener("webkitfullscreenchange", updateFullscreenButton);
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && isPseudoFullscreen) {
+      exitPseudoFullscreen();
+    }
+  });
 })();
