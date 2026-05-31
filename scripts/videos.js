@@ -178,17 +178,18 @@
     },
     {
       provider: "uqload",
-      id: "1162",
-      title: "1162",
+      id: "the-pick-of-destiny",
+      title: "The Pick of Destiny",
       fileId: "acjonillkj0b",
       category: "Film",
       duration: "01:30:14",
       resolution: "672x360",
       language: "Fr",
-      posterUrl: "https://strm5.uqload.is/i/04/01920/acjonillkj0b_t.jpg",
+      date: "2006",
+      posterUrl: "https://image.tmdb.org/t/p/w400/kYo7TWASMC3YG3dJVsEsE4CNkd7.jpg",
       description:
-        "Film référencé depuis Uqload sous le titre 1162, ajouté depuis le lien fourni.",
-      tags: ["Uqload"]
+        "Pas de chance pour le jeune JB. Il est passionné de rock'n'roll dans une famille ultra religieuse qui considère cette musique comme l'œuvre du diable. Lorsque son père lui colle une raclée en arrachant tous les posters de ses idoles, JB s'enfuit et part pour Hollywood y chercher le secret du rock'n'roll... ",
+      tags: ["Comédie", "Musique"]
     }
   ];
 
