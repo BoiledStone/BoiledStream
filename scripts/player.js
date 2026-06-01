@@ -282,10 +282,9 @@
       iframe.className = "custom-embed-frame";
       iframe.src = embedUrl;
       iframe.title = item.title;
-      iframe.allow = "autoplay; fullscreen; picture-in-picture; encrypted-media";
+      iframe.allow = "autoplay; picture-in-picture; encrypted-media";
       iframe.sandbox = "allow-scripts allow-presentation";
       iframe.referrerPolicy = "no-referrer";
-      iframe.allowFullscreen = true;
       if ("credentialless" in iframe) {
         iframe.credentialless = true;
       }

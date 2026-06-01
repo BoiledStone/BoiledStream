@@ -930,6 +930,19 @@ h3 {
   border: 0;
 }
 
+.custom-embed-player[data-provider="uqload"] .custom-embed-frame:fullscreen,
+.custom-embed-player[data-provider="uqload"] .custom-embed-frame:-webkit-full-screen {
+  inset: 0 0 -12px 0;
+  width: 100vw;
+  max-width: none;
+  height: calc(100vh + 12px);
+  height: calc(100dvh + 12px);
+  min-height: calc(100vh + 12px);
+  min-height: calc(100dvh + 12px);
+  background: #000;
+  border: 0;
+}
+
 .player-mount:fullscreen .custom-embed-player[data-provider="uqload"] .custom-embed-frame,
 .player-mount:-webkit-full-screen .custom-embed-player[data-provider="uqload"] .custom-embed-frame,
 .player-mount.player-pseudo-fullscreen .custom-embed-player[data-provider="uqload"] .custom-embed-frame {
