@@ -828,8 +828,8 @@ h3 {
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 2;
-  height: 2px;
+  z-index: 4;
+  height: 8px;
   background: #000;
   content: "";
   pointer-events: none;
@@ -930,10 +930,22 @@ h3 {
   border: 0;
 }
 
+.player-mount:fullscreen .custom-embed-player[data-provider="uqload"] .custom-embed-frame,
+.player-mount:-webkit-full-screen .custom-embed-player[data-provider="uqload"] .custom-embed-frame,
+.player-mount.player-pseudo-fullscreen .custom-embed-player[data-provider="uqload"] .custom-embed-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  max-width: none;
+  height: calc(100% + 8px);
+  min-height: calc(100% + 8px);
+}
+
 .player-activity-capture {
   position: absolute;
   inset: 0;
-  z-index: 3;
+  z-index: 5;
   pointer-events: none;
 }
 
@@ -945,7 +957,7 @@ h3 {
   position: absolute;
   right: 12px;
   bottom: 12px;
-  z-index: 4;
+  z-index: 6;
   display: flex;
   justify-content: flex-end;
   opacity: 1;
