@@ -45,6 +45,7 @@ body.modal-open {
 
 body.player-pseudo-fullscreen-active {
   overflow: hidden;
+  background: #000;
 }
 
 [hidden] {
@@ -784,7 +785,11 @@ h3 {
 .player-mount:fullscreen {
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
+  min-height: 100dvh;
   aspect-ratio: auto;
+  overflow: hidden;
+  background: #000;
   border: 0;
   border-radius: 0;
 }
@@ -792,27 +797,48 @@ h3 {
 .player-mount:-webkit-full-screen {
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
+  min-height: 100dvh;
   aspect-ratio: auto;
+  overflow: hidden;
+  background: #000;
   border: 0;
   border-radius: 0;
 }
 
 .player-mount.player-pseudo-fullscreen {
   position: fixed;
-  inset: 0;
+  inset: 0 0 -1px 0;
   z-index: 60;
-  width: 100vw;
+  width: auto;
   max-width: none;
-  height: 100dvh;
+  height: auto;
+  max-height: none;
   margin: 0;
   aspect-ratio: auto;
+  background: #000;
   border: 0;
   border-radius: 0;
+}
+
+.player-mount:fullscreen::after,
+.player-mount:-webkit-full-screen::after,
+.player-mount.player-pseudo-fullscreen::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  height: 2px;
+  background: #000;
+  content: "";
+  pointer-events: none;
 }
 
 .main-video {
   width: 100%;
   height: 100%;
+  min-height: 100%;
   max-height: 100%;
   background: #000;
   border: 0;
@@ -899,8 +925,20 @@ h3 {
 .custom-embed-frame {
   width: 100%;
   height: 100%;
+  min-height: 100%;
   background: #000;
   border: 0;
+}
+
+.player-activity-capture {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.player-mount.controls-idle .player-activity-capture {
+  pointer-events: auto;
 }
 
 .player-floating-controls {
@@ -910,7 +948,23 @@ h3 {
   z-index: 4;
   display: flex;
   justify-content: flex-end;
+  opacity: 1;
   pointer-events: none;
+  transform: translateY(0);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+.player-floating-controls.controls-idle {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(6px);
+}
+
+.player-floating-controls:focus-within {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .player-control-button {
@@ -1589,6 +1643,12 @@ h3 {
   .player-help,
   .player-details {
     max-width: calc(100vw - 56px);
+  }
+
+  .player-mount:fullscreen,
+  .player-mount:-webkit-full-screen,
+  .player-mount.player-pseudo-fullscreen {
+    max-width: none;
   }
 
   .player-poster,

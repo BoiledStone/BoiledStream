@@ -47,6 +47,8 @@
   const nextVideo = videos[(currentIndex + 1) % videos.length];
   let fullscreenButtons = [];
   let isPseudoFullscreen = false;
+  let controlsIdleTimer = null;
+  let hasBoundPlayerActivity = false;
 
   function inferLanguage(item) {
     if (item.language) {
@@ -110,6 +112,37 @@
     });
   }
 
+  function setFloatingControlsIdle(isIdle) {
+    playerMount.classList.toggle("controls-idle", isIdle);
+    playerMount
+      .querySelector(".player-floating-controls")
+      ?.classList.toggle("controls-idle", isIdle);
+  }
+
+  function scheduleFloatingControlsIdle() {
+    window.clearTimeout(controlsIdleTimer);
+    controlsIdleTimer = window.setTimeout(() => {
+      setFloatingControlsIdle(true);
+    }, 3000);
+  }
+
+  function showFloatingControls() {
+    setFloatingControlsIdle(false);
+    scheduleFloatingControlsIdle();
+  }
+
+  function bindPlayerActivity() {
+    if (hasBoundPlayerActivity) {
+      return;
+    }
+
+    hasBoundPlayerActivity = true;
+    ["mousemove", "pointermove", "pointerdown", "touchstart", "focusin"].forEach((eventName) => {
+      playerMount.addEventListener(eventName, showFloatingControls, { passive: true });
+    });
+    document.addEventListener("keydown", showFloatingControls);
+  }
+
   function enterPseudoFullscreen() {
     isPseudoFullscreen = true;
     document.body.classList.add("player-pseudo-fullscreen-active");
@@ -160,15 +193,25 @@
 
   function renderPlayerChrome() {
     playerMount.querySelector(".player-floating-controls")?.remove();
+    playerMount.querySelector(".player-activity-capture")?.remove();
+    const needsActivityCapture = Boolean(playerMount.querySelector("iframe"));
+
     playerMount.insertAdjacentHTML(
       "beforeend",
       `
+        ${
+          needsActivityCapture
+            ? '<div class="player-activity-capture" aria-hidden="true"></div>'
+            : ""
+        }
         <div class="player-floating-controls" aria-label="Contrôles du player">
           <button class="player-control-button" type="button" data-player-fullscreen>Plein écran</button>
         </div>
       `
     );
     bindFullscreenButton(playerMount.querySelector("[data-player-fullscreen]"));
+    bindPlayerActivity();
+    showFloatingControls();
     updateFullscreenButton();
   }
 
@@ -178,7 +221,13 @@
     }
 
     fullscreenButtons.push(button);
-    button.addEventListener("click", togglePlayerFullscreen);
+    button.addEventListener("click", (event) => {
+      if (event.detail > 0) {
+        button.blur();
+      }
+
+      togglePlayerFullscreen();
+    });
   }
 
   function renderUqloadProxy(item) {
