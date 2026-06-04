@@ -206,7 +206,41 @@
       posterUrl: "https://image.tmdb.org/t/p/w600_and_h900_bestv2/thQQ3BBBhGDtWm3UTtabhyDJd8U.jpg",
       description:
         "Un jeune cinéaste bascule dans une autre dimension vide et labyrinthique, qui semble abriter des êtres d'un autre monde.",
+      tags: ["Horreur", "Mystère", "Science-Fiction"]
+    },
+    {
+      provider: "embed",
+      id: "obsession",
+      title: "Obsession",
+      category: "Film",
+      duration: "1:45:29",
+      resolution: "1080x720",
+      language: "Fr",
+      date: "2026",
+      sourceName: "Vidzy",
+      sourceUrl: "https://vidzy.org/embed-kdd8mtwq0j1i.html",
+      embedUrl: "https://vidzy.org/embed-kdd8mtwq0j1i.html",
+      posterUrl: "https://image.tmdb.org/t/p/w600_and_h900_bestv2/mDCR1frpUvGfIKksuM440VLb7X9.jpg",
+      description:
+        "Et si vous pouviez réaliser votre rêve le plus fou ? Un jeune introverti met la main sur un objet magique capable d’exaucer n’importe quel souhait. Son crush de toujours tombe alors raide dingue de lui… jusqu’à l’obsession la plus totale. Faites attention à ce que vous souhaitez !",
       tags: ["Horreur"]
+    },
+    {
+      provider: "embed",
+      id: "numero-9",
+      title: "Numéro 9",
+      category: "Film",
+      duration: "1:19:22",
+      resolution: "1080x720",
+      language: "Fr",
+      date: "2026",
+      sourceName: "Vidzy",
+      sourceUrl: "https://vidzy.org/embed-7noyoadpqz9r.html",
+      embedUrl: "https://vidzy.org/embed-7noyoadpqz9r.html",
+      posterUrl: "https://image.tmdb.org/t/p/w400/h7uO28IWKtIIXhPWKvVdFOaPcSq.jpg",
+      description:
+        "Dans un futur proche, la Terre a été ravagée par une grande guerre entre les hommes et les puissantes machines qu'ils avaient créées. Sachant l'humanité condamnée, un scientifique crée 9 petites créatures, fragiles et sans défense à partir d'objets divers ramassés dans les décombres. Incapables de s'opposer aux machines, ils ont formé une petite communauté survivant au jour le jour dans les décombres. Mais le dernier né de cette famille, le Numéro 9 a une mission. Il détient en lui la clé de leur survie et devra convaincre ses camarades de quitter leur refuge de fortune pour s'aventurer au coeur du royaume des machines. Ce qu'ils vont découvrir en chemin représente peut-être le dernier espoir de l'Humanité.",
+      tags: ["Action", "Aventure", "Animation", "Science-Fiction", "Thriller"]
     }
   ];
 
