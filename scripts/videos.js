@@ -174,7 +174,7 @@
       posterUrl: "https://m.media-amazon.com/images/M/MV5BOWVjYjU0ZTAtNGVlNi00NGM1LTgzZjctNTZjMjAyYTc4N2VlXkEyXkFqcGc@._V1_FMjpg_UY2998_.jpg",
       description:
         "Retour dans l'univers Silent Hill, exploration psychologique et horreur atmosphérique centrée sur la mémoire, la perte et les manifestations de la ville.",
-      tags: ["Horreur", "Silent Hill"]
+      tags: ["Horreur"]
     },
     {
       provider: "uqload",
@@ -192,7 +192,7 @@
       tags: ["Comédie", "Musique"]
     },
     {
-      provider: "vidzy",
+      provider: "embed",
       id: "backrooms",
       title: "Backrooms",
       category: "Film",
@@ -205,9 +205,9 @@
       embedUrl: "https://vidzy.org/embed-e525be2gf8bi.html",
       posterUrl: "https://image.tmdb.org/t/p/w600_and_h900_bestv2/thQQ3BBBhGDtWm3UTtabhyDJd8U.jpg",
       description:
-        "Retour dans l'univers Silent Hill, exploration psychologique et horreur atmosphérique centrée sur la mémoire, la perte et les manifestations de la ville.",
-      tags: ["Horreur", "Silent Hill"]
-    },
+        "Un jeune cinéaste bascule dans une autre dimension vide et labyrinthique, qui semble abriter des êtres d'un autre monde.",
+      tags: ["Horreur"]
+    }
   ];
 
   function buildVideo(item) {
