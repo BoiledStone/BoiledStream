@@ -506,7 +506,9 @@ h3 {
 .video-card[data-source="vaplayer"] {
   --card-accent: var(--vaplayer);
 }
-
+.video-card[data-source="vidzy"] {
+  --card-accent: var(--vaplayer);
+}
 .video-card:hover,
 .video-card:focus-visible {
   background:
