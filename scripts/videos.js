@@ -258,6 +258,23 @@
       description:
         "Le narrateur, sans identité précise, vit seul, travaille seul, dort seul, mange seul ses plateaux‐repas pour une personne comme beaucoup d’autres personnes seules qui connaissent la misère humaine, morale et sexuelle. C’est pourquoi il va devenir membre du Fight club, un lieu clandestin où il va pouvoir retrouver sa virilité, l’échange et la communication. Ce club est dirigé par Tyler Durden, une sorte d’anarchiste entre gourou et philosophe qui prêche l’amour de son prochain.",
       tags: ["Drame"]
+    },
+    {
+      provider: "embed",
+      id: "a-minecraft-movie",
+      title: "A Minecraft Movie",
+      category: "Film",
+      duration: "1:41:09",
+      resolution: "1080x720",
+      language: "En",
+      date: "2025",
+      sourceName: "vaplayer",
+      sourceUrl: "https://vaplayer.ru/embed/movie/950387",
+      embedUrl: "https://vaplayer.ru/embed/movie/950387",
+      posterUrl: "https://image.tmdb.org/t/p/w500/yFHHfHcUgGAxziP1C3lLt0q2T4s.jpg",
+      description:
+        "Four unlikely friends face everyday challenges until a mysterious portal transports them to the Overworld, a whimsical, blocky realm fueled by creativity. To return home, they must navigate this fantastical landscape, tackling unique obstacles along the way. With the help of the skilled crafter, Steve, the group embarks on an enchanting adventure that tests their ingenuity and teamwork. As they explore this vibrant world, they learn to embrace their differences and discover the power of friendship in overcoming adversity.",
+      tags: ["Famille", "Aventure", "Comédie"]
     }
   ];
 
