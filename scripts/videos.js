@@ -190,7 +190,24 @@
       description:
         "Pas de chance pour le jeune JB. Il est passionné de rock'n'roll dans une famille ultra religieuse qui considère cette musique comme l'œuvre du diable. Lorsque son père lui colle une raclée en arrachant tous les posters de ses idoles, JB s'enfuit et part pour Hollywood y chercher le secret du rock'n'roll... ",
       tags: ["Comédie", "Musique"]
-    }
+    },
+    {
+      provider: "vidzy",
+      id: "backrooms",
+      title: "Backrooms",
+      category: "Film",
+      duration: "01:42:56",
+      resolution: "1080x720",
+      language: "En",
+      date: "2026",
+      sourceName: "Vidzy",
+      sourceUrl: "https://vidzy.org/embed-e525be2gf8bi.html",
+      embedUrl: "https://vidzy.org/embed-e525be2gf8bi.html",
+      posterUrl: "https://image.tmdb.org/t/p/w600_and_h900_bestv2/thQQ3BBBhGDtWm3UTtabhyDJd8U.jpg",
+      description:
+        "Retour dans l'univers Silent Hill, exploration psychologique et horreur atmosphérique centrée sur la mémoire, la perte et les manifestations de la ville.",
+      tags: ["Horreur", "Silent Hill"]
+    },
   ];
 
   function buildVideo(item) {
