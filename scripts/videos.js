@@ -233,7 +233,7 @@
       duration: "1:19:22",
       resolution: "1080x720",
       language: "Fr",
-      date: "2026",
+      date: "2009",
       sourceName: "Vidzy",
       sourceUrl: "https://vidzy.org/embed-7noyoadpqz9r.html",
       embedUrl: "https://vidzy.org/embed-7noyoadpqz9r.html",
@@ -241,6 +241,23 @@
       description:
         "Dans un futur proche, la Terre a été ravagée par une grande guerre entre les hommes et les puissantes machines qu'ils avaient créées. Sachant l'humanité condamnée, un scientifique crée 9 petites créatures, fragiles et sans défense à partir d'objets divers ramassés dans les décombres. Incapables de s'opposer aux machines, ils ont formé une petite communauté survivant au jour le jour dans les décombres. Mais le dernier né de cette famille, le Numéro 9 a une mission. Il détient en lui la clé de leur survie et devra convaincre ses camarades de quitter leur refuge de fortune pour s'aventurer au coeur du royaume des machines. Ce qu'ils vont découvrir en chemin représente peut-être le dernier espoir de l'Humanité.",
       tags: ["Action", "Aventure", "Animation", "Science-Fiction", "Thriller"]
+    },
+    {
+      provider: "embed",
+      id: "fight-club",
+      title: "Fight Club",
+      category: "Film",
+      duration: "2:19:08",
+      resolution: "1080x720",
+      language: "Fr",
+      date: "2026",
+      sourceName: "Vidzy",
+      sourceUrl: "https://vidzy.org/embed-8bbcxyiitroi.html",
+      embedUrl: "https://vidzy.org/embed-8bbcxyiitroi.html",
+      posterUrl: "https://image.tmdb.org/t/p/w400/t1i10ptOivG4hV7erkX3tmKpiqm.jpg",
+      description:
+        "Le narrateur, sans identité précise, vit seul, travaille seul, dort seul, mange seul ses plateaux‐repas pour une personne comme beaucoup d’autres personnes seules qui connaissent la misère humaine, morale et sexuelle. C’est pourquoi il va devenir membre du Fight club, un lieu clandestin où il va pouvoir retrouver sa virilité, l’échange et la communication. Ce club est dirigé par Tyler Durden, une sorte d’anarchiste entre gourou et philosophe qui prêche l’amour de son prochain.",
+      tags: ["Drame"]
     }
   ];
 
