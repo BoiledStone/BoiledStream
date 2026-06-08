@@ -38,11 +38,17 @@
   function buildPlayerUrl(id) {
     const encodedId = encodeURIComponent(id);
 
+    if (window.location.protocol === "file:") {
+      return buildDirectPlayerUrl(id);
+    }
+
     return window.location.pathname.includes("/watch/") ? `${encodedId}.html` : `watch/${encodedId}.html`;
   }
 
   function buildDirectPlayerUrl(id) {
-    return `player.html?video=${encodeURIComponent(id)}`;
+    const url = `player.html?video=${encodeURIComponent(id)}`;
+
+    return window.location.pathname.includes("/watch/") ? `../${url}` : url;
   }
 
   function getCardSourceName(video) {

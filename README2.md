@@ -18,13 +18,9 @@ scripts/sqlSupabase/*.sql          scripts SQL à lancer dans Supabase
 miniatures/posters/                affiches locales des films
 ```
 
-Pour ajouter un film, modifier `scripts/videos.js`, ajouter l'image dans `miniatures/posters/` si tu veux une affiche locale, puis relancer:
+Pour ajouter un film, modifier `scripts/videos.js` et ajouter l'image dans `miniatures/posters/` si tu veux une affiche locale.
 
-```bash
-node scripts/generate-watch-pages.js
-```
-
-Cette commande met a jour les pages `watch/*.html` utilisees par Discord pour afficher le titre et la miniature du bon film ou episode.
+Les pages `watch/*.html` utilisees par Discord pour afficher le titre et la miniature du bon film ou episode sont generees automatiquement par GitHub Actions apres un push.
 
 ## Ajouter Un Film Uqload
 
