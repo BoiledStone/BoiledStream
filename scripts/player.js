@@ -1,5 +1,7 @@
 (function () {
   const videos = window.BOILED_VIDEOS || [];
+  const episodes = window.BOILED_EPISODES || [];
+  const allVideos = [...videos, ...episodes];
   const utils = window.BOILED_UTILS;
   const params = new URLSearchParams(window.location.search);
   const requestedId = params.get("video");
@@ -20,7 +22,7 @@
   const relatedGrid = document.querySelector("#related-grid");
   const playerHelp = document.querySelector("#player-help");
 
-  if (!utils || !playerMount || !videos.length) {
+  if (!utils || !playerMount || !allVideos.length) {
     if (playerMount) {
       playerMount.innerHTML = `
         <div class="main-video player-error">
@@ -41,10 +43,10 @@
     renderVideoCard,
     bindImageFallbacks
   } = utils;
-  const video = videos.find((item) => item.id === requestedId) || videos[0];
-  const currentIndex = videos.findIndex((item) => item.id === video.id);
-  const previousVideo = videos[(currentIndex - 1 + videos.length) % videos.length];
-  const nextVideo = videos[(currentIndex + 1) % videos.length];
+  const video = allVideos.find((item) => item.id === requestedId) || videos[0] || episodes[0];
+  const currentIndex = allVideos.findIndex((item) => item.id === video.id);
+  const previousVideo = allVideos[(currentIndex - 1 + allVideos.length) % allVideos.length];
+  const nextVideo = allVideos[(currentIndex + 1) % allVideos.length];
   let fullscreenButtons = [];
   let isPseudoFullscreen = false;
   let controlsIdleTimer = null;
@@ -60,6 +62,102 @@
       .map(formatLanguage);
 
     return languageTags.length ? languageTags.join(" / ") : "Français";
+  }
+
+  function getSeriesForEpisode(item) {
+    return item.seriesId ? videos.find((candidate) => candidate.id === item.seriesId && candidate.type === "series") : null;
+  }
+
+  function getSeriesEpisodes(series) {
+    return series?.seasons?.flatMap((season) => season.episodes) || [];
+  }
+
+  function getNextEpisode(item) {
+    const series = getSeriesForEpisode(item);
+    const seriesEpisodes = getSeriesEpisodes(series);
+    const episodeIndex = seriesEpisodes.findIndex((episode) => episode.id === item.id);
+
+    return episodeIndex >= 0 ? seriesEpisodes[episodeIndex + 1] || null : null;
+  }
+
+  function getPreviousEpisode(item) {
+    const series = getSeriesForEpisode(item);
+    const seriesEpisodes = getSeriesEpisodes(series);
+    const episodeIndex = seriesEpisodes.findIndex((episode) => episode.id === item.id);
+
+    return episodeIndex > 0 ? seriesEpisodes[episodeIndex - 1] : null;
+  }
+
+  function renderSeriesBrowser(series) {
+    const seasons = series.seasons || [];
+    const firstSeason = seasons[0];
+
+    if (!seasons.length || !firstSeason?.episodes?.length) {
+      playerMount.innerHTML = `
+        <div class="main-video player-error">
+          <p>Aucun episode n'est disponible pour cette serie.</p>
+        </div>
+      `;
+      if (playerHelp) {
+        playerHelp.innerHTML = "";
+      }
+      return;
+    }
+
+    function renderEpisodeList(season) {
+      return season.episodes
+        .map(
+          (episode) => `
+            <a class="episode-link" href="${buildPlayerUrl(episode.id)}">
+              <span class="episode-number">E${String(episode.episodeNumber).padStart(2, "0")}</span>
+              <span class="episode-copy">
+                <strong>${escapeHtml(episode.title)}</strong>
+                <small>${escapeHtml([episode.duration, episode.language].filter(Boolean).join(" - "))}</small>
+              </span>
+            </a>
+          `
+        )
+        .join("");
+    }
+
+    playerMount.innerHTML = `
+      <div class="series-browser main-video">
+        <div class="series-browser-head">
+          <span class="source-pill">Serie</span>
+          <h2>${escapeHtml(series.title)}</h2>
+        </div>
+        <div class="season-tabs" role="tablist" aria-label="Saisons">
+          ${seasons
+            .map(
+              (season, index) => `
+                <button class="season-tab${index === 0 ? " active" : ""}" type="button" data-season-index="${index}" aria-pressed="${index === 0}">
+                  ${escapeHtml(season.title)}
+                </button>
+              `
+            )
+            .join("")}
+        </div>
+        <div class="episode-list" data-episode-list>
+          ${renderEpisodeList(firstSeason)}
+        </div>
+      </div>
+    `;
+
+    playerMount.querySelectorAll("[data-season-index]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const season = seasons[Number(button.dataset.seasonIndex)] || firstSeason;
+        playerMount.querySelectorAll("[data-season-index]").forEach((tab) => {
+          const isActive = tab === button;
+          tab.classList.toggle("active", isActive);
+          tab.setAttribute("aria-pressed", String(isActive));
+        });
+        playerMount.querySelector("[data-episode-list]").innerHTML = renderEpisodeList(season);
+      });
+    });
+
+    if (playerHelp) {
+      playerHelp.innerHTML = "";
+    }
   }
 
   function isUqloadEmbed(item) {
@@ -306,6 +404,11 @@
   }
 
   function renderPlayer(item) {
+    if (item.type === "series") {
+      renderSeriesBrowser(item);
+      return;
+    }
+
     if (item.embedUrl) {
       if (isUqloadEmbed(item)) {
         renderUqloadProxy(item);
@@ -362,7 +465,7 @@
       title.textContent = item.title;
     }
     if (category) {
-      category.textContent = "Lecture";
+      category.textContent = item.type === "series" ? "Serie" : item.seriesId ? "Episode" : "Lecture";
     }
     if (description) {
       description.textContent = item.description || "";
@@ -396,11 +499,39 @@
       return;
     }
 
-    playerActions.hidden = videos.length < 2;
-    if (videos.length < 2) {
+    if (video.type === "series") {
+      playerActions.hidden = true;
       return;
     }
 
+    const previousEpisode = getPreviousEpisode(video);
+    const nextEpisode = getNextEpisode(video);
+
+    if (video.seriesId) {
+      playerActions.hidden = !previousEpisode && !nextEpisode;
+      previousLink.hidden = !previousEpisode;
+      nextLink.hidden = !nextEpisode;
+
+      if (previousEpisode) {
+        previousLink.href = buildPlayerUrl(previousEpisode.id);
+        previousLink.textContent = "Episode precedent";
+        previousLink.setAttribute("aria-label", `Lire ${previousEpisode.title}`);
+      }
+      if (nextEpisode) {
+        nextLink.href = buildPlayerUrl(nextEpisode.id);
+        nextLink.textContent = "Prochain episode";
+        nextLink.setAttribute("aria-label", `Lire ${nextEpisode.title}`);
+      }
+      return;
+    }
+
+    playerActions.hidden = allVideos.length < 2;
+    if (allVideos.length < 2) {
+      return;
+    }
+
+    previousLink.hidden = false;
+    nextLink.hidden = false;
     previousLink.href = buildPlayerUrl(previousVideo.id);
     previousLink.textContent = "Précédent";
     previousLink.setAttribute("aria-label", `Lire ${previousVideo.title}`);
@@ -414,8 +545,11 @@
       return;
     }
 
-    relatedGrid.innerHTML = videos
-      .filter((item) => item.id !== video.id)
+    const relatedItems = video.seriesId
+      ? getSeriesEpisodes(getSeriesForEpisode(video)).filter((item) => item.id !== video.id)
+      : videos.filter((item) => item.id !== video.id);
+
+    relatedGrid.innerHTML = relatedItems
       .slice(0, 3)
       .map((item) => renderVideoCard(item, { related: true, tagLimit: 0 }))
       .join("");

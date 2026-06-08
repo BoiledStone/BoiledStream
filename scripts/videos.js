@@ -2,6 +2,12 @@
 // sur l'accueil, dans la recherche, dans le player et dans les avis.
 (function () {
   const PROVIDERS = {
+    series(item) {
+      return {
+        sourceName: "Serie",
+        sourceUrl: item.sourceUrl || "#"
+      };
+    },
     uqload(item) {
       return {
         sourceName: "Uqload",
@@ -14,6 +20,13 @@
         sourceName: "YouTube",
         sourceUrl: `https://www.youtube.com/watch?v=${item.videoId}`,
         embedUrl: `https://www.youtube.com/embed/${item.videoId}`
+      };
+    },
+    dailymotion(item) {
+      return {
+        sourceName: "Dailymotion",
+        sourceUrl: `https://www.dailymotion.com/video/${item.videoId}`,
+        embedUrl: `https://www.dailymotion.com/embed/video/${item.videoId}`
       };
     },
     embed(item) {
@@ -275,16 +288,129 @@
       description:
         "Four unlikely friends face everyday challenges until a mysterious portal transports them to the Overworld, a whimsical, blocky realm fueled by creativity. To return home, they must navigate this fantastical landscape, tackling unique obstacles along the way. With the help of the skilled crafter, Steve, the group embarks on an enchanting adventure that tests their ingenuity and teamwork. As they explore this vibrant world, they learn to embrace their differences and discover the power of friendship in overcoming adversity.",
       tags: ["Famille", "Aventure", "Comédie"]
+    },
+
+    {
+      provider: "series",
+      id: "supernatural",
+      title: "Supernatural",
+      category: "Serie",
+      language: "Anglais",
+      date: "2005",
+      posterUrl: "miniatures/posters/Supernatural.jpg",
+      description: "Deux frères chassent des créatures surnaturelles à travers les États-Unis.",
+      tags: ["Fantastique", "Horreur"],
+      seasons: [
+        {
+          number: 1,
+          title: "Saison 1",
+          episodes: [
+            {
+              provider: "Dailymotion",
+              title: "Pilot",
+              videoId: "k4Kgvh7o91dnnrGw7Yi",
+              duration: "00:46:21",
+              resolution: "1280x720"
+            },
+            {
+              provider: "Dailymotion",
+              title: "Wendigo",
+              videoId: "k4MJDmehjRt5FwGw96m",
+              duration: "00:43:07",
+              resolution: "1280x720"
+            },
+            {
+              provider: "Dailymotion",
+              title: "Dead in the Water",
+              videoId: "k7CPLjTEgI3VNgGw96q",
+              duration: "00:43:31",
+              resolution: "1280x720"
+            }
+          ]
+        }
+      ]
     }
+
   ];
 
+  function buildEpisode(series, season, episode, episodeIndex) {
+    const provider = String(episode.provider || "").toLowerCase();
+    const buildSource = PROVIDERS[provider];
+    if (!buildSource || provider === "series") {
+      throw new Error(`Provider episode inconnu: ${episode.provider}`);
+    }
+
+    const seasonNumber = season.number || episode.season || 1;
+    const episodeNumber = episode.number || episode.episode || episodeIndex + 1;
+    const episodeId =
+      episode.id ||
+      `${series.id}-s${String(seasonNumber).padStart(2, "0")}e${String(episodeNumber).padStart(2, "0")}`;
+    const { provider: _provider, fileId, videoId, ...details } = episode;
+
+    return Object.freeze({
+      ...details,
+      ...buildSource(episode),
+      id: episodeId,
+      title: episode.title || `${series.title} S${seasonNumber}E${episodeNumber}`,
+      category: "Serie",
+      seriesId: series.id,
+      seriesTitle: series.title,
+      seasonNumber,
+      episodeNumber,
+      duration: episode.duration || "",
+      resolution: episode.resolution || series.resolution || "",
+      language: episode.language || series.language || "",
+      date: episode.date || series.date || "",
+      posterUrl: episode.posterUrl || season.posterUrl || series.posterUrl || "",
+      description: episode.description || series.description || "",
+      tags: Object.freeze([...(series.tags || []), ...(episode.tags || [])])
+    });
+  }
+
+  function buildSeries(item) {
+    const seasons = (item.seasons || []).map((season, seasonIndex) => {
+      const seasonNumber = season.number || seasonIndex + 1;
+      const episodes = (season.episodes || []).map((episode, episodeIndex) =>
+        buildEpisode(item, { ...season, number: seasonNumber }, episode, episodeIndex)
+      );
+
+      return Object.freeze({
+        number: seasonNumber,
+        title: season.title || `Saison ${seasonNumber}`,
+        episodes: Object.freeze(episodes)
+      });
+    });
+    const episodeCount = seasons.reduce((total, season) => total + season.episodes.length, 0);
+    const { provider, seasons: _seasons, ...details } = item;
+
+    return Object.freeze({
+      ...details,
+      provider,
+      type: "series",
+      category: "Serie",
+      sourceName: "Serie",
+      sourceUrl: item.sourceUrl || "#",
+      duration: `${episodeCount} episode${episodeCount > 1 ? "s" : ""}`,
+      seasonCount: seasons.length,
+      episodeCount,
+      seasons: Object.freeze(seasons),
+      tags: Object.freeze([...(item.tags || [])])
+    });
+  }
+
   function buildVideo(item) {
-    const buildSource = PROVIDERS[item.provider];
+    const provider = String(item.provider || "").toLowerCase();
+
+    if (provider === "series") {
+      return buildSeries(item);
+    }
+
+    const buildSource = PROVIDERS[provider];
     if (!buildSource) {
       throw new Error(`Provider vidéo inconnu: ${item.provider}`);
     }
 
-    const { provider, fileId, videoId, ...details } = item;
+    const { provider: _provider, fileId, videoId, ...details } = item;
     const video = {
       ...details,
       ...buildSource(item),
@@ -294,5 +420,9 @@
     return Object.freeze(video);
   }
 
-  window.BOILED_VIDEOS = Object.freeze(catalogue.map(buildVideo));
+  const videos = catalogue.map(buildVideo);
+  window.BOILED_VIDEOS = Object.freeze(videos);
+  window.BOILED_EPISODES = Object.freeze(
+    videos.flatMap((item) => item.seasons?.flatMap((season) => season.episodes) || [])
+  );
 })();

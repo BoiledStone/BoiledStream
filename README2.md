@@ -121,6 +121,67 @@ Utiliser `provider: "direct"` seulement pour une vraie URL `.mp4` ou compatible 
 }
 ```
 
+## Ajouter Une Serie
+
+Dans `scripts/videos.js`, ajouter un bloc avec `provider: "series"`. La carte apparait dans le catalogue, puis le player affiche les boutons de saisons et la liste des episodes.
+
+```js
+{
+  provider: "series",
+  id: "ma-serie",
+  title: "Ma Serie",
+  category: "Serie",
+  language: "Fr",
+  date: "2024",
+  posterUrl: "miniatures/posters/ma-serie.webp",
+  description: "Resume court de la serie.",
+  tags: ["Action"],
+  seasons: [
+    {
+      number: 1,
+      title: "Saison 1",
+      episodes: [
+        {
+          provider: "uqload",
+          title: "Episode 1",
+          fileId: "code-uqload-episode-1",
+          duration: "00:42:00",
+          resolution: "1280x720"
+        },
+        {
+          provider: "uqload",
+          title: "Episode 2",
+          fileId: "code-uqload-episode-2",
+          duration: "00:43:00",
+          resolution: "1280x720"
+        }
+      ]
+    }
+  ]
+}
+```
+
+Pour Dailymotion, utilise `provider: "dailymotion"` et mets seulement l'id dans `videoId`.
+
+```js
+{
+  provider: "dailymotion",
+  title: "Episode 1",
+  videoId: "ID_DAILYMOTION",
+  duration: "00:42:00",
+  resolution: "1280x720"
+}
+```
+
+Exemple:
+
+```text
+URL Dailymotion: https://www.dailymotion.com/video/x8abcde
+videoId: "x8abcde"
+```
+
+Les episodes peuvent aussi utiliser `provider: "youtube"`, `provider: "embed"` ou `provider: "direct"`, comme les films. Le bouton `Prochain episode` apparait automatiquement dans le lecteur quand il existe un episode suivant.
+
 ## Règles Des Champs
 
 - `id`: unique, en minuscules, sans espace, par exemple `silent-hill`.

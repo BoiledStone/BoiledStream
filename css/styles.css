@@ -1020,6 +1020,109 @@ h3 {
   outline: 0;
 }
 
+.series-browser {
+  display: grid;
+  align-content: start;
+  gap: 18px;
+  padding: 24px;
+  overflow: auto;
+  background:
+    radial-gradient(circle at 20% 0, rgba(36, 122, 150, 0.26), transparent 34%),
+    linear-gradient(135deg, rgba(212, 168, 79, 0.08), transparent 48%),
+    #070707;
+}
+
+.series-browser-head {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+}
+
+.series-browser-head h2 {
+  font-size: 1.75rem;
+}
+
+.season-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.season-tab {
+  min-height: 38px;
+  padding: 0 13px;
+  color: var(--muted);
+  background: #111;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 850;
+}
+
+.season-tab:hover,
+.season-tab:focus-visible,
+.season-tab.active {
+  color: #090909;
+  background: var(--gold);
+  border-color: var(--gold);
+  outline: 0;
+}
+
+.episode-list {
+  display: grid;
+  gap: 10px;
+}
+
+.episode-link {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.episode-link:hover,
+.episode-link:focus-visible {
+  background: rgba(255, 255, 255, 0.075);
+  border-color: var(--accent);
+  outline: 0;
+}
+
+.episode-number {
+  display: grid;
+  min-height: 36px;
+  color: #090909;
+  background: var(--teal);
+  border-radius: var(--radius);
+  font-size: 0.82rem;
+  font-weight: 950;
+  place-items: center;
+}
+
+.episode-copy {
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+}
+
+.episode-copy strong,
+.episode-copy small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.episode-copy small {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
 .player-error {
   display: grid;
   place-items: center;

@@ -9,6 +9,7 @@
   const videoCountLabel = document.querySelector("#video-count-label");
   const emptyState = document.querySelector("#empty-state");
   const FILTER_ALL = "Tout";
+  const FILTER_SERIES = "Serie";
   const FILTER_ANIMATED = "Animé";
   const state = {
     category: FILTER_ALL,
@@ -59,6 +60,7 @@
     const categories = [
       ...new Set([
         FILTER_ALL,
+        FILTER_SERIES,
         FILTER_ANIMATED,
         ...videos.map((video) => video.category).filter(Boolean)
       ])

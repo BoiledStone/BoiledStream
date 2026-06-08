@@ -2,6 +2,7 @@
   const HIDDEN_TAGS = new Set([
     "film",
     "serie",
+    "series",
     "anime",
     "francais",
     "anglais",
@@ -36,6 +37,18 @@
 
   function buildPlayerUrl(id) {
     return `player.html?video=${encodeURIComponent(id)}`;
+  }
+
+  function getCardSourceName(video) {
+    return video.type === "series" ? "Serie" : video.sourceName || "Source";
+  }
+
+  function getCardDuration(video) {
+    if (video.type === "series") {
+      return `${video.episodeCount || 0} ep.`;
+    }
+
+    return video.duration || "";
   }
 
   function formatLanguage(value) {
@@ -99,7 +112,8 @@
 
   function renderVideoCard(video, options = {}) {
     const { related = false, tagLimit = 2 } = options;
-    const sourceName = video.sourceName || "Source";
+    const sourceName = getCardSourceName(video);
+    const duration = getCardDuration(video);
 
     return `
       <a class="video-card${related ? " related-card" : ""}" href="${buildPlayerUrl(video.id)}" data-video-id="${escapeHtml(video.id)}" data-source="${escapeHtml(sourceKey(sourceName))}" aria-label="Ouvrir ${escapeHtml(video.title)}">
@@ -112,7 +126,7 @@
           <h3>${escapeHtml(video.title)}</h3>
           <div class="card-meta">
             <span class="source-pill">${escapeHtml(sourceName)}</span>
-            <span class="duration-pill">${escapeHtml(video.duration || "")}</span>
+            <span class="duration-pill">${escapeHtml(duration)}</span>
           </div>
           ${tagLimit > 0 ? renderCardTags(video, tagLimit) : ""}
         </div>
