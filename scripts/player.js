@@ -4,7 +4,8 @@
   const allVideos = [...videos, ...episodes];
   const utils = window.BOILED_UTILS;
   const params = new URLSearchParams(window.location.search);
-  const requestedId = params.get("video");
+  const watchMatch = window.location.pathname.match(/\/watch\/([^/]+)\.html$/);
+  const requestedId = params.get("video") || (watchMatch ? decodeURIComponent(watchMatch[1]) : "");
   const playerMount = document.querySelector("#player-mount");
   const playerPoster = document.querySelector("#player-poster");
   const title = document.querySelector("#player-title");
@@ -37,6 +38,7 @@
     buildPlayerUrl,
     escapeHtml,
     formatLanguage,
+    getAssetUrl,
     getDisplayTags,
     normalizeKey,
     renderPosterImage,
@@ -432,7 +434,8 @@
     }
 
     if (item.videoUrl) {
-      const posterAttribute = item.posterUrl ? ` poster="${escapeHtml(item.posterUrl)}"` : "";
+      const posterUrl = getAssetUrl(item.posterUrl);
+      const posterAttribute = posterUrl ? ` poster="${escapeHtml(posterUrl)}"` : "";
       playerMount.innerHTML = `
         <video class="main-video" controls preload="metadata" playsinline${posterAttribute}>
           <source src="${escapeHtml(item.videoUrl)}" type="video/mp4">

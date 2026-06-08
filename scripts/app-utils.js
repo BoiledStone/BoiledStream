@@ -36,6 +36,12 @@
   }
 
   function buildPlayerUrl(id) {
+    const encodedId = encodeURIComponent(id);
+
+    return window.location.pathname.includes("/watch/") ? `${encodedId}.html` : `watch/${encodedId}.html`;
+  }
+
+  function buildDirectPlayerUrl(id) {
     return `player.html?video=${encodeURIComponent(id)}`;
   }
 
@@ -96,9 +102,25 @@
     return normalizeKey(sourceName || "source");
   }
 
+  function getAssetUrl(url) {
+    const value = String(url || "").trim();
+
+    if (
+      !value ||
+      /^(https?:|data:|blob:|#|\/)/i.test(value) ||
+      value.startsWith("../")
+    ) {
+      return value;
+    }
+
+    return window.location.pathname.includes("/watch/") ? `../${value}` : value;
+  }
+
   function renderPosterImage(posterUrl, loading = "lazy") {
-    return posterUrl
-      ? `<img src="${escapeHtml(posterUrl)}" alt="" loading="${escapeHtml(loading)}">`
+    const resolvedPosterUrl = getAssetUrl(posterUrl);
+
+    return resolvedPosterUrl
+      ? `<img src="${escapeHtml(resolvedPosterUrl)}" alt="" loading="${escapeHtml(loading)}">`
       : "";
   }
 
@@ -145,8 +167,10 @@
 
   window.BOILED_UTILS = Object.freeze({
     buildPlayerUrl,
+    buildDirectPlayerUrl,
     escapeHtml,
     formatLanguage,
+    getAssetUrl,
     getDisplayTags,
     hasCategoryOrTag,
     normalizeKey,

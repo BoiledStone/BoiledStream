@@ -3,39 +3,40 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>BoiledStream - Player</title>
-    <meta name="description" content="Player vidéo BoiledStream.">
-    <link rel="canonical" href="https://boiledstone.github.io/BoiledStream/player.html">
+    <title>Fight Club | BoiledStream</title>
+    <meta name="description" content="Le narrateur, sans identité précise, vit seul, travaille seul, dort seul, mange seul ses plateaux‐repas pour une personne comme beaucoup d’autres personnes seules qui connaissent la misère humaine, morale et sexuelle. C’est pourquoi il va devenir membre du Fight club, un lieu clandestin où il va pouvoir retrouver sa virilité, l’échange et la communication. Ce club est dirigé par Tyler Durden, une sorte d’anarchiste entre gourou et philosophe qui prêche l’amour de son prochain.">
+    <link rel="canonical" href="https://boiledstone.github.io/BoiledStream/watch/fight-club.html">
     <meta property="og:site_name" content="BoiledStream">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://boiledstone.github.io/BoiledStream/player.html">
-    <meta property="og:title" content="BoiledStream - Player">
-    <meta property="og:description" content="Player video BoiledStream.">
-    <meta property="og:image" content="https://boiledstone.github.io/BoiledStream/favicon.svg">
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="BoiledStream - Player">
-    <meta name="twitter:description" content="Player video BoiledStream.">
-    <meta name="twitter:image" content="https://boiledstone.github.io/BoiledStream/favicon.svg">
-    <link rel="icon" href="favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="css/styles.css?v=20260601-uqload-wrapper-fs">
-    <script src="scripts/app-utils.js?v=20260608-discord-watch-pages" defer></script>
-    <!-- videos.js doit être chargé avant player.js: le player lit le catalogue central. -->
-    <script src="scripts/videos.js?v=20260531-player-fixes" defer></script>
-    <script src="scripts/player.js?v=20260608-discord-watch-pages" defer></script>
+    <meta property="og:type" content="video.movie">
+    <meta property="og:url" content="https://boiledstone.github.io/BoiledStream/watch/fight-club.html">
+    <meta property="og:title" content="Fight Club | BoiledStream">
+    <meta property="og:description" content="Le narrateur, sans identité précise, vit seul, travaille seul, dort seul, mange seul ses plateaux‐repas pour une personne comme beaucoup d’autres personnes seules qui connaissent la misère humaine, morale et sexuelle. C’est pourquoi il va devenir membre du Fight club, un lieu clandestin où il va pouvoir retrouver sa virilité, l’échange et la communication. Ce club est dirigé par Tyler Durden, une sorte d’anarchiste entre gourou et philosophe qui prêche l’amour de son prochain.">
+    <meta property="og:image" content="https://image.tmdb.org/t/p/w400/t1i10ptOivG4hV7erkX3tmKpiqm.jpg">
+    <meta property="og:image:secure_url" content="https://image.tmdb.org/t/p/w400/t1i10ptOivG4hV7erkX3tmKpiqm.jpg">
+    <meta property="og:image:alt" content="Fight Club">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Fight Club | BoiledStream">
+    <meta name="twitter:description" content="Le narrateur, sans identité précise, vit seul, travaille seul, dort seul, mange seul ses plateaux‐repas pour une personne comme beaucoup d’autres personnes seules qui connaissent la misère humaine, morale et sexuelle. C’est pourquoi il va devenir membre du Fight club, un lieu clandestin où il va pouvoir retrouver sa virilité, l’échange et la communication. Ce club est dirigé par Tyler Durden, une sorte d’anarchiste entre gourou et philosophe qui prêche l’amour de son prochain.">
+    <meta name="twitter:image" content="https://image.tmdb.org/t/p/w400/t1i10ptOivG4hV7erkX3tmKpiqm.jpg">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/styles.css?v=20260601-uqload-wrapper-fs">
+    <script src="../scripts/app-utils.js?v=20260608-discord-watch-pages" defer></script>
+    <script src="../scripts/videos.js?v=20260531-player-fixes" defer></script>
+    <script src="../scripts/player.js?v=20260608-discord-watch-pages" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <script src="scripts/supabase-config.js?v=20260531-player-fixes" defer></script>
-    <script src="scripts/community.js?v=20260531-player-fixes" defer></script>
+    <script src="../scripts/supabase-config.js?v=20260531-player-fixes" defer></script>
+    <script src="../scripts/community.js?v=20260531-player-fixes" defer></script>
   </head>
   <body>
     <header class="site-header">
-      <a class="brand" href="index.html" aria-label="Accueil BoiledStream">
+      <a class="brand" href="../index.html" aria-label="Accueil BoiledStream">
         <span class="brand-mark" aria-hidden="true">B</span>
         <span>BoiledStream</span>
       </a>
       <div class="header-actions">
         <nav class="top-nav" aria-label="Navigation principale">
-          <a href="index.html#catalogue">Catalogue</a>
-          <a href="index.html#sources">Sources</a>
+          <a href="../index.html#catalogue">Catalogue</a>
+          <a href="../index.html#sources">Sources</a>
         </nav>
         <div class="account-controls" id="account-controls" aria-live="polite"></div>
       </div>
@@ -44,7 +45,7 @@
     <main>
       <section class="player-layout" aria-labelledby="player-title">
         <div class="player-stage">
-          <a class="back-link" href="index.html#catalogue">Retour au catalogue</a>
+          <a class="back-link" href="../index.html#catalogue">Retour au catalogue</a>
           <div id="player-mount" class="player-mount" aria-label="Lecteur vidéo"></div>
           <div id="player-help" class="player-help"></div>
         </div>
