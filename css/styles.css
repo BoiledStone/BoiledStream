@@ -585,12 +585,17 @@ h3 {
 .duration-pill {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-width: 0;
+  max-width: 100%;
   min-height: 24px;
   padding: 0 8px;
+  overflow: hidden;
   border-radius: 999px;
   font-size: 0.72rem;
   font-weight: 900;
   line-height: 1;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -640,7 +645,6 @@ h3 {
   color: var(--muted);
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid var(--line);
-  margin-left: auto;
 }
 
 .card-body {
@@ -664,9 +668,9 @@ h3 {
 }
 
 .card-meta {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
   align-items: center;
-  justify-content: space-between;
   gap: 8px;
   min-width: 0;
   color: var(--muted);
@@ -1320,6 +1324,20 @@ h3 {
   /* Les cartes "À regarder ensuite" n'affichent pas les tags : on évite donc
      la ligne vide réservée aux tags dans la grille standard. */
   grid-template-rows: auto auto;
+}
+
+.video-card.related-card .card-meta {
+  align-items: start;
+  grid-template-columns: 1fr;
+  gap: 7px;
+}
+
+.video-card.related-card .source-pill,
+.video-card.related-card .duration-pill {
+  justify-self: start;
+  min-height: 22px;
+  padding: 0 7px;
+  font-size: 0.66rem;
 }
 
 .community-section {
