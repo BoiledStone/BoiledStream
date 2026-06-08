@@ -298,8 +298,8 @@
       language: "Anglais",
       date: "2005",
       posterUrl: "miniatures/posters/Supernatural.jpg",
-      description: "Deux frères chassent des créatures surnaturelles à travers les États-Unis.",
-      tags: ["Fantastique", "Horreur"],
+      description: "Les frères Winchester parcourent les États-Unis pour traquer les forces du Mal. Ils espèrent par la même occasion mettre la main sur le démon responsable de la mort de leur mère, vingt ans plus tôt.",
+      tags: ["Fantastique", "Horreur", "Policier", "Drame"],
       seasons: [
         {
           number: 1,
@@ -324,6 +324,27 @@
               title: "Dead in the Water",
               videoId: "k7CPLjTEgI3VNgGw96q",
               duration: "00:43:31",
+              resolution: "1280x720"
+            },
+            {
+              provider: "Dailymotion",
+              title: "Phantom Traveler",
+              videoId: "kWrm8BI2BLThxPGwcAG",
+              duration: "00:42:12",
+              resolution: "1280x720"
+            },
+            {
+              provider: "Dailymotion",
+              title: "Bloody Mary",
+              videoId: "kqcvwaYDB6184RGwcIC",
+              duration: "00:43:14",
+              resolution: "1280x720"
+            },
+            {
+              provider: "Dailymotion",
+              title: "Skin",
+              videoId: "k3tNdFLaQpEQMiGwcNc",
+              duration: "00:41:50",
               resolution: "1280x720"
             }
           ]
