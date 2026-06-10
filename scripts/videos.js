@@ -328,6 +328,46 @@
       videoId: "k3tNdFLaQpEQMiGwcNc",
       duration: "00:41:50",
       resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e07",
+      provider: "dailymotion",
+      title: "Hook Man",
+      seasonNumber: 1,
+      episodeNumber: 7,
+      videoId: "k4ReTDJSgIJchIGyLe6",
+      duration: "00:40:39",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e08",
+      provider: "dailymotion",
+      title: "Bugs",
+      seasonNumber: 1,
+      episodeNumber: 8,
+      videoId: "k9GvOvsnN1YAERGyLjg",
+      duration: "00:43:08",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e09",
+      provider: "dailymotion",
+      title: "Home",
+      seasonNumber: 1,
+      episodeNumber: 9,
+      videoId: "ktffjKeR2qENNjGyLjk",
+      duration: "00:42:57",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e10",
+      provider: "dailymotion",
+      title: "Asylum",
+      seasonNumber: 1,
+      episodeNumber: 10,
+      videoId: "k33mvqpriQGgtlGyLjo",
+      duration: "00:43:18",
+      resolution: "1280x720"
     }
   ];
 
@@ -675,99 +715,6 @@
       description:
         "Four unlikely friends face everyday challenges until a mysterious portal transports them to the Overworld, a whimsical, blocky realm fueled by creativity. To return home, they must navigate this fantastical landscape, tackling unique obstacles along the way. With the help of the skilled crafter, Steve, the group embarks on an enchanting adventure that tests their ingenuity and teamwork. As they explore this vibrant world, they learn to embrace their differences and discover the power of friendship in overcoming adversity.",
       tags: ["Famille", "Aventure", "Comédie"]
-<<<<<<< HEAD
-    },
-
-    {
-      provider: "series",
-      id: "supernatural",
-      title: "Supernatural",
-      category: "Serie",
-      language: "Anglais",
-      date: "2005",
-      posterUrl: "miniatures/posters/Supernatural.jpg",
-      description: "Les frères Winchester parcourent les États-Unis pour traquer les forces du Mal. Ils espèrent par la même occasion mettre la main sur le démon responsable de la mort de leur mère, vingt ans plus tôt.",
-      tags: ["Fantastique", "Horreur", "Policier", "Drame"],
-      seasons: [
-        {
-          number: 1,
-          title: "Saison 1",
-          episodes: [
-            {
-              provider: "Dailymotion",
-              title: "Pilot",
-              videoId: "k4Kgvh7o91dnnrGw7Yi",
-              duration: "00:46:21",
-              resolution: "1280x720"
-            },
-            {
-              provider: "Dailymotion",
-              title: "Wendigo",
-              videoId: "k4MJDmehjRt5FwGw96m",
-              duration: "00:43:07",
-              resolution: "1280x720"
-            },
-            {
-              provider: "Dailymotion",
-              title: "Dead in the Water",
-              videoId: "k7CPLjTEgI3VNgGw96q",
-              duration: "00:43:31",
-              resolution: "1280x720"
-            },
-            {
-              provider: "Dailymotion",
-              title: "Phantom Traveler",
-              videoId: "kWrm8BI2BLThxPGwcAG",
-              duration: "00:42:12",
-              resolution: "1280x720"
-            },
-            {
-              provider: "Dailymotion",
-              title: "Bloody Mary",
-              videoId: "kqcvwaYDB6184RGwcIC",
-              duration: "00:43:14",
-              resolution: "1280x720"
-            },
-            {
-              provider: "Dailymotion",
-              title: "Skin",
-              videoId: "k3tNdFLaQpEQMiGwcNc",
-              duration: "00:41:50",
-              resolution: "1280x720"
-            },
-            {
-              provider: "Dailymotion",
-              title: "Hook Man",
-              videoId: "k4ReTDJSgIJchIGyLe6",
-              duration: "00:41:50",
-              resolution: "1280x720"
-            },
-            {
-              provider: "Dailymotion",
-              title: "Bugs",
-              videoId: "k9GvOvsnN1YAERGyLjg",
-              duration: "00:41:50",
-              resolution: "1280x720"
-            },
-            {
-              provider: "Dailymotion",
-              title: "Home",
-              videoId: "ktffjKeR2qENNjGyLjk",
-              duration: "00:41:50",
-              resolution: "1280x720"
-            },
-            {
-              provider: "Dailymotion",
-              title: "Asylum",
-              videoId: "k33mvqpriQGgtlGyLjo",
-              duration: "00:41:50",
-              resolution: "1280x720"
-            }
-          ]
-        }
-      ]
-=======
->>>>>>> 5246791d4368bc3fccc27cc1868fc7814d235ff4
     }
   ];
 
