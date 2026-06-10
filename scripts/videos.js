@@ -20,7 +20,7 @@
       return {
         sourceName: "Dailymotion",
         sourceUrl: `https://www.dailymotion.com/video/${item.videoId}`,
-        embedUrl: `https://www.dailymotion.com/embed/video/${item.videoId}`
+        embedUrl: `https://geo.dailymotion.com/player.html?video=${item.videoId}`
       };
     },
     embed(item) {
@@ -104,15 +104,19 @@
   */
   function buildEpisodes(config, defaults = {}) {
     const seasonNumber = config.number;
-    const availableEpisodes = Number(config.availableEpisodes ?? config.episodes ?? config.totalEpisodes) || 0;
+    const episodeNumbers = config.episodeNumbers?.length
+      ? config.episodeNumbers.map(Number).filter(Boolean)
+      : null;
+    const availableEpisodes =
+      Number(config.availableEpisodes ?? config.episodes ?? config.totalEpisodes ?? episodeNumbers?.length) || 0;
     const sourceName = config.sourceName || defaults.sourceName || "Player";
     const allowExternalSource = defaults.allowExternalSource !== false;
     const sourceUrl = allowExternalSource ? config.sourceUrl || defaults.sourceUrl : "";
     const languages = uniqueValues(config.languages || defaults.languages || DEFAULT_SERIES_LANGUAGES);
     const episodeSources = config.episodeSources || {};
+    const numbers = episodeNumbers || Array.from({ length: availableEpisodes }, (_item, index) => index + 1);
 
-    return Array.from({ length: availableEpisodes }, (_item, index) => {
-      const episodeNumber = index + 1;
+    return numbers.map((episodeNumber) => {
       const directSource = episodeSources[episodeNumber] || episodeSources[`e${episodeNumber}`] || {};
       const episodeId =
         directSource.id ||
@@ -139,7 +143,11 @@
   }
 
   function buildSeason(config, defaults = {}) {
-    const availableEpisodes = Number(config.availableEpisodes ?? config.episodes ?? config.totalEpisodes) || 0;
+    const episodeNumbers = config.episodeNumbers?.length
+      ? config.episodeNumbers.map(Number).filter(Boolean)
+      : null;
+    const availableEpisodes =
+      Number(config.availableEpisodes ?? config.episodes ?? config.totalEpisodes ?? episodeNumbers?.length) || 0;
     const totalEpisodes = Number(config.totalEpisodes ?? config.episodes ?? availableEpisodes) || availableEpisodes;
     const sourceName = config.sourceName || defaults.sourceName || "Player";
     const allowExternalSource = defaults.allowExternalSource !== false;
@@ -237,79 +245,25 @@
     );
   }
 
+  const RICK_AND_MORTY_FR_EPISODES = [
+    { provider: "dailymotion", seasonNumber: 1, episodeNumber: 1, videoId: "k1G3j2LjU05O2PGy6aG" },
+    { provider: "dailymotion", seasonNumber: 1, episodeNumber: 3, videoId: "k4pykpn2tF0lNZGy6ae" },
+    { provider: "dailymotion", seasonNumber: 1, episodeNumber: 6, videoId: "k5tY4WPJGkEiP3Gy6ay" },
+    { provider: "dailymotion", seasonNumber: 1, episodeNumber: 7, videoId: "k7tbDU1PNgCduwGy6am" },
+    { provider: "dailymotion", seasonNumber: 1, episodeNumber: 9, videoId: "k7l6EsYjYLKx2FGy6au" },
+    { provider: "dailymotion", seasonNumber: 1, episodeNumber: 10, videoId: "k7cV5hO5OySHwGGy6a6" }
+  ];
+
   const RICK_AND_MORTY_SEASONS = [
     {
       number: 1,
-      episodes: 11,
+      episodeNumbers: RICK_AND_MORTY_FR_EPISODES.map((episode) => episode.episodeNumber),
       sourceUrl: "",
       posterUrl: "https://image.tmdb.org/t/p/w400/3MYxbw5FNgowfIJ6K0WCW49hjSo.jpg",
+      episodeSources: buildProviderEpisodeSources("FR", RICK_AND_MORTY_FR_EPISODES),
+      languages: ["FR"],
       description:
         "Rick et Morty rencontrent un prêteur sur gages dans l'espace, vivent dans des univers parallèles et se retrouvent nez à nez avec le diable."
-    },
-    {
-      number: 2,
-      episodes: 10,
-      sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w400/pZSkjWs5m9ew5OmpoFUvsnnEfKj.jpg",
-      description:
-        "Rick et Morty remettent le temps en marche, mais doivent survivre dans une autre dimension en ruines qui n'existe peut-être même pas."
-    },
-    {
-      number: 3,
-      episodes: 10,
-      sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w400/qAI9rbMSqGUqxsq2DxJE46PWTQA.jpg",
-      description:
-        "Le duo voyage, se la coule douce, croise des dilemmes familiaux et Rick se transforme en cornichon."
-    },
-    {
-      number: 4,
-      episodes: 10,
-      sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w400/92EMKUuiCTS72TxcmHbneUzILRE.jpg",
-      description:
-        "Rick et Morty repartent dans des aventures interdimensionnelles qui défient le temps, l'espace et la logique familiale."
-    },
-    {
-      number: 5,
-      episodes: 10,
-      sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w400/lC5QlHFnB0MAigxnzuCWDTVLXKE.jpg",
-      description:
-        "Un brillant inventeur et son petit-fils un peu à l'Ouest repartent pour une nouvelle salve d'aventures absurdes."
-    },
-    {
-      number: 6,
-      episodes: 10,
-      sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w400/cvhNj9eoRBe5SxjCbQTkh05UP5K.jpg",
-      description:
-        "Fatigués et dans une mauvaise passe, Rick et Morty tentent de rebondir dans des aventures possiblement liées à des dinosaures."
-    },
-    {
-      number: 7,
-      episodes: 10,
-      sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w400/OXy96OFiLDZIz9jT4Byxk1Hk6b.jpg",
-      description:
-        "Rick et Morty reviennent avec des possibilités infinies, des variantes familiales et toujours plus de chaos."
-    },
-    {
-      number: 8,
-      episodes: 10,
-      sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w500/WGRQ8FpjkDTzivQJ43t94bOuY0.jpg",
-      description:
-        "La huitième saison remet Summer, Jerry, Beth et l'autre Beth au centre d'aventures imprévisibles."
-    },
-    {
-      number: 9,
-      episodes: 3,
-      totalEpisodes: 10,
-      sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w500/owhkU6KRqdXoUQpjV8uyZGPtX58.jpg",
-      description:
-        "La saison 9 est référencée avec trois épisodes disponibles sur dix au moment de l'ajout."
     }
   ];
 
@@ -379,124 +333,13 @@
   const SUPERNATURAL_SEASONS = [
     {
       number: 1,
-      episodes: 22,
+      episodeNumbers: SUPERNATURAL_EN_EPISODES.map((episode) => episode.episodeNumber),
       sourceUrl: "",
       posterUrl: "https://image.tmdb.org/t/p/w400/rffL4ayOB0NaY3jcD1L2VsVoh0n.jpg",
       episodeSources: buildProviderEpisodeSources("EN", SUPERNATURAL_EN_EPISODES),
+      languages: ["EN"],
       description:
         "Sam et Dean Winchester parcourent les États-Unis pour traquer les forces du Mal responsables de la mort de leur mère, vingt ans plus tôt."
-    },
-    {
-      number: 2,
-      episodes: 22,
-      sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w400/rCyLjdjw0N0EAVYCuiZGyPMeJ0L.jpg",
-      description:
-        "Les frères Winchester poursuivent Azazel, le démon aux yeux jaunes, pendant que Sam développe d'étranges capacités."
-    },
-    {
-      number: 3,
-      episodes: 16,
-      sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w400/wxP0yrQCKO9Ihd4B9hP16C7xTXx.jpg",
-      description:
-        "Les démons échappés de l'Enfer se multiplient pendant que Sam cherche un moyen de sauver Dean."
-    },
-    {
-      number: 4,
-      episodes: 22,
-      sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w400/70M4sb3uoVsEHCRPVnjS7ClYVbk.jpg",
-      description:
-        "Dean revient de l'Enfer grâce à Castiel, et les Winchester découvrent une guerre plus vaste entre anges et démons."
-    },
-    {
-      number: 5,
-      episodes: 22,
-      sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w400/xaOt0r6EvgVkX9vdXDYjIlcFMUs.jpg",
-      description:
-        "Lucifer est libéré, l'apocalypse commence, et Sam et Dean sont entraînés dans un affrontement décisif."
-    },
-    {
-      number: 6,
-      episodes: 22,
-      sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w400/3Tddpn6nUjnfKWTabVMdhfvzuDB.jpg",
-      description:
-        "Dean tente une vie normale jusqu'au retour inattendu de Sam et d'une nouvelle vague de menaces surnaturelles."
-    },
-    {
-      number: 7,
-      episodes: 23,
-      sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w400/bz0Fz4EnfkPH86R6eeGLpMCWuS9.jpg",
-      description:
-        "Les Léviathans libérés du Purgatoire deviennent l'un des adversaires les plus dangereux des Winchester."
-    },
-    {
-      number: 8,
-      episodes: 23,
-      sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w400/gt7Kd8yPzzH7KeBTPVF8zleXyXV.jpg",
-      description:
-        "Dean revient du Purgatoire pendant que Sam tente de reprendre la chasse et de fermer les portes de l'Enfer."
-    },
-    {
-      number: 9,
-      episodes: 23,
-      sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w400/1bZo1MIWooTsFRg8tg0p3XLOaLZ.jpg",
-      description:
-        "Les anges tombés sur Terre poursuivent Sam, Dean, Castiel et Kevin, tandis que les démons se réorganisent."
-    },
-    {
-      number: 10,
-      episodes: 23,
-      sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w400/cvCqErWddIMA4SwB2ywIVSVUKPG.jpg",
-      description:
-        "La marque de Caïn bouleverse Dean, obligeant Sam à chercher une issue avant que son frère ne se perde."
-    },
-    {
-      number: 11,
-      episodes: 23,
-      sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w400/qAAQPjUhbFYgAM0KOsR6GKoVjjW.jpg",
-      description:
-        "Les Winchester font face aux Ténèbres avec l'aide de Castiel, Crowley, Rowena et d'alliés inattendus."
-    },
-    {
-      number: 12,
-      episodes: 23,
-      sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w400/aUjETkalRXPbaEREOcsUdeltlSx.jpg",
-      description:
-        "Mary Winchester revient, les Hommes de Lettres britanniques s'imposent, et Lucifer reste une menace."
-    },
-    {
-      number: 13,
-      episodes: 23,
-      sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w400/nEeJmlQCtxijqJadoDFEYqHJW0i.jpg",
-      description:
-        "Sam et Dean protègent Jack, un Nephilim puissant qui attire l'attention de nouvelles forces infernales."
-    },
-    {
-      number: 14,
-      episodes: 20,
-      sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w400/6i9c50LkZk0K4TOUpKRXjMnLmpI.jpg",
-      description:
-        "Sam, Castiel et leurs alliés cherchent un moyen de sauver Dean après une possession qui change tout."
-    },
-    {
-      number: 15,
-      episodes: 20,
-      sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w400/t0hmC3iSjndoWFEF81q31hrvZW7.jpg",
-      description:
-        "La dernière chasse des Winchester les confronte à l'origine même de leur destin."
     }
   ];
 
@@ -642,13 +485,13 @@
       id: "rick-et-morty-vf",
       title: "Rick et Morty",
       date: "2013",
-      sourceName: "Player",
+      sourceName: "Dailymotion",
       allowExternalSource: false,
       posterUrl: "https://image.tmdb.org/t/p/w500/qo07tk7mF3c63G7MktMVA2GApZt.jpg",
       description:
-        "Com\u00e9die de science-fiction anim\u00e9e centr\u00e9e sur les aventures interdimensionnelles de Rick Sanchez et Morty Smith, pr\u00eate pour des players par saison et \u00e9pisode.",
+        "Com\u00e9die de science-fiction anim\u00e9e centr\u00e9e sur les aventures interdimensionnelles de Rick Sanchez et Morty Smith, avec les \u00e9pisodes FR disponibles en player.",
       tags: ["Animation adulte", "Science-fiction", "Com\u00e9die"],
-      languages: [],
+      languages: ["FR"],
       seasons: RICK_AND_MORTY_SEASONS
     }),
     buildSeries({
