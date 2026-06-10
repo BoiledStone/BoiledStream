@@ -9,14 +9,14 @@
       content="Catalogue vidéo moderne avec films, séries, saisons, épisodes et player dédié."
     >
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="css/styles.css?v=20260609-series-rebase">
-    <script src="scripts/app-utils.js?v=20260609-series-rebase" defer></script>
+    <link rel="stylesheet" href="css/styles.css?v=20260610-clean-home">
+    <script src="scripts/app-utils.js?v=20260610-clean-home" defer></script>
     <!-- videos.js doit être chargé avant catalog.js: il expose window.BOILED_VIDEOS. -->
-    <script src="scripts/videos.js?v=20260609-series-rebase" defer></script>
-    <script src="scripts/catalog.js?v=20260609-series-rebase" defer></script>
+    <script src="scripts/videos.js?v=20260610-clean-home" defer></script>
+    <script src="scripts/catalog.js?v=20260610-clean-home" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <script src="scripts/supabase-config.js?v=20260609-series-rebase" defer></script>
-    <script src="scripts/community.js?v=20260609-series-rebase" defer></script>
+    <script src="scripts/supabase-config.js?v=20260610-clean-home" defer></script>
+    <script src="scripts/community.js?v=20260610-clean-home" defer></script>
   </head>
   <body>
     <header class="site-header">
@@ -27,6 +27,7 @@
       <div class="header-actions">
         <nav class="top-nav" aria-label="Navigation principale">
           <a href="#catalogue">Catalogue</a>
+          <a href="#series">Séries</a>
           <a href="#sources">Sources</a>
         </nav>
         <div class="account-controls" id="account-controls" aria-live="polite"></div>
@@ -45,15 +46,31 @@
       <section class="catalog-hero" aria-labelledby="page-title">
         <div class="hero-copy">
           <p class="section-kicker">Catalogue streaming</p>
-          <h1 id="page-title">Films et séries prêts à lancer.</h1>
+          <h1 id="page-title">Films et séries</h1>
           <p>
-            Une interface compacte, des affiches lisibles, des filtres rapides et un player avec saisons, langues et épisodes quand le contenu le permet.
+            Une sélection courte, organisée par affiches, sources, saisons et épisodes.
           </p>
+          <div class="hero-stats" aria-label="Résumé du catalogue">
+            <span><strong id="movie-count">0</strong> films</span>
+            <span><strong id="series-count">0</strong> séries</span>
+            <span><strong id="episode-count">0</strong> épisodes</span>
+          </div>
         </div>
-        <div class="hero-panel" aria-label="Statistiques du catalogue">
+        <div class="hero-panel" aria-label="Titres mis en avant">
+          <div class="featured-posters" id="featured-posters"></div>
           <span class="panel-number" id="video-count">0</span>
-          <span class="panel-label" id="video-count-label">titres prêts</span>
+          <span class="panel-label" id="video-count-label">médias disponibles</span>
         </div>
+      </section>
+
+      <section class="series-section" id="series" aria-labelledby="series-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Séries</p>
+            <h2 id="series-title">Continuer par saison</h2>
+          </div>
+        </div>
+        <div class="series-row" id="series-row"></div>
       </section>
 
       <section class="toolbar" aria-label="Recherche et filtres">
@@ -72,7 +89,7 @@
       <section class="catalog-section" id="catalogue" aria-labelledby="catalog-title">
         <div class="section-heading">
           <div>
-            <p class="section-kicker">Nouveautés</p>
+            <p class="section-kicker">Catalogue</p>
             <h2 id="catalog-title">Choisir un titre</h2>
           </div>
           <p id="result-count" class="result-count" aria-live="polite"></p>

@@ -665,7 +665,7 @@
       seasons: SUPERNATURAL_SEASONS
     }),
     {
-      provider: "externalPage",
+      provider: "embed",
       id: "coraline",
       title: "Coraline",
       category: "Film",
@@ -673,12 +673,13 @@
       resolution: "HD",
       language: "VF",
       date: "2009",
-      sourceName: "Player",
-      sourceUrl: "",
+      sourceName: "Vidzy",
+      sourceUrl: "https://vidzy.org/embed-bk2tw1uqgprz.html",
+      embedUrl: "https://vidzy.org/embed-bk2tw1uqgprz.html",
       posterUrl: "https://image.tmdb.org/t/p/w400/4jeFXQYytChdZYE9JYO7Un87IlW.jpg",
       description:
-        "Coraline découvre une porte condamnée menant à un monde parallèle plus coloré, plus attentif, puis beaucoup plus inquiétant.",
-      tags: ["Animation", "Fantastique", "Famille"]
+        "Coraline Jones est une fillette intrépide et douée d'une curiosité sans limites. Ses parents, qui ont tout juste emménagé avec elle dans une étrange maison, n'ont guère de temps à lui consacrer. Pour tromper son ennui, Coraline décide donc de jouer les exploratrices. Ouvrant une porte condamnée, elle pénètre dans un appartement identique au sien, mais où tout est différent. Dans cet Autre Monde, chaque chose lui paraît plus belle, plus colorée et plus attrayante. Son Autre Mère est pleinement disponible, son Autre Père prend la peine de lui mitonner des plats exquis, et même le Chat, si hautain dans la Vraie vie, daigne s'entretenir avec elle. Coraline est bien tentée d'élire domicile dans ce Monde merveilleux, qui répond à toutes ses attentes. Mais le rêve va très vite tourner au cauchemar. Prisonnière de l'Autre Mère, Coraline va devoir déployer des trésors de bravoure, d'imagination et de ténacité pour rentrer chez elle et sauver sa Vraie famille.",
+      tags: ["Animation", "Familial", "Fantastique"]
     },
     {
       provider: "embed",
