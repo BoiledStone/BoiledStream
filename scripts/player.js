@@ -57,6 +57,32 @@
   let controlsIdleTimer = null;
   let hasBoundPlayerActivity = false;
 
+  function showPlayerMount() {
+    playerMount.hidden = false;
+  }
+
+  function hidePlayerMount() {
+    const fullscreenElement = getFullscreenElement();
+
+    if (fullscreenElement === playerMount) {
+      const exitFullscreen = document.exitFullscreen?.() || document.webkitExitFullscreen?.();
+      Promise.resolve(exitFullscreen).catch(() => {});
+    }
+    if (isPseudoFullscreen) {
+      exitPseudoFullscreen();
+    }
+
+    setMiniPlayer(false);
+    window.clearTimeout(controlsIdleTimer);
+    fullscreenButtons = fullscreenButtons.filter((button) => document.contains(button));
+    playerMount.hidden = true;
+    playerMount.innerHTML = "";
+    playerMount.classList.remove("controls-idle");
+    if (playerHelp) {
+      playerHelp.innerHTML = "";
+    }
+  }
+
   function inferLanguage(item) {
     if (item.language) {
       return formatLanguage(item.language);
@@ -204,7 +230,7 @@
   }
 
   async function togglePlayerFullscreen() {
-    if (!playerMount) {
+    if (!playerMount || playerMount.hidden) {
       return;
     }
 
@@ -316,8 +342,9 @@
     const requestedEpisode = Number(currentParams.get("episode"));
     const requestedLanguage = currentParams.get("lang") || "";
     const season = seasons.find((entry) => entry.number === requestedSeason) || seasons[0];
-    const episode =
-      season?.episodes?.find((entry) => entry.number === requestedEpisode) || season?.episodes?.[0] || null;
+    const selectedEpisode =
+      season?.episodes?.find((entry) => entry.number === requestedEpisode) || null;
+    const episode = currentParams.has("episode") ? selectedEpisode : null;
     const languages = uniqueNormalizedValues([
       ...(episode?.languages || season?.languages || [item.language].filter(Boolean)),
       ...getSourceLanguages(episode?.sources)
@@ -335,7 +362,11 @@
     const nextParams = new URLSearchParams(window.location.search);
     nextParams.set("video", item.id);
     nextParams.set("season", String(season.number));
-    nextParams.set("episode", String(episode.number));
+    if (episode) {
+      nextParams.set("episode", String(episode.number));
+    } else {
+      nextParams.delete("episode");
+    }
     if (language) {
       nextParams.set("lang", language);
     } else {
@@ -347,6 +378,8 @@
   }
 
   function renderEmptyPlayer(item, options = {}) {
+    showPlayerMount();
+
     const titleText = options.title || item.title;
     const contextText =
       options.context || "Aucun player n'est encore renseigné pour cette sélection.";
@@ -373,6 +406,8 @@
   }
 
   function renderExternalGate(item, options = {}) {
+    showPlayerMount();
+
     const sourceUrl = options.sourceUrl || item.sourceUrl || "";
     const sourceName = options.sourceName || item.sourceName || "Source externe";
     const gateTitle = options.title || item.title;
@@ -410,20 +445,25 @@
     }
 
     const { season, episode, language, languages } = getSeriesState(item);
-    if (!season || !episode) {
+    if (!season) {
       seriesPanel.hidden = true;
       seriesPanel.innerHTML = "";
       return;
     }
 
     const seasons = item.seasons || [];
-    const playback = getEpisodePlaybackSource(episode, language);
+    const hasEpisodeSelection = Boolean(episode);
+    const playback = hasEpisodeSelection ? getEpisodePlaybackSource(episode, language) : {};
     const selectedPosterUrl = season.posterUrl || item.posterUrl;
-    const hasSelectedPlayer = Boolean(playback.embedUrl || playback.videoUrl);
-    const selectedSourceUrl = hasSelectedPlayer
-      ? ""
-      : playback.sourceUrl || episode.sourceUrl || season.sourceUrl || item.sourceUrl || "";
-    const selectedSourceName = playback.sourceName || episode.sourceName || item.sourceName || "Player";
+    const hasSelectedPlayer = hasEpisodeSelection && Boolean(playback.embedUrl || playback.videoUrl);
+    const selectedSourceUrl = hasEpisodeSelection
+      ? hasSelectedPlayer
+        ? ""
+        : playback.sourceUrl || episode.sourceUrl || season.sourceUrl || item.sourceUrl || ""
+      : "";
+    const selectedSourceName = hasEpisodeSelection
+      ? playback.sourceName || episode.sourceName || item.sourceName || "Player"
+      : item.sourceName || "Player";
     const sourceAction = selectedSourceUrl
       ? `<a class="button secondary" href="${escapeHtml(selectedSourceUrl)}" target="_blank" rel="noreferrer">Fiche source</a>`
       : "";
@@ -439,7 +479,7 @@
       .join("");
     const episodeButtons = (season.episodes || [])
       .map((entry) => {
-        const isActive = entry.number === episode.number;
+        const isActive = hasEpisodeSelection && entry.number === episode.number;
         return `
           <button class="episode-button${isActive ? " active" : ""}" type="button" data-episode="${entry.number}" aria-pressed="${isActive}">
             <span>Ep ${entry.number}</span>
@@ -473,12 +513,20 @@
       })
       .join("");
 
+    const panelTitle = hasEpisodeSelection
+      ? `${season.label} - ${episode.title}`
+      : `${season.label} - Choisir un épisode`;
+    const nowKicker = hasEpisodeSelection ? "Sélection active" : "Épisode";
+    const nowTitle = hasEpisodeSelection
+      ? `${item.title} - ${season.label} - ${episode.title}`
+      : `${item.title} - ${season.label}`;
+
     seriesPanel.hidden = false;
     seriesPanel.innerHTML = `
       <div class="series-panel-head">
         <div>
           <p class="section-kicker">Player série</p>
-          <h2>${escapeHtml(season.label)} - ${escapeHtml(episode.title)}</h2>
+          <h2>${escapeHtml(panelTitle)}</h2>
         </div>
         ${sourceAction}
       </div>
@@ -488,8 +536,8 @@
           ${renderPosterImage(selectedPosterUrl, "eager")}
         </div>
         <div class="series-now-copy">
-          <p class="section-kicker">Sélection active</p>
-          <h3>${escapeHtml(item.title)} - ${escapeHtml(season.label)} - ${escapeHtml(episode.title)}</h3>
+          <p class="section-kicker">${escapeHtml(nowKicker)}</p>
+          <h3>${escapeHtml(nowTitle)}</h3>
           <div class="series-now-meta" aria-label="Détails de la sélection">
             ${panelMeta}
           </div>
@@ -520,8 +568,7 @@
       button.addEventListener("click", () => {
         const nextSeason =
           seasons.find((entry) => entry.number === Number(button.dataset.season)) || season;
-        const nextEpisode = nextSeason.episodes?.[0] || episode;
-        updateSeriesAddress(item, nextSeason, nextEpisode, language);
+        updateSeriesAddress(item, nextSeason, null, language);
         renderSeriesExperience(item);
         renderMetadata(item);
         renderPlayerPoster(item);
@@ -531,7 +578,10 @@
     seriesPanel.querySelectorAll("[data-episode]").forEach((button) => {
       button.addEventListener("click", () => {
         const nextEpisode =
-          season.episodes?.find((entry) => entry.number === Number(button.dataset.episode)) || episode;
+          season.episodes?.find((entry) => entry.number === Number(button.dataset.episode));
+        if (!nextEpisode) {
+          return;
+        }
         updateSeriesAddress(item, season, nextEpisode, language);
         renderSeriesExperience(item);
         renderMetadata(item);
@@ -588,6 +638,8 @@
   }
 
   function renderEpisodePlayback(item, season, episode, language) {
+    showPlayerMount();
+
     const playback = getEpisodePlaybackSource(episode, language);
     const playbackTitle = `${item.title} - ${season.label} - ${episode.title}`;
     const playbackItem = {
@@ -644,10 +696,17 @@
 
   function renderSeriesExperience(item) {
     const { season, episode, language } = getSeriesState(item);
-    if (!season || !episode) {
+    if (!season) {
       renderExternalGate(item, {
         context: "Aucun épisode n'est référencé pour cette série."
       });
+      return;
+    }
+
+    if (!episode) {
+      updateSeriesAddress(item, season, null, language);
+      hidePlayerMount();
+      renderSeriesPanel(item);
       return;
     }
 
@@ -681,6 +740,8 @@
   }
 
   function renderUqloadProxy(item) {
+    showPlayerMount();
+
     const embedUrl = getSafeUqloadEmbedUrl(item);
 
     if (!embedUrl) {
@@ -771,6 +832,8 @@
       renderSeriesExperience(item);
       return;
     }
+
+    showPlayerMount();
 
     if (item.embedUrl) {
       if (isUqloadEmbed(item)) {
@@ -977,6 +1040,10 @@
   }
 
   function handlePlayerShortcuts(event) {
+    if (playerMount.hidden) {
+      return;
+    }
+
     if (isTypingTarget(event.target)) {
       return;
     }
@@ -1038,7 +1105,7 @@
 
   function updateMiniPlayer() {
     const communitySection = document.querySelector("#community-section");
-    if (!communitySection || !playerMount || playerMount.querySelector(".source-gate")) {
+    if (!communitySection || !playerMount || playerMount.hidden || playerMount.querySelector(".source-gate")) {
       setMiniPlayer(false);
       return;
     }
