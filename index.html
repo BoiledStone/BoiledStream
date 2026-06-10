@@ -3,20 +3,20 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>BoiledStream - Catalogue vidéo</title>
+    <title>BoiledStream - Films et séries</title>
     <meta
       name="description"
-      content="Catalogue vidéo avec vignettes cliquables et player dédié pour chaque contenu."
+      content="Catalogue vidéo moderne avec films, séries, saisons, épisodes et player dédié."
     >
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="css/styles.css?v=20260608-card-meta-fix">
-    <script src="scripts/app-utils.js?v=20260608-watch-local-fix" defer></script>
+    <link rel="stylesheet" href="css/styles.css?v=20260609-series-rebase">
+    <script src="scripts/app-utils.js?v=20260609-series-rebase" defer></script>
     <!-- videos.js doit être chargé avant catalog.js: il expose window.BOILED_VIDEOS. -->
-    <script src="scripts/videos.js?v=20260531-player-fixes" defer></script>
-    <script src="scripts/catalog.js?v=20260531-player-fixes" defer></script>
+    <script src="scripts/videos.js?v=20260609-series-rebase" defer></script>
+    <script src="scripts/catalog.js?v=20260609-series-rebase" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <script src="scripts/supabase-config.js?v=20260531-player-fixes" defer></script>
-    <script src="scripts/community.js?v=20260531-player-fixes" defer></script>
+    <script src="scripts/supabase-config.js?v=20260609-series-rebase" defer></script>
+    <script src="scripts/community.js?v=20260609-series-rebase" defer></script>
   </head>
   <body>
     <header class="site-header">
@@ -44,11 +44,10 @@
 
       <section class="catalog-hero" aria-labelledby="page-title">
         <div class="hero-copy">
-          <p class="section-kicker">Streaming simple</p>
-          <h1 id="page-title">Films prêts à lancer.</h1>
+          <p class="section-kicker">Catalogue streaming</p>
+          <h1 id="page-title">Films et séries prêts à lancer.</h1>
           <p>
-            Un catalogue compact, des affiches lisibles, une page lecteur par film
-            et des avis connectés pour garder les bons titres à portée de main.
+            Une interface compacte, des affiches lisibles, des filtres rapides et un player avec saisons, langues et épisodes quand le contenu le permet.
           </p>
         </div>
         <div class="hero-panel" aria-label="Statistiques du catalogue">
@@ -64,7 +63,7 @@
             id="search-input"
             type="search"
             autocomplete="off"
-            placeholder="Titre, ambiance, source..."
+            placeholder="Titre, saison, ambiance, source..."
           >
         </label>
         <div class="filter-group" id="filter-group" aria-label="Filtrer par catégorie"></div>
@@ -74,7 +73,7 @@
         <div class="section-heading">
           <div>
             <p class="section-kicker">Nouveautés</p>
-            <h2 id="catalog-title">Choisir un film</h2>
+            <h2 id="catalog-title">Choisir un titre</h2>
           </div>
           <p id="result-count" class="result-count" aria-live="polite"></p>
         </div>

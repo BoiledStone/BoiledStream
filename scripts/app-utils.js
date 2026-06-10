@@ -4,6 +4,7 @@
     "serie",
     "series",
     "anime",
+    "animation",
     "francais",
     "anglais",
     "english",
@@ -51,18 +52,6 @@
     return window.location.pathname.includes("/watch/") ? `../${url}` : url;
   }
 
-  function getCardSourceName(video) {
-    return video.type === "series" ? "Serie" : video.sourceName || "Source";
-  }
-
-  function getCardDuration(video) {
-    if (video.type === "series") {
-      return `${video.episodeCount || 0} ep.`;
-    }
-
-    return video.duration || "";
-  }
-
   function formatLanguage(value) {
     const labels = {
       en: "Anglais",
@@ -72,7 +61,10 @@
       vf: "Français",
       jp: "Japonais",
       multi: "Multi",
-      vostfr: "VOSTFR"
+      vostfr: "VOSTFR",
+      "vf+vostfr": "VF + VOSTFR",
+      french: "French",
+      truefrench: "TrueFrench"
     };
     const key = normalizeKey(value);
 
@@ -122,6 +114,38 @@
     return window.location.pathname.includes("/watch/") ? `../${value}` : value;
   }
 
+  function getEpisodeCount(video) {
+    return (
+      video.episodeCount ||
+      (video.seasons || []).reduce((total, season) => total + (season.episodes || []).length, 0)
+    );
+  }
+
+  function getSeasonLabel(video) {
+    const count = video.seasonCount || (video.seasons || []).length;
+
+    if (!count) {
+      return "";
+    }
+
+    return `${count} saison${count > 1 ? "s" : ""}`;
+  }
+
+  function getCardSourceName(video) {
+    return video.type === "series" ? video.sourceName || "Serie" : video.sourceName || "Source";
+  }
+
+  function getCardStat(video) {
+    if (video.type === "series") {
+      const episodeCount = getEpisodeCount(video);
+      const seasonLabel = getSeasonLabel(video);
+
+      return [seasonLabel, episodeCount ? `${episodeCount} ep.` : ""].filter(Boolean).join(" / ");
+    }
+
+    return video.duration || "";
+  }
+
   function renderPosterImage(posterUrl, loading = "lazy") {
     const resolvedPosterUrl = getAssetUrl(posterUrl);
 
@@ -141,20 +165,23 @@
   function renderVideoCard(video, options = {}) {
     const { related = false, tagLimit = 2 } = options;
     const sourceName = getCardSourceName(video);
-    const duration = getCardDuration(video);
+    const cardStat = getCardStat(video);
+    const cardType = video.type === "series" ? "Série" : video.category || "Film";
+    const playerHref = video.type === "series" ? buildDirectPlayerUrl(video.id) : buildPlayerUrl(video.id);
 
     return `
-      <a class="video-card${related ? " related-card" : ""}" href="${buildPlayerUrl(video.id)}" data-video-id="${escapeHtml(video.id)}" data-source="${escapeHtml(sourceKey(sourceName))}" aria-label="Ouvrir ${escapeHtml(video.title)}">
+      <a class="video-card${related ? " related-card" : ""}" href="${playerHref}" data-video-id="${escapeHtml(video.id)}" data-source="${escapeHtml(sourceKey(sourceName))}" data-type="${escapeHtml(video.type || "movie")}" aria-label="Ouvrir ${escapeHtml(video.title)}">
         <div class="thumb">
           <div class="generated-poster" aria-hidden="true"></div>
           ${renderPosterImage(video.posterUrl)}
+          <span class="card-kind">${escapeHtml(cardType)}</span>
           <span class="play-badge" aria-hidden="true"></span>
         </div>
         <div class="card-body">
           <h3>${escapeHtml(video.title)}</h3>
           <div class="card-meta">
             <span class="source-pill">${escapeHtml(sourceName)}</span>
-            <span class="duration-pill">${escapeHtml(duration)}</span>
+            <span class="duration-pill">${escapeHtml(cardStat)}</span>
           </div>
           ${tagLimit > 0 ? renderCardTags(video, tagLimit) : ""}
         </div>
@@ -177,6 +204,8 @@
     escapeHtml,
     formatLanguage,
     getAssetUrl,
+    getEpisodeCount,
+    getSeasonLabel,
     getDisplayTags,
     hasCategoryOrTag,
     normalizeKey,
