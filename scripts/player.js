@@ -311,7 +311,7 @@
       languages.find((entry) => normalizeKey(entry) === normalizeKey(requestedLanguage)) ||
       languages[0] ||
       item.language ||
-      "VF";
+      "";
 
     return { season, episode, language, languages };
   }
@@ -321,17 +321,50 @@
     nextParams.set("video", item.id);
     nextParams.set("season", String(season.number));
     nextParams.set("episode", String(episode.number));
-    nextParams.set("lang", language);
+    if (language) {
+      nextParams.set("lang", language);
+    } else {
+      nextParams.delete("lang");
+    }
     const nextUrl = new URL(window.location.href);
     nextUrl.search = nextParams.toString();
     window.history.replaceState(null, "", nextUrl);
   }
 
+  function renderEmptyPlayer(item, options = {}) {
+    const titleText = options.title || item.title;
+    const contextText =
+      options.context || "Aucun player n'est encore renseigné pour cette sélection.";
+    const meta = [options.language ? formatLanguage(options.language) : "", options.quality || item.resolution]
+      .filter(Boolean)
+      .map((value) => `<span>${escapeHtml(value)}</span>`)
+      .join("");
+
+    playerMount.innerHTML = `
+      <div class="main-video source-gate source-gate-empty">
+        <div class="source-gate-content">
+          <div class="embed-meta-row" aria-label="Informations de lecture">
+            ${meta}
+          </div>
+          <h2>${escapeHtml(titleText)}</h2>
+          <p>${escapeHtml(contextText)}</p>
+        </div>
+      </div>
+    `;
+
+    if (playerHelp) {
+      playerHelp.innerHTML = "";
+    }
+  }
+
   function renderExternalGate(item, options = {}) {
-    const sourceUrl = options.sourceUrl || item.sourceUrl || "#";
+    const sourceUrl = options.sourceUrl || item.sourceUrl || "";
     const sourceName = options.sourceName || item.sourceName || "Source externe";
     const gateTitle = options.title || item.title;
     const gateContext = options.context || "Source externe";
+    const sourceAction = sourceUrl
+      ? `<a class="button primary" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noreferrer">Ouvrir la source</a>`
+      : "";
     const gateMeta = [sourceName, options.language || item.language, options.quality || item.resolution]
       .filter(Boolean)
       .map((value) => `<span>${escapeHtml(formatLanguage(value))}</span>`)
@@ -345,7 +378,7 @@
           </div>
           <h2>${escapeHtml(gateTitle)}</h2>
           <p>${escapeHtml(gateContext)}</p>
-          <a class="button primary" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noreferrer">Ouvrir la source</a>
+          ${sourceAction}
         </div>
       </div>
     `;
@@ -371,8 +404,14 @@
     const seasons = item.seasons || [];
     const playback = getEpisodePlaybackSource(episode, language);
     const selectedPosterUrl = season.posterUrl || item.posterUrl;
-    const selectedSourceUrl = playback.sourceUrl || episode.sourceUrl || season.sourceUrl || item.sourceUrl || "#";
-    const selectedSourceName = playback.sourceName || episode.sourceName || item.sourceName || "Source";
+    const hasSelectedPlayer = Boolean(playback.embedUrl || playback.videoUrl);
+    const selectedSourceUrl = hasSelectedPlayer
+      ? ""
+      : playback.sourceUrl || episode.sourceUrl || season.sourceUrl || item.sourceUrl || "";
+    const selectedSourceName = playback.sourceName || episode.sourceName || item.sourceName || "Player";
+    const sourceAction = selectedSourceUrl
+      ? `<a class="button secondary" href="${escapeHtml(selectedSourceUrl)}" target="_blank" rel="noreferrer">Fiche source</a>`
+      : "";
     const availableEpisodes = season.availableEpisodes || (season.episodes || []).length;
     const totalEpisodes = season.totalEpisodes || availableEpisodes;
     const episodeCountText =
@@ -426,7 +465,7 @@
           <p class="section-kicker">Player série</p>
           <h2>${escapeHtml(season.label)} - ${escapeHtml(episode.title)}</h2>
         </div>
-        <a class="button secondary" href="${escapeHtml(selectedSourceUrl)}" target="_blank" rel="noreferrer">Fiche source</a>
+        ${sourceAction}
       </div>
       <div class="series-now">
         <div class="series-now-poster" aria-hidden="true">
@@ -603,9 +642,21 @@
     }
 
     const playback = getEpisodePlaybackSource(episode, language);
+    const sourceUrl = playback.sourceUrl || episode.sourceUrl || season.sourceUrl || item.sourceUrl || "";
+    if (!sourceUrl) {
+      renderEmptyPlayer(item, {
+        title: `${item.title} - ${season.label} - ${episode.title}`,
+        language,
+        quality: item.resolution,
+        context: "Aucun player n'est encore renseigné pour cet épisode."
+      });
+      renderSeriesPanel(item);
+      return;
+    }
+
     renderExternalGate(item, {
       title: `${item.title} - ${season.label} - ${episode.title}`,
-      sourceUrl: playback.sourceUrl || episode.sourceUrl || season.sourceUrl || item.sourceUrl,
+      sourceUrl,
       sourceName: playback.sourceName || episode.sourceName || item.sourceName,
       language,
       quality: item.resolution,
