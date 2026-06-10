@@ -98,9 +98,10 @@
 
   /*
     Ajouter une serie:
-    1. Creer une liste de saisons avec number, episodes, sourceUrl, posterUrl et description.
-    2. Appeler buildSeries({ id, title, date, posterUrl, description, tags, seasons }).
-    3. Ajouter seasonSourceMaps seulement si une langue/source supplementaire existe.
+    1. Creer une liste de saisons avec number, posterUrl, description et languages.
+    2. Renseigner episodeNumbers pour n'afficher que les episodes disponibles.
+    3. Ajouter les players par episode avec episodeSources ou buildProviderEpisodeSources.
+    4. Appeler buildSeries({ id, title, date, posterUrl, description, tags, seasons }).
   */
   function buildEpisodes(config, defaults = {}) {
     const seasonNumber = config.number;

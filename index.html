@@ -9,14 +9,14 @@
       content="Catalogue vidéo moderne avec films, séries, saisons, épisodes et player dédié."
     >
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="css/styles.css?v=20260610-source-colors">
-    <script src="scripts/app-utils.js?v=20260610-source-colors" defer></script>
+    <link rel="stylesheet" href="css/styles.css?v=20260610-home-series-autoplay">
+    <script src="scripts/app-utils.js?v=20260610-home-series-autoplay" defer></script>
     <!-- videos.js doit être chargé avant catalog.js: il expose window.BOILED_VIDEOS. -->
-    <script src="scripts/videos.js?v=20260610-source-colors" defer></script>
-    <script src="scripts/catalog.js?v=20260610-source-colors" defer></script>
+    <script src="scripts/videos.js?v=20260610-home-series-autoplay" defer></script>
+    <script src="scripts/catalog.js?v=20260610-home-series-autoplay" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <script src="scripts/supabase-config.js?v=20260610-source-colors" defer></script>
-    <script src="scripts/community.js?v=20260610-source-colors" defer></script>
+    <script src="scripts/supabase-config.js?v=20260610-home-series-autoplay" defer></script>
+    <script src="scripts/community.js?v=20260610-home-series-autoplay" defer></script>
   </head>
   <body>
     <header class="site-header">
@@ -92,8 +92,21 @@
             <p class="section-kicker">Séries</p>
             <h2 id="series-title">Continuer par saison</h2>
           </div>
+          <p id="series-result-count" class="result-count" aria-live="polite"></p>
+        </div>
+        <div class="series-toolbar" aria-label="Recherche séries">
+          <label class="search-box">
+            <span>Rechercher une série</span>
+            <input
+              id="series-search-input"
+              type="search"
+              autocomplete="off"
+              placeholder="Titre, saison, langue, source..."
+            >
+          </label>
         </div>
         <div class="series-row" id="series-row"></div>
+        <p class="empty-state" id="series-empty-state" hidden>Aucune série trouvée.</p>
       </section>
     </main>
 

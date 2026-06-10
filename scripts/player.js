@@ -112,6 +112,21 @@
     }
   }
 
+  function buildAutoplayEmbedUrl(url) {
+    try {
+      const embedUrl = new URL(url, window.location.href);
+
+      embedUrl.searchParams.set("autoplay", "1");
+      if (/(^|\.)youtube(-nocookie)?\.com$/i.test(embedUrl.hostname)) {
+        embedUrl.searchParams.set("playsinline", "1");
+      }
+
+      return embedUrl.toString();
+    } catch (_error) {
+      return url;
+    }
+  }
+
   function buildIframePolicy() {
     const allow = "autoplay; fullscreen; picture-in-picture; encrypted-media";
 
@@ -593,7 +608,7 @@
         playerMount.innerHTML = `
           <iframe
             class="main-video"
-            src="${escapeHtml(playback.embedUrl)}"
+            src="${escapeHtml(buildAutoplayEmbedUrl(playback.embedUrl))}"
             title="${escapeHtml(playbackTitle)}"
             ${buildIframePolicy()}
             referrerpolicy="origin"
@@ -715,9 +730,10 @@
     launchButton?.addEventListener("click", () => {
       const iframe = document.createElement("iframe");
       iframe.className = "custom-embed-frame";
-      iframe.src = embedUrl;
+      iframe.src = buildAutoplayEmbedUrl(embedUrl);
       iframe.title = item.title;
-      iframe.allow = "autoplay; picture-in-picture; encrypted-media";
+      iframe.allow = "autoplay; fullscreen; picture-in-picture; encrypted-media";
+      iframe.allowFullscreen = true;
       iframe.sandbox = "allow-scripts allow-presentation";
       iframe.referrerPolicy = "no-referrer";
       if ("credentialless" in iframe) {
@@ -765,7 +781,7 @@
       playerMount.innerHTML = `
         <iframe
           class="main-video"
-          src="${escapeHtml(item.embedUrl)}"
+          src="${escapeHtml(buildAutoplayEmbedUrl(item.embedUrl))}"
           title="${escapeHtml(item.title)}"
           ${buildIframePolicy()}
           referrerpolicy="origin"

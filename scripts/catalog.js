@@ -9,13 +9,18 @@
   const videoCountLabel = document.querySelector("#video-count-label");
   const movieCount = document.querySelector("#movie-count");
   const seriesCount = document.querySelector("#series-count");
+  const seriesSearchInput = document.querySelector("#series-search-input");
+  const seriesResultCount = document.querySelector("#series-result-count");
   const seriesRow = document.querySelector("#series-row");
+  const seriesEmptyState = document.querySelector("#series-empty-state");
   const emptyState = document.querySelector("#empty-state");
   const FILTER_ALL = "Tout";
-  const FILTER_SERIES = "Série";
   const FILTER_ANIMATED = "Animé";
   const state = {
     category: FILTER_ALL,
+    query: ""
+  };
+  const seriesState = {
     query: ""
   };
 
@@ -54,8 +59,8 @@
       .join(" ");
   }
 
-  function matchesSearch(video) {
-    const query = normalizeKey(state.query.trim());
+  function matchesSearch(video, queryValue = state.query) {
+    const query = normalizeKey(queryValue.trim());
 
     return !query || normalizeKey(searchableText(video)).includes(query);
   }
@@ -65,29 +70,23 @@
       return true;
     }
 
-    if (state.category === FILTER_SERIES) {
-      return video.type === "series";
-    }
-
     return state.category === FILTER_ANIMATED
       ? hasCategoryOrTag(video, "anime")
       : video.category === state.category;
   }
 
   function getFilteredVideos() {
-    return videos.filter((video) => matchesCategory(video) && matchesSearch(video));
+    return movieItems.filter((video) => matchesCategory(video) && matchesSearch(video));
   }
 
   function renderFilters() {
     const categories = [
       ...new Set([
         FILTER_ALL,
-        FILTER_SERIES,
         FILTER_ANIMATED,
-        ...videos
+        ...movieItems
           .map((video) => video.category)
           .filter(Boolean)
-          .filter((category) => normalizeKey(category) !== normalizeKey(FILTER_SERIES))
       ])
     ];
 
@@ -125,7 +124,16 @@
       return;
     }
 
-    seriesRow.innerHTML = seriesItems
+    const filteredSeries = seriesItems.filter((series) => matchesSearch(series, seriesState.query));
+
+    if (seriesResultCount) {
+      seriesResultCount.textContent = `${filteredSeries.length} série${filteredSeries.length > 1 ? "s" : ""}`;
+    }
+    if (seriesEmptyState) {
+      seriesEmptyState.hidden = filteredSeries.length > 0;
+    }
+
+    seriesRow.innerHTML = filteredSeries
       .map((series) => {
         const sourceName = series.sourceName || "Player";
         const seasonLabel = getSeasonLabel(series) || "Série";
@@ -175,6 +183,11 @@
   searchInput.addEventListener("input", (event) => {
     state.query = event.target.value;
     renderVideos();
+  });
+
+  seriesSearchInput?.addEventListener("input", (event) => {
+    seriesState.query = event.target.value;
+    renderSeriesRow();
   });
 
   if (videoCount) {

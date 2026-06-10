@@ -12,7 +12,7 @@
   --accent: #f48625;
   --accent-strong: #ffac45;
   --teal: #45c8b5;
-  --gold: #e7c15e;
+  --gold: #e5484d;
   --uqload-blue: #17315f;
   --dailymotion-blue: #2a61a8;
   --vaplayer: #6640a3;
@@ -110,7 +110,7 @@ iframe {
   display: grid;
   width: 38px;
   height: 38px;
-  color: #090909;
+  color: #fff;
   background: linear-gradient(135deg, #992400, #995400);
   border-radius: var(--radius);
   place-items: center;
@@ -207,7 +207,7 @@ iframe {
   width: 30px;
   height: 30px;
   overflow: hidden;
-  color: #090909;
+  color: #fff;
   background:
     linear-gradient(135deg, rgba(212, 168, 79, 0.95), rgba(78, 183, 166, 0.95));
   border: 1px solid rgba(243, 241, 237, 0.18);
@@ -458,7 +458,7 @@ h3 {
 .filter-button:hover,
 .filter-button:focus-visible,
 .filter-button.active {
-  color: #090909;
+  color: #fff;
   background: var(--gold);
   border-color: var(--gold);
 }
@@ -473,6 +473,15 @@ h3 {
 .series-section {
   padding-top: 18px;
   padding-bottom: 30px;
+}
+
+.series-toolbar {
+  max-width: 1180px;
+  margin: 0 auto 22px;
+}
+
+.series-toolbar .search-box {
+  width: min(100%, 430px);
 }
 
 .series-row {
@@ -761,15 +770,8 @@ h3 {
 }
 
 .source-pill {
-  color: #090909;
-  background: var(--card-accent);
-}
-
-.video-card[data-source="uqload"] .source-pill,
-.video-card[data-source="dailymotion"] .source-pill,
-.video-card[data-source="vaplayer"] .source-pill,
-.video-card[data-source="vidzy"] .source-pill {
   color: #fff;
+  background: var(--card-accent);
 }
 
 .play-badge {
@@ -824,7 +826,7 @@ h3 {
   align-items: center;
   min-height: 24px;
   padding: 0 9px;
-  color: #090909;
+  color: #fff;
   background: var(--card-accent);
   border-radius: var(--radius);
   font-size: 0.68rem;
@@ -1133,7 +1135,7 @@ h3 {
 }
 
 .embed-provider {
-  color: #090909 !important;
+  color: #fff !important;
   background: var(--gold) !important;
   border-color: var(--gold) !important;
 }
@@ -1301,7 +1303,7 @@ h3 {
 .season-tab:hover,
 .season-tab:focus-visible,
 .season-tab.active {
-  color: #090909;
+  color: #fff;
   background: var(--gold);
   border-color: var(--gold);
   outline: 0;
@@ -1334,7 +1336,7 @@ h3 {
 .episode-number {
   display: grid;
   min-height: 36px;
-  color: #090909;
+  color: #fff;
   background: var(--teal);
   border-radius: var(--radius);
   font-size: 0.82rem;
@@ -1593,14 +1595,14 @@ h3 {
 .episode-button:hover,
 .episode-button:focus-visible,
 .episode-button.active {
-  color: #090909;
+  color: #fff;
   background: var(--accent);
   border-color: var(--accent);
   outline: 0;
 }
 
 .season-button.active small {
-  color: rgba(9, 9, 9, 0.72);
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .season-description {
@@ -1739,7 +1741,7 @@ h3 {
 }
 
 .button.primary {
-  color: #090909;
+  color: #fff;
   background: var(--accent);
   border-color: var(--accent);
 }
@@ -1839,7 +1841,7 @@ h3 {
 .star-button:hover,
 .star-button:focus-visible,
 .star-button.active {
-  color: #080a0f;
+  color: #fff;
   background: var(--gold);
   border-color: var(--gold);
   outline: 0;
@@ -2046,7 +2048,7 @@ h3 {
 }
 
 .password-rules span.met {
-  color: #08100f;
+  color: #fff;
   background: var(--teal);
   border-color: var(--teal);
 }
