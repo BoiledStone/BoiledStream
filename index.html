@@ -9,14 +9,14 @@
       content="Catalogue vidéo moderne avec films, séries, saisons, épisodes et player dédié."
     >
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="css/styles.css?v=20260610-series-sources">
-    <script src="scripts/app-utils.js?v=20260610-series-sources" defer></script>
+    <link rel="stylesheet" href="css/styles.css?v=20260610-source-colors">
+    <script src="scripts/app-utils.js?v=20260610-source-colors" defer></script>
     <!-- videos.js doit être chargé avant catalog.js: il expose window.BOILED_VIDEOS. -->
-    <script src="scripts/videos.js?v=20260610-series-sources" defer></script>
-    <script src="scripts/catalog.js?v=20260610-series-sources" defer></script>
+    <script src="scripts/videos.js?v=20260610-source-colors" defer></script>
+    <script src="scripts/catalog.js?v=20260610-source-colors" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <script src="scripts/supabase-config.js?v=20260610-series-sources" defer></script>
-    <script src="scripts/community.js?v=20260610-series-sources" defer></script>
+    <script src="scripts/supabase-config.js?v=20260610-source-colors" defer></script>
+    <script src="scripts/community.js?v=20260610-source-colors" defer></script>
   </head>
   <body>
     <header class="site-header">
@@ -55,8 +55,7 @@
             <span><strong id="series-count">0</strong> séries</span>
           </div>
         </div>
-        <div class="hero-panel" aria-label="Titres mis en avant">
-          <div class="featured-posters" id="featured-posters"></div>
+        <div class="hero-panel" aria-label="Statistiques du catalogue">
           <span class="panel-number" id="video-count">0</span>
           <span class="panel-label" id="video-count-label">médias disponibles</span>
         </div>

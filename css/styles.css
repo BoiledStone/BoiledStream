@@ -13,6 +13,8 @@
   --accent-strong: #ffac45;
   --teal: #45c8b5;
   --gold: #e7c15e;
+  --uqload-blue: #17315f;
+  --dailymotion-blue: #2a61a8;
   --vaplayer: #6640a3;
   --shadow: 0 18px 44px rgba(0, 0, 0, 0.38);
   --radius: 8px;
@@ -361,42 +363,15 @@ h3 {
 }
 
 .hero-panel {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: end;
+  display: flex;
+  align-items: baseline;
   justify-self: end;
-  gap: 12px;
-  width: min(100%, 360px);
-  min-width: 260px;
+  gap: 9px;
+  min-width: 220px;
   padding: 14px;
   background: rgba(255, 255, 255, 0.045);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-}
-
-.featured-posters {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.featured-poster {
-  position: relative;
-  aspect-ratio: 2 / 3;
-  overflow: hidden;
-  background: #0f0f0f;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-}
-
-.featured-poster img,
-.featured-poster .generated-poster {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 .panel-number {
@@ -529,7 +504,7 @@ h3 {
 }
 
 .series-card[data-source="dailymotion"] {
-  --series-accent: var(--gold);
+  --series-accent: var(--dailymotion-blue);
 }
 
 .series-card:hover,
@@ -592,7 +567,7 @@ h3 {
 }
 
 .series-card-meta span:first-child {
-  color: #06100f;
+  color: #fff;
   background: var(--series-accent);
 }
 
@@ -681,6 +656,12 @@ h3 {
 
 .video-card[data-source="youtube"] {
   --card-accent: var(--gold);
+}
+.video-card[data-source="uqload"] {
+  --card-accent: var(--uqload-blue);
+}
+.video-card[data-source="dailymotion"] {
+  --card-accent: var(--dailymotion-blue);
 }
 .video-card[data-source="vaplayer"],
 .video-card[data-source="vidzy"] {
@@ -782,6 +763,13 @@ h3 {
 .source-pill {
   color: #090909;
   background: var(--card-accent);
+}
+
+.video-card[data-source="uqload"] .source-pill,
+.video-card[data-source="dailymotion"] .source-pill,
+.video-card[data-source="vaplayer"] .source-pill,
+.video-card[data-source="vidzy"] .source-pill {
+  color: #fff;
 }
 
 .play-badge {
@@ -2190,10 +2178,6 @@ h3 {
 
   .toolbar {
     position: static;
-  }
-
-  .featured-posters {
-    grid-template-columns: repeat(5, minmax(44px, 1fr));
   }
 
   .hero-panel {

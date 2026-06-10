@@ -10,7 +10,6 @@
   const movieCount = document.querySelector("#movie-count");
   const seriesCount = document.querySelector("#series-count");
   const seriesRow = document.querySelector("#series-row");
-  const featuredPosters = document.querySelector("#featured-posters");
   const emptyState = document.querySelector("#empty-state");
   const FILTER_ALL = "Tout";
   const FILTER_SERIES = "Série";
@@ -121,24 +120,6 @@
     bindImageFallbacks(grid);
   }
 
-  function renderFeaturedPosters() {
-    if (!featuredPosters) {
-      return;
-    }
-
-    const featured = [...seriesItems, ...movieItems].filter((video) => video.posterUrl).slice(0, 5);
-    featuredPosters.innerHTML = featured
-      .map(
-        (video) => `
-          <span class="featured-poster" title="${escapeHtml(video.title)}">
-            ${renderPosterImage(video.posterUrl)}
-          </span>
-        `
-      )
-      .join("");
-    bindImageFallbacks(featuredPosters, ".featured-poster img");
-  }
-
   function renderSeriesRow() {
     if (!seriesRow) {
       return;
@@ -208,7 +189,6 @@
   if (seriesCount) {
     seriesCount.textContent = String(seriesItems.length);
   }
-  renderFeaturedPosters();
   renderSeriesRow();
   renderFilters();
   renderVideos();
