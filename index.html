@@ -3,20 +3,20 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>BoiledStream - Catalogue vidéo</title>
+    <title>BoiledStream - Films et séries</title>
     <meta
       name="description"
-      content="Catalogue vidéo avec vignettes cliquables et player dédié pour chaque contenu."
+      content="Catalogue vidéo moderne avec films, séries, saisons, épisodes et player dédié."
     >
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="css/styles.css?v=20260608-card-meta-fix">
-    <script src="scripts/app-utils.js?v=20260608-watch-local-fix" defer></script>
+    <link rel="stylesheet" href="css/styles.css?v=20260610-home-series-autoplay">
+    <script src="scripts/app-utils.js?v=20260610-home-series-autoplay" defer></script>
     <!-- videos.js doit être chargé avant catalog.js: il expose window.BOILED_VIDEOS. -->
-    <script src="scripts/videos.js?v=20260531-player-fixes" defer></script>
-    <script src="scripts/catalog.js?v=20260531-player-fixes" defer></script>
+    <script src="scripts/videos.js?v=20260610-home-series-autoplay" defer></script>
+    <script src="scripts/catalog.js?v=20260610-home-series-autoplay" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <script src="scripts/supabase-config.js?v=20260531-player-fixes" defer></script>
-    <script src="scripts/community.js?v=20260531-player-fixes" defer></script>
+    <script src="scripts/supabase-config.js?v=20260610-home-series-autoplay" defer></script>
+    <script src="scripts/community.js?v=20260610-home-series-autoplay" defer></script>
   </head>
   <body>
     <header class="site-header">
@@ -27,6 +27,7 @@
       <div class="header-actions">
         <nav class="top-nav" aria-label="Navigation principale">
           <a href="#catalogue">Catalogue</a>
+          <a href="#series">Séries</a>
           <a href="#sources">Sources</a>
         </nav>
         <div class="account-controls" id="account-controls" aria-live="polite"></div>
@@ -44,16 +45,19 @@
 
       <section class="catalog-hero" aria-labelledby="page-title">
         <div class="hero-copy">
-          <p class="section-kicker">Streaming simple</p>
-          <h1 id="page-title">Films prêts à lancer.</h1>
+          <p class="section-kicker">Catalogue streaming</p>
+          <h1 id="page-title">Films et séries</h1>
           <p>
-            Un catalogue compact, des affiches lisibles, une page lecteur par film
-            et des avis connectés pour garder les bons titres à portée de main.
+            Une sélection courte, organisée par affiches, sources et saisons.
           </p>
+          <div class="hero-stats" aria-label="Résumé du catalogue">
+            <span><strong id="movie-count">0</strong> films</span>
+            <span><strong id="series-count">0</strong> séries</span>
+          </div>
         </div>
         <div class="hero-panel" aria-label="Statistiques du catalogue">
           <span class="panel-number" id="video-count">0</span>
-          <span class="panel-label" id="video-count-label">titres prêts</span>
+          <span class="panel-label" id="video-count-label">médias disponibles</span>
         </div>
       </section>
 
@@ -64,7 +68,7 @@
             id="search-input"
             type="search"
             autocomplete="off"
-            placeholder="Titre, ambiance, source..."
+            placeholder="Titre, saison, ambiance, source..."
           >
         </label>
         <div class="filter-group" id="filter-group" aria-label="Filtrer par catégorie"></div>
@@ -73,13 +77,36 @@
       <section class="catalog-section" id="catalogue" aria-labelledby="catalog-title">
         <div class="section-heading">
           <div>
-            <p class="section-kicker">Nouveautés</p>
-            <h2 id="catalog-title">Choisir un film</h2>
+            <p class="section-kicker">Catalogue</p>
+            <h2 id="catalog-title">Choisir un titre</h2>
           </div>
           <p id="result-count" class="result-count" aria-live="polite"></p>
         </div>
         <div class="video-grid" id="video-grid"></div>
         <p class="empty-state" id="empty-state" hidden>Aucun résultat. Essaie un autre titre, tag ou hébergeur.</p>
+      </section>
+
+      <section class="series-section" id="series" aria-labelledby="series-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Séries</p>
+            <h2 id="series-title">Continuer par saison</h2>
+          </div>
+          <p id="series-result-count" class="result-count" aria-live="polite"></p>
+        </div>
+        <div class="series-toolbar" aria-label="Recherche séries">
+          <label class="search-box">
+            <span>Rechercher une série</span>
+            <input
+              id="series-search-input"
+              type="search"
+              autocomplete="off"
+              placeholder="Titre, saison, langue, source..."
+            >
+          </label>
+        </div>
+        <div class="series-row" id="series-row"></div>
+        <p class="empty-state" id="series-empty-state" hidden>Aucune série trouvée.</p>
       </section>
     </main>
 

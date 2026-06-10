@@ -2,12 +2,6 @@
 // sur l'accueil, dans la recherche, dans le player et dans les avis.
 (function () {
   const PROVIDERS = {
-    series(item) {
-      return {
-        sourceName: "Serie",
-        sourceUrl: item.sourceUrl || "#"
-      };
-    },
     uqload(item) {
       return {
         sourceName: "Uqload",
@@ -26,7 +20,7 @@
       return {
         sourceName: "Dailymotion",
         sourceUrl: `https://www.dailymotion.com/video/${item.videoId}`,
-        embedUrl: `https://www.dailymotion.com/embed/video/${item.videoId}`
+        embedUrl: `https://geo.dailymotion.com/player.html?video=${item.videoId}`
       };
     },
     embed(item) {
@@ -35,6 +29,15 @@
         sourceUrl: item.sourceUrl || item.embedUrl,
         embedUrl: item.embedUrl
       };
+    },
+    externalPage(item) {
+      return {
+        sourceName: item.sourceName || "Page externe",
+        sourceUrl: item.sourceUrl
+      };
+    },
+    externalpage(item) {
+      return PROVIDERS.externalPage(item);
     },
     direct(item) {
       return {
@@ -45,12 +48,302 @@
     }
   };
 
+  const DEFAULT_SERIES_LANGUAGES = Object.freeze(["VF", "VOSTFR"]);
+
+  function normalizeDataKey(value) {
+    return String(value ?? "").trim().toLowerCase();
+  }
+
+  function uniqueValues(values) {
+    const seen = new Set();
+
+    return (values || []).filter((value) => {
+      const key = normalizeDataKey(value);
+
+      if (!key || seen.has(key)) {
+        return false;
+      }
+
+      seen.add(key);
+      return true;
+    });
+  }
+
+  function mergeEpisodeSources(...sourceMaps) {
+    const merged = {};
+
+    sourceMaps.filter(Boolean).forEach((sourceMap) => {
+      Object.entries(sourceMap).forEach(([episodeNumber, source]) => {
+        const previous = merged[episodeNumber] || {};
+        const next = source || {};
+        const sources = {
+          ...(previous.sources || {}),
+          ...(next.sources || {})
+        };
+
+        merged[episodeNumber] = {
+          ...previous,
+          ...next,
+          sources
+        };
+
+        if (!Object.keys(sources).length) {
+          delete merged[episodeNumber].sources;
+        }
+      });
+    });
+
+    return merged;
+  }
+
   /*
-    Ajouter un film:
-    1. Copier un bloc dans `catalogue`.
-    2. Modifier id, title, fileId/videoId, durée, année, affiche et tags.
-    3. Garder un id unique, en minuscules, sans espace: "mon-film".
+    Ajouter une serie:
+    1. Creer une liste de saisons avec number, posterUrl, description et languages.
+    2. Renseigner episodeNumbers pour n'afficher que les episodes disponibles.
+    3. Ajouter les players par episode avec episodeSources ou buildProviderEpisodeSources.
+    4. Appeler buildSeries({ id, title, date, posterUrl, description, tags, seasons }).
   */
+  function buildEpisodes(config, defaults = {}) {
+    const seasonNumber = config.number;
+    const episodeNumbers = config.episodeNumbers?.length
+      ? config.episodeNumbers.map(Number).filter(Boolean)
+      : null;
+    const availableEpisodes =
+      Number(config.availableEpisodes ?? config.episodes ?? config.totalEpisodes ?? episodeNumbers?.length) || 0;
+    const sourceName = config.sourceName || defaults.sourceName || "Player";
+    const allowExternalSource = defaults.allowExternalSource !== false;
+    const sourceUrl = allowExternalSource ? config.sourceUrl || defaults.sourceUrl : "";
+    const languages = uniqueValues(config.languages || defaults.languages || DEFAULT_SERIES_LANGUAGES);
+    const episodeSources = config.episodeSources || {};
+    const numbers = episodeNumbers || Array.from({ length: availableEpisodes }, (_item, index) => index + 1);
+
+    return numbers.map((episodeNumber) => {
+      const directSource = episodeSources[episodeNumber] || episodeSources[`e${episodeNumber}`] || {};
+      const episodeId =
+        directSource.id ||
+        (defaults.seriesId
+          ? `${defaults.seriesId}-s${String(seasonNumber).padStart(2, "0")}e${String(episodeNumber).padStart(2, "0")}`
+          : `s${seasonNumber}e${episodeNumber}`);
+
+      return {
+        id: episodeId,
+        number: episodeNumber,
+        seasonNumber,
+        episodeNumber,
+        seriesId: defaults.seriesId,
+        seriesTitle: defaults.seriesTitle,
+        category: "Serie",
+        title: `Épisode ${episodeNumber}`,
+        sourceName,
+        sourceUrl,
+        posterUrl: config.posterUrl || defaults.posterUrl,
+        languages: [...languages],
+        ...directSource
+      };
+    });
+  }
+
+  function buildSeason(config, defaults = {}) {
+    const episodeNumbers = config.episodeNumbers?.length
+      ? config.episodeNumbers.map(Number).filter(Boolean)
+      : null;
+    const availableEpisodes =
+      Number(config.availableEpisodes ?? config.episodes ?? config.totalEpisodes ?? episodeNumbers?.length) || 0;
+    const totalEpisodes = Number(config.totalEpisodes ?? config.episodes ?? availableEpisodes) || availableEpisodes;
+    const sourceName = config.sourceName || defaults.sourceName || "Player";
+    const allowExternalSource = defaults.allowExternalSource !== false;
+    const sourceUrl = allowExternalSource ? config.sourceUrl || defaults.sourceUrl : "";
+    const languages = uniqueValues(config.languages || defaults.languages || DEFAULT_SERIES_LANGUAGES);
+    const seasonSourceMaps = defaults.seasonSourceMaps || [];
+    const episodeSources = mergeEpisodeSources(
+      config.episodeSources,
+      ...seasonSourceMaps.map((buildSourceMap) => buildSourceMap(config))
+    );
+
+    return {
+      id: config.id || `s${config.number}`,
+      number: config.number,
+      label: config.label || `Saison ${config.number}`,
+      availableEpisodes,
+      totalEpisodes,
+      sourceUrl,
+      posterUrl: config.posterUrl || defaults.posterUrl,
+      description: config.description || "",
+      languages,
+      episodes: buildEpisodes(
+        {
+          ...config,
+          availableEpisodes,
+          totalEpisodes,
+          sourceName,
+          sourceUrl,
+          languages,
+          episodeSources
+        },
+        defaults
+      )
+    };
+  }
+
+  function buildSeriesSeasons(seasons = [], defaults = {}) {
+    return seasons.map((season) => buildSeason(season, defaults));
+  }
+
+  function buildSeries(item) {
+    const {
+      seasons = [],
+      seasonSourceMaps = [],
+      languages = DEFAULT_SERIES_LANGUAGES,
+      ...details
+    } = item;
+    const sourceName = details.sourceName || "Player";
+    const allowExternalSource = item.allowExternalSource !== false;
+    const builtSeasons = buildSeriesSeasons(seasons, {
+      seriesId: details.id,
+      seriesTitle: details.title,
+      sourceName,
+      languages,
+      sourceUrl: details.sourceUrl,
+      posterUrl: details.posterUrl,
+      seasonSourceMaps,
+      allowExternalSource
+    });
+    const seasonCount = builtSeasons.length;
+
+    return {
+      provider: "externalPage",
+      type: "series",
+      category: "Série",
+      duration: `${seasonCount} saison${seasonCount > 1 ? "s" : ""}`,
+      resolution: "HD",
+      language: uniqueValues(languages).join("+"),
+      ...details,
+      sourceName,
+      sourceUrl: allowExternalSource ? details.sourceUrl || builtSeasons[0]?.sourceUrl : "",
+      seasons: builtSeasons
+    };
+  }
+
+  function buildProviderEpisodeSources(language, episodes = []) {
+    return Object.fromEntries(
+      episodes.map((episode) => {
+        const provider = String(episode.provider || "").toLowerCase();
+        const buildSource = PROVIDERS[provider];
+        const source = buildSource ? buildSource(episode) : {};
+
+        return [
+          episode.episodeNumber,
+          {
+            sources: {
+              [language]: {
+                language,
+                ...source
+              }
+            }
+          }
+        ];
+      })
+    );
+  }
+
+  const RICK_AND_MORTY_FR_EPISODES = [
+    { provider: "dailymotion", seasonNumber: 1, episodeNumber: 1, videoId: "k1G3j2LjU05O2PGy6aG" },
+    { provider: "dailymotion", seasonNumber: 1, episodeNumber: 3, videoId: "k4pykpn2tF0lNZGy6ae" },
+    { provider: "dailymotion", seasonNumber: 1, episodeNumber: 6, videoId: "k5tY4WPJGkEiP3Gy6ay" },
+    { provider: "dailymotion", seasonNumber: 1, episodeNumber: 7, videoId: "k7tbDU1PNgCduwGy6am" },
+    { provider: "dailymotion", seasonNumber: 1, episodeNumber: 9, videoId: "k7l6EsYjYLKx2FGy6au" },
+    { provider: "dailymotion", seasonNumber: 1, episodeNumber: 10, videoId: "k7cV5hO5OySHwGGy6a6" }
+  ];
+
+  const RICK_AND_MORTY_SEASONS = [
+    {
+      number: 1,
+      episodeNumbers: RICK_AND_MORTY_FR_EPISODES.map((episode) => episode.episodeNumber),
+      sourceUrl: "",
+      posterUrl: "https://image.tmdb.org/t/p/w400/3MYxbw5FNgowfIJ6K0WCW49hjSo.jpg",
+      episodeSources: buildProviderEpisodeSources("FR", RICK_AND_MORTY_FR_EPISODES),
+      languages: ["FR"],
+      description:
+        "Rick et Morty rencontrent un prêteur sur gages dans l'espace, vivent dans des univers parallèles et se retrouvent nez à nez avec le diable."
+    }
+  ];
+
+  const SUPERNATURAL_EN_EPISODES = [
+    {
+      id: "supernatural-s01e01",
+      provider: "dailymotion",
+      title: "Pilot",
+      seasonNumber: 1,
+      episodeNumber: 1,
+      videoId: "k4Kgvh7o91dnnrGw7Yi",
+      duration: "00:46:21",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e02",
+      provider: "dailymotion",
+      title: "Wendigo",
+      seasonNumber: 1,
+      episodeNumber: 2,
+      videoId: "k4MJDmehjRt5FwGw96m",
+      duration: "00:43:07",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e03",
+      provider: "dailymotion",
+      title: "Dead in the Water",
+      seasonNumber: 1,
+      episodeNumber: 3,
+      videoId: "k7CPLjTEgI3VNgGw96q",
+      duration: "00:43:31",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e04",
+      provider: "dailymotion",
+      title: "Phantom Traveler",
+      seasonNumber: 1,
+      episodeNumber: 4,
+      videoId: "kWrm8BI2BLThxPGwcAG",
+      duration: "00:42:12",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e05",
+      provider: "dailymotion",
+      title: "Bloody Mary",
+      seasonNumber: 1,
+      episodeNumber: 5,
+      videoId: "kqcvwaYDB6184RGwcIC",
+      duration: "00:43:14",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e06",
+      provider: "dailymotion",
+      title: "Skin",
+      seasonNumber: 1,
+      episodeNumber: 6,
+      videoId: "k3tNdFLaQpEQMiGwcNc",
+      duration: "00:41:50",
+      resolution: "1280x720"
+    }
+  ];
+
+  const SUPERNATURAL_SEASONS = [
+    {
+      number: 1,
+      episodeNumbers: SUPERNATURAL_EN_EPISODES.map((episode) => episode.episodeNumber),
+      sourceUrl: "",
+      posterUrl: "https://image.tmdb.org/t/p/w400/rffL4ayOB0NaY3jcD1L2VsVoh0n.jpg",
+      episodeSources: buildProviderEpisodeSources("EN", SUPERNATURAL_EN_EPISODES),
+      languages: ["EN"],
+      description:
+        "Sam et Dean Winchester parcourent les États-Unis pour traquer les forces du Mal responsables de la mort de leur mère, vingt ans plus tôt."
+    }
+  ];
+
   const catalogue = [
     {
       provider: "uqload",
@@ -189,6 +482,83 @@
         "Retour dans l'univers Silent Hill, exploration psychologique et horreur atmosphérique centrée sur la mémoire, la perte et les manifestations de la ville.",
       tags: ["Horreur"]
     },
+    buildSeries({
+      id: "rick-et-morty-vf",
+      title: "Rick et Morty",
+      date: "2013",
+      sourceName: "Dailymotion",
+      allowExternalSource: false,
+      posterUrl: "https://image.tmdb.org/t/p/w500/qo07tk7mF3c63G7MktMVA2GApZt.jpg",
+      description:
+        "Com\u00e9die de science-fiction anim\u00e9e centr\u00e9e sur les aventures interdimensionnelles de Rick Sanchez et Morty Smith, avec les \u00e9pisodes FR disponibles en player.",
+      tags: ["Animation", "Science-fiction", "Com\u00e9die"],
+      languages: ["FR"],
+      seasons: RICK_AND_MORTY_SEASONS
+    }),
+    buildSeries({
+      id: "supernatural",
+      title: "Supernatural",
+      date: "2005",
+      sourceName: "Dailymotion",
+      allowExternalSource: false,
+      posterUrl: "https://image.tmdb.org/t/p/w400/rffL4ayOB0NaY3jcD1L2VsVoh0n.jpg",
+      description:
+        "Sam et Dean Winchester sillonnent les \u00c9tats-Unis pour enqu\u00eater sur des ph\u00e9nom\u00e8nes paranormaux et affronter des cr\u00e9atures surnaturelles.",
+      tags: ["Fantastique", "Horreur", "Surnaturel"],
+      languages: ["EN"],
+      seasons: SUPERNATURAL_SEASONS
+    }),
+    {
+      provider: "embed",
+      id: "coraline",
+      title: "Coraline",
+      category: "Film",
+      duration: "1h40",
+      resolution: "HD",
+      language: "VF",
+      date: "2009",
+      sourceName: "Vidzy",
+      sourceUrl: "https://vidzy.org/embed-bk2tw1uqgprz.html",
+      embedUrl: "https://vidzy.org/embed-bk2tw1uqgprz.html",
+      posterUrl: "https://image.tmdb.org/t/p/w400/4jeFXQYytChdZYE9JYO7Un87IlW.jpg",
+      description:
+        "Coraline Jones est une fillette intrépide et douée d'une curiosité sans limites. Ses parents, qui ont tout juste emménagé avec elle dans une étrange maison, n'ont guère de temps à lui consacrer. Pour tromper son ennui, Coraline décide donc de jouer les exploratrices. Ouvrant une porte condamnée, elle pénètre dans un appartement identique au sien, mais où tout est différent. Dans cet Autre Monde, chaque chose lui paraît plus belle, plus colorée et plus attrayante. Son Autre Mère est pleinement disponible, son Autre Père prend la peine de lui mitonner des plats exquis, et même le Chat, si hautain dans la Vraie vie, daigne s'entretenir avec elle. Coraline est bien tentée d'élire domicile dans ce Monde merveilleux, qui répond à toutes ses attentes. Mais le rêve va très vite tourner au cauchemar. Prisonnière de l'Autre Mère, Coraline va devoir déployer des trésors de bravoure, d'imagination et de ténacité pour rentrer chez elle et sauver sa Vraie famille.",
+      tags: ["Animation", "Familial", "Fantastique"]
+    },
+    {
+      provider: "embed",
+      id: "the-substance",
+      title: "The Substance",
+      category: "Film",
+      duration: "2h21",
+      resolution: "HD",
+      language: "TrueFrench",
+      date: "2024",
+      sourceName: "Vidzy",
+      sourceUrl: "https://vidzy.live/embed-k1qmqmy44x63.html",
+      embedUrl: "https://vidzy.live/embed-k1qmqmy44x63.html",
+      posterUrl: "https://image.tmdb.org/t/p/w300/noHuScdXjsL9sWkQBOdqCVeTUrY.jpg",
+      description:
+        "Après son licenciement, Elisabeth Sparkle teste une substance promettant une version plus jeune et parfaite d'elle-même, avec des conséquences physiques extrêmes.",
+      tags: ["Horreur", "Science-fiction", "Body horror"]
+    },
+    {
+      provider: "embed",
+      id: "exit-8",
+      title: "Exit 8",
+      category: "Film",
+      duration: "1h40",
+      resolution: "HD",
+      language: "Fr",
+      date: "2025",
+      sourceName: "Vidzy",
+      sourceUrl: "https://vidzy.live/embed-u7pmwypb4kp2.html",
+      embedUrl: "https://vidzy.live/embed-u7pmwypb4kp2.html",
+      posterUrl: "https://image.tmdb.org/t/p/w300/4moIv5Zewxg0gFuNC7m75x3JbDx.jpg",
+      description:
+        "Un homme piégé dans un couloir de métro cherche la sortie 8 en repérant les anomalies, sous peine de revenir au point de départ.",
+      tags: ["Horreur", "Mystère", "Thriller"]
+    },
     {
       provider: "uqload",
       id: "the-pick-of-destiny",
@@ -203,6 +573,23 @@
       description:
         "Pas de chance pour le jeune JB. Il est passionné de rock'n'roll dans une famille ultra religieuse qui considère cette musique comme l'œuvre du diable. Lorsque son père lui colle une raclée en arrachant tous les posters de ses idoles, JB s'enfuit et part pour Hollywood y chercher le secret du rock'n'roll... ",
       tags: ["Comédie", "Musique"]
+    },
+    {
+      provider: "embed",
+      id: "l-echelle-de-jacob-1990",
+      title: "L'Échelle de Jacob",
+      category: "Film",
+      duration: "1h52",
+      resolution: "1080x720",
+      language: "Fr",
+      date: "1990",
+      sourceName: "Vidzy",
+      sourceUrl: "https://vidzy.org/embed-woqfe8k3cxj0.html",
+      embedUrl: "https://vidzy.org/embed-woqfe8k3cxj0.html",
+      posterUrl: "https://image.tmdb.org/t/p/w600_and_h900_bestv2/kSfvkCE8mwZCxRH0T4GxGz3SfLP.jpg",
+      description:
+        "Jacob Singer, un employé des postes new-yorkaises, est assailli par de nombreux cauchemars durant ses journées. Il voit des hommes aux visages déformés et se retrouve dans des lieux qu'il ne connaît pas. Jacob est victime des flashbacks incessants de son premier mariage, de la mort de son fils et de son service au Vietnam. Jours après jours, Jacob s'enfonce dans la folie en essayant de comprendre ce qui lui arrive avec l'aide de Jezebel, son épouse.",
+      tags: ["Drame", "Mystère", "Horreur"]
     },
     {
       provider: "embed",
@@ -288,6 +675,7 @@
       description:
         "Four unlikely friends face everyday challenges until a mysterious portal transports them to the Overworld, a whimsical, blocky realm fueled by creativity. To return home, they must navigate this fantastical landscape, tackling unique obstacles along the way. With the help of the skilled crafter, Steve, the group embarks on an enchanting adventure that tests their ingenuity and teamwork. As they explore this vibrant world, they learn to embrace their differences and discover the power of friendship in overcoming adversity.",
       tags: ["Famille", "Aventure", "Comédie"]
+<<<<<<< HEAD
     },
 
     {
@@ -378,82 +766,38 @@
           ]
         }
       ]
+=======
+>>>>>>> 5246791d4368bc3fccc27cc1868fc7814d235ff4
     }
-
   ];
 
-  function buildEpisode(series, season, episode, episodeIndex) {
+  function buildStandaloneEpisode(episode) {
     const provider = String(episode.provider || "").toLowerCase();
     const buildSource = PROVIDERS[provider];
-    if (!buildSource || provider === "series") {
+
+    if (!buildSource) {
       throw new Error(`Provider episode inconnu: ${episode.provider}`);
     }
 
-    const seasonNumber = season.number || episode.season || 1;
-    const episodeNumber = episode.number || episode.episode || episodeIndex + 1;
-    const episodeId =
-      episode.id ||
-      `${series.id}-s${String(seasonNumber).padStart(2, "0")}e${String(episodeNumber).padStart(2, "0")}`;
-    const { provider: _provider, fileId, videoId, ...details } = episode;
+    const { provider: _provider, videoId, fileId, ...details } = episode;
 
     return Object.freeze({
       ...details,
       ...buildSource(episode),
-      id: episodeId,
-      title: episode.title || `${series.title} S${seasonNumber}E${episodeNumber}`,
       category: "Serie",
-      seriesId: series.id,
-      seriesTitle: series.title,
-      seasonNumber,
-      episodeNumber,
-      duration: episode.duration || "",
-      resolution: episode.resolution || series.resolution || "",
-      language: episode.language || series.language || "",
-      date: episode.date || series.date || "",
-      posterUrl: episode.posterUrl || season.posterUrl || series.posterUrl || "",
-      description: episode.description || series.description || "",
-      tags: Object.freeze([...(series.tags || []), ...(episode.tags || [])])
-    });
-  }
-
-  function buildSeries(item) {
-    const seasons = (item.seasons || []).map((season, seasonIndex) => {
-      const seasonNumber = season.number || seasonIndex + 1;
-      const episodes = (season.episodes || []).map((episode, episodeIndex) =>
-        buildEpisode(item, { ...season, number: seasonNumber }, episode, episodeIndex)
-      );
-
-      return Object.freeze({
-        number: seasonNumber,
-        title: season.title || `Saison ${seasonNumber}`,
-        episodes: Object.freeze(episodes)
-      });
-    });
-    const episodeCount = seasons.reduce((total, season) => total + season.episodes.length, 0);
-    const { provider, seasons: _seasons, ...details } = item;
-
-    return Object.freeze({
-      ...details,
-      provider,
-      type: "series",
-      category: "Serie",
-      sourceName: "Serie",
-      sourceUrl: item.sourceUrl || "#",
-      duration: `${episodeCount} episode${episodeCount > 1 ? "s" : ""}`,
-      seasonCount: seasons.length,
-      episodeCount,
-      seasons: Object.freeze(seasons),
-      tags: Object.freeze([...(item.tags || [])])
+      seriesId: "supernatural",
+      seriesTitle: "Supernatural",
+      language: "EN",
+      date: "2005",
+      posterUrl: "miniatures/posters/Supernatural.jpg",
+      description:
+        "Sam et Dean Winchester parcourent les États-Unis pour traquer les forces du Mal.",
+      tags: Object.freeze(["Fantastique", "Horreur", "Surnaturel"])
     });
   }
 
   function buildVideo(item) {
     const provider = String(item.provider || "").toLowerCase();
-
-    if (provider === "series") {
-      return buildSeries(item);
-    }
-
     const buildSource = PROVIDERS[provider];
     if (!buildSource) {
       throw new Error(`Provider vidéo inconnu: ${item.provider}`);
@@ -471,7 +815,5 @@
 
   const videos = catalogue.map(buildVideo);
   window.BOILED_VIDEOS = Object.freeze(videos);
-  window.BOILED_EPISODES = Object.freeze(
-    videos.flatMap((item) => item.seasons?.flatMap((season) => season.episodes) || [])
-  );
+  window.BOILED_EPISODES = Object.freeze(SUPERNATURAL_EN_EPISODES.map(buildStandaloneEpisode));
 })();

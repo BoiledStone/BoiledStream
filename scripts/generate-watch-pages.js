@@ -5,6 +5,7 @@ const vm = require("vm");
 const ROOT = path.resolve(__dirname, "..");
 const SITE_URL = "https://boiledstone.github.io/BoiledStream";
 const WATCH_DIR = path.join(ROOT, "watch");
+const ASSET_VERSION = "20260610-home-series-autoplay";
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -77,10 +78,10 @@ function renderWatchPage(video) {
     <meta name="twitter:description" content="${escapeHtml(description)}">
     <meta name="twitter:image" content="${escapeHtml(image)}">
     <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../css/styles.css?v=20260608-card-meta-fix">
-    <script src="../scripts/app-utils.js?v=20260608-watch-local-fix" defer></script>
-    <script src="../scripts/videos.js?v=20260531-player-fixes" defer></script>
-    <script src="../scripts/player.js?v=20260608-watch-local-fix" defer></script>
+    <link rel="stylesheet" href="../css/styles.css?v=${ASSET_VERSION}">
+    <script src="../scripts/app-utils.js?v=${ASSET_VERSION}" defer></script>
+    <script src="../scripts/videos.js?v=${ASSET_VERSION}" defer></script>
+    <script src="../scripts/player.js?v=${ASSET_VERSION}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     <script src="../scripts/supabase-config.js?v=20260531-player-fixes" defer></script>
     <script src="../scripts/community.js?v=20260531-player-fixes" defer></script>
