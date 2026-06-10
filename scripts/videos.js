@@ -346,6 +346,34 @@
               videoId: "k3tNdFLaQpEQMiGwcNc",
               duration: "00:41:50",
               resolution: "1280x720"
+            },
+            {
+              provider: "Dailymotion",
+              title: "Hook Man",
+              videoId: "k4ReTDJSgIJchIGyLe6",
+              duration: "00:41:50",
+              resolution: "1280x720"
+            },
+            {
+              provider: "Dailymotion",
+              title: "Bugs",
+              videoId: "k9GvOvsnN1YAERGyLjg",
+              duration: "00:41:50",
+              resolution: "1280x720"
+            },
+            {
+              provider: "Dailymotion",
+              title: "Home",
+              videoId: "ktffjKeR2qENNjGyLjk",
+              duration: "00:41:50",
+              resolution: "1280x720"
+            },
+            {
+              provider: "Dailymotion",
+              title: "Asylum",
+              videoId: "k33mvqpriQGgtlGyLjo",
+              duration: "00:41:50",
+              resolution: "1280x720"
             }
           ]
         }
