@@ -490,7 +490,7 @@
       posterUrl: "https://image.tmdb.org/t/p/w500/qo07tk7mF3c63G7MktMVA2GApZt.jpg",
       description:
         "Com\u00e9die de science-fiction anim\u00e9e centr\u00e9e sur les aventures interdimensionnelles de Rick Sanchez et Morty Smith, avec les \u00e9pisodes FR disponibles en player.",
-      tags: ["Animation adulte", "Science-fiction", "Com\u00e9die"],
+      tags: ["Animation", "Science-fiction", "Com\u00e9die"],
       languages: ["FR"],
       seasons: RICK_AND_MORTY_SEASONS
     }),
