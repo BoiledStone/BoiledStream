@@ -137,10 +137,9 @@
 
   function getCardStat(video) {
     if (video.type === "series") {
-      const episodeCount = getEpisodeCount(video);
       const seasonLabel = getSeasonLabel(video);
 
-      return [seasonLabel, episodeCount ? `${episodeCount} ep.` : ""].filter(Boolean).join(" / ");
+      return seasonLabel;
     }
 
     return video.duration || "";

@@ -9,7 +9,6 @@
   const videoCountLabel = document.querySelector("#video-count-label");
   const movieCount = document.querySelector("#movie-count");
   const seriesCount = document.querySelector("#series-count");
-  const episodeCount = document.querySelector("#episode-count");
   const seriesRow = document.querySelector("#series-row");
   const featuredPosters = document.querySelector("#featured-posters");
   const emptyState = document.querySelector("#empty-state");
@@ -30,7 +29,6 @@
     escapeHtml,
     formatLanguage,
     getDisplayTags,
-    getEpisodeCount,
     getSeasonLabel,
     hasCategoryOrTag,
     normalizeKey,
@@ -150,7 +148,6 @@
       .map((series) => {
         const sourceName = series.sourceName || "Player";
         const seasonLabel = getSeasonLabel(series) || "Série";
-        const episodes = getEpisodeCount(series);
         const languages = (series.languages || []).map(formatLanguage).filter(Boolean);
         const languagePill = languages.length ? `<span>${escapeHtml(languages.join(" + "))}</span>` : "";
         const tags = getDisplayTags(series, 3)
@@ -172,7 +169,6 @@
               <p>${escapeHtml(series.description || "")}</p>
               <div class="series-card-stats">
                 <span>${escapeHtml(seasonLabel)}</span>
-                <span>${episodes} épisode${episodes > 1 ? "s" : ""}</span>
               </div>
               <div class="series-card-tags">${tags}</div>
             </div>
@@ -212,10 +208,6 @@
   if (seriesCount) {
     seriesCount.textContent = String(seriesItems.length);
   }
-  if (episodeCount) {
-    episodeCount.textContent = String(seriesItems.reduce((total, series) => total + getEpisodeCount(series), 0));
-  }
-
   renderFeaturedPosters();
   renderSeriesRow();
   renderFilters();
