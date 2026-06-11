@@ -250,11 +250,16 @@
 
   const RICK_AND_MORTY_FR_EPISODES = [
     { provider: "dailymotion", seasonNumber: 1, episodeNumber: 1, videoId: "k1G3j2LjU05O2PGy6aG" },
+    { provider: "dailymotion", seasonNumber: 1, episodeNumber: 2, videoId: "kmDIC1rww8sCFrGzWts" },
     { provider: "dailymotion", seasonNumber: 1, episodeNumber: 3, videoId: "k4pykpn2tF0lNZGy6ae" },
+    { provider: "dailymotion", seasonNumber: 1, episodeNumber: 4, videoId: "kmEu9KkndqlVYqGzWtk" },
+    { provider: "dailymotion", seasonNumber: 1, episodeNumber: 5, videoId: "k2tE5U5ETcM8cEGzWtA" },
     { provider: "dailymotion", seasonNumber: 1, episodeNumber: 6, videoId: "k5tY4WPJGkEiP3Gy6ay" },
     { provider: "dailymotion", seasonNumber: 1, episodeNumber: 7, videoId: "k7tbDU1PNgCduwGy6am" },
+    { provider: "dailymotion", seasonNumber: 1, episodeNumber: 8, videoId: "k6dfJ8EojkfEhKGzWto" },
     { provider: "dailymotion", seasonNumber: 1, episodeNumber: 9, videoId: "k7l6EsYjYLKx2FGy6au" },
-    { provider: "dailymotion", seasonNumber: 1, episodeNumber: 10, videoId: "k7cV5hO5OySHwGGy6a6" }
+    { provider: "dailymotion", seasonNumber: 1, episodeNumber: 10, videoId: "k7cV5hO5OySHwGGy6a6" },
+    { provider: "dailymotion", seasonNumber: 1, episodeNumber: 11, videoId: "kyCrL4XYSJ9IksGzWtw" }
   ];
 
   const RICK_AND_MORTY_SEASONS = [
