@@ -5,7 +5,7 @@ const vm = require("vm");
 const ROOT = path.resolve(__dirname, "..");
 const SITE_URL = "https://boiledstone.github.io/BoiledStream";
 const WATCH_DIR = path.join(ROOT, "watch");
-const ASSET_VERSION = "20260610-home-series-autoplay";
+const ASSET_VERSION = "20260611-pill-hover-color";
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -83,8 +83,8 @@ function renderWatchPage(video) {
     <script src="../scripts/videos.js?v=${ASSET_VERSION}" defer></script>
     <script src="../scripts/player.js?v=${ASSET_VERSION}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <script src="../scripts/supabase-config.js?v=20260531-player-fixes" defer></script>
-    <script src="../scripts/community.js?v=20260531-player-fixes" defer></script>
+    <script src="../scripts/supabase-config.js?v=${ASSET_VERSION}" defer></script>
+    <script src="../scripts/community.js?v=${ASSET_VERSION}" defer></script>
   </head>
   <body>${body}</body>
 </html>

@@ -4,6 +4,7 @@
   const grid = document.querySelector("#video-grid");
   const filterGroup = document.querySelector("#filter-group");
   const searchInput = document.querySelector("#search-input");
+  const sortSelect = document.querySelector("#sort-select");
   const resultCount = document.querySelector("#result-count");
   const videoCount = document.querySelector("#video-count");
   const videoCountLabel = document.querySelector("#video-count-label");
@@ -18,7 +19,8 @@
   const FILTER_ANIMATED = "Animé";
   const state = {
     category: FILTER_ALL,
-    query: ""
+    query: "",
+    sort: "catalogue"
   };
   const seriesState = {
     query: ""
@@ -29,9 +31,11 @@
   }
 
   const {
+    buildAccentStyle,
     buildDirectPlayerUrl,
     escapeHtml,
     formatLanguage,
+    getCardTypeLabel,
     getDisplayTags,
     getSeasonLabel,
     hasCategoryOrTag,
@@ -44,12 +48,23 @@
   const seriesItems = videos.filter((video) => video.type === "series");
   const movieItems = videos.filter((video) => video.type !== "series");
 
+  function getReleaseYear(video) {
+    const match = String(video.date || "").match(/\d{4}/);
+
+    return match ? Number(match[0]) : 0;
+  }
+
+  function compareTitle(first, second) {
+    return String(first.title || "").localeCompare(String(second.title || ""), "fr", {
+      sensitivity: "base"
+    });
+  }
+
   function searchableText(video) {
     return [
       video.title,
       video.category,
       video.description,
-      video.sourceName,
       video.language,
       video.date,
       ...(video.seasons || []).map((season) => season.label),
@@ -75,8 +90,28 @@
       : video.category === state.category;
   }
 
+  function sortVideos(items) {
+    const sortedItems = [...items];
+
+    if (state.sort === "title") {
+      sortedItems.sort(compareTitle);
+    } else if (state.sort === "year-desc") {
+      sortedItems.sort(
+        (first, second) => getReleaseYear(second) - getReleaseYear(first) || compareTitle(first, second)
+      );
+    } else if (state.sort === "year-asc") {
+      sortedItems.sort(
+        (first, second) => getReleaseYear(first) - getReleaseYear(second) || compareTitle(first, second)
+      );
+    }
+
+    return sortedItems;
+  }
+
   function getFilteredVideos() {
-    return movieItems.filter((video) => matchesCategory(video) && matchesSearch(video));
+    return sortVideos(
+      movieItems.filter((video) => matchesCategory(video) && matchesSearch(video))
+    );
   }
 
   function renderFilters() {
@@ -135,8 +170,10 @@
 
     seriesRow.innerHTML = filteredSeries
       .map((series) => {
-        const sourceName = series.sourceName || "Player";
+        const typeLabel = getCardTypeLabel(series);
         const seasonLabel = getSeasonLabel(series) || "Série";
+        const accentStyle = buildAccentStyle(series.accentColor);
+        const accentLock = series.accentColor ? ' data-accent-lock="true"' : "";
         const languages = (series.languages || []).map(formatLanguage).filter(Boolean);
         const languagePill = languages.length ? `<span>${escapeHtml(languages.join(" + "))}</span>` : "";
         const tags = getDisplayTags(series, 3)
@@ -144,17 +181,17 @@
           .join("");
 
         return `
-          <a class="series-card" href="${buildDirectPlayerUrl(series.id)}" data-source="${escapeHtml(normalizeKey(sourceName))}" aria-label="Ouvrir ${escapeHtml(series.title)}">
+          <a class="series-card" href="${buildDirectPlayerUrl(series.id)}"${accentLock}${accentStyle} aria-label="Ouvrir ${escapeHtml(series.title)}">
             <div class="series-card-poster">
               <div class="generated-poster" aria-hidden="true"></div>
               ${renderPosterImage(series.posterUrl)}
             </div>
             <div class="series-card-copy">
+              <h3>${escapeHtml(series.title)}</h3>
               <div class="series-card-meta">
-                <span>${escapeHtml(sourceName)}</span>
+                <span class="type-pill">${escapeHtml(typeLabel)}</span>
                 ${languagePill}
               </div>
-              <h3>${escapeHtml(series.title)}</h3>
               <p>${escapeHtml(series.description || "")}</p>
               <div class="series-card-stats">
                 <span>${escapeHtml(seasonLabel)}</span>
@@ -182,6 +219,11 @@
 
   searchInput.addEventListener("input", (event) => {
     state.query = event.target.value;
+    renderVideos();
+  });
+
+  sortSelect?.addEventListener("change", (event) => {
+    state.sort = event.target.value || "catalogue";
     renderVideos();
   });
 

@@ -51,9 +51,28 @@
       .replaceAll("'", "&#039;");
   };
 
+  function getWatchVideoId() {
+    const match = window.location.pathname.match(/\/watch\/([^/]+)\.html$/);
+
+    if (!match) {
+      return "";
+    }
+
+    try {
+      return window.decodeURIComponent ? window.decodeURIComponent(match[1]) : match[1];
+    } catch (_error) {
+      return match[1];
+    }
+  }
+
+  function getFallbackVideoId() {
+    return [...(window.BOILED_VIDEOS || []), ...(window.BOILED_EPISODES || [])][0]?.id || "";
+  }
+
   function getVideoId() {
     const params = new URLSearchParams(window.location.search);
-    return params.get("video") || window.BOILED_VIDEOS?.[0]?.id || "";
+
+    return params.get("video") || getWatchVideoId() || getFallbackVideoId();
   }
 
   function getInitials(name) {

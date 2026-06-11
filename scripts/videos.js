@@ -136,6 +136,7 @@
         title: `Épisode ${episodeNumber}`,
         sourceName,
         sourceUrl,
+        accentColor: config.accentColor || defaults.accentColor,
         posterUrl: config.posterUrl || defaults.posterUrl,
         languages: [...languages],
         ...directSource
@@ -205,6 +206,7 @@
       languages,
       sourceUrl: details.sourceUrl,
       posterUrl: details.posterUrl,
+      accentColor: details.accentColor,
       seasonSourceMaps,
       allowExternalSource
     });
@@ -396,6 +398,7 @@
       language: "En",
       date: "2026",
       posterUrl: "miniatures/posters/project-hail-mary.webp",
+      accentColor: "#2f6e9f",
       description:
         "Science-fiction spatiale tendue autour d'une mission de survie, d'un vaisseau isolé et d'un mystère capable de décider du sort de la Terre.",
       tags: ["Science-fiction", "Espace"]
@@ -411,6 +414,7 @@
       language: "Fr",
       date: "2011",
       posterUrl: "miniatures/posters/limitless.webp",
+      accentColor: "#c8892d",
       description:
         "Thriller nerveux où une pilule expérimentale décuple les capacités d'un écrivain et l'entraîne dans un jeu de pouvoir dangereux.",
       tags: ["Thriller"]
@@ -426,6 +430,7 @@
       language: "En",
       date: "2003",
       posterUrl: "miniatures/posters/interstella-5555.webp",
+      accentColor: "#3560c8",
       description:
         "Odyssée animée et musicale portée par Daft Punk, entre enlèvement interstellaire, pop cosmique et aventure sans dialogue.",
       tags: ["Animé", "Musique"]
@@ -441,6 +446,7 @@
       language: "Fr",
       date: "2006",
       posterUrl: "miniatures/posters/silent-hill.webp",
+      accentColor: "#8f3a2f",
       description:
         "Horreur brumeuse et oppressante autour d'une mère qui cherche sa fille dans une ville fantôme hantée par des visions cauchemardesques.",
       tags: ["Horreur", "Survie", "Silent Hill"]
@@ -456,6 +462,7 @@
       language: "Fr",
       date: "2012",
       posterUrl: "miniatures/posters/silent-hill-revelation.webp",
+      accentColor: "#8a2f33",
       description:
         "Retour dans l'univers Silent Hill avec une héroïne poursuivie par son passé, des cultes inquiétants et des créatures sorties du brouillard.",
       tags: ["Horreur", "Survie", "Silent Hill"]
@@ -471,9 +478,10 @@
       language: "En",
       date: "2007",
       posterUrl: "miniatures/posters/postal-2007.webp",
+      accentColor: "#b71825",
       description:
         "Comédie noire volontairement excessive, adaptée du jeu culte, avec satire, chaos et humour provocateur en version YouTube intégrée.",
-      tags: ["Comédie noire", "Postal"]
+      tags: ["Action", "Comédie noire"]
     },
     {
       provider: "uqload",
@@ -486,6 +494,7 @@
       language: "Fr",
       date: "2017",
       posterUrl: "https://image.tmdb.org/t/p/w400/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg",
+      accentColor: "#d07a2d",
       description:
         "En 2049, la société est fragilisée par les tensions entre humains et réplicants. L'officier K découvre un secret capable de changer le monde.",
       tags: ["Science-fiction"]
@@ -501,6 +510,7 @@
       language: "Fr",
       date: "1982",
       posterUrl: "https://image.tmdb.org/t/p/w400/tDR1V8PbwSGrvi9D7eZneku7Rj.jpg",
+      accentColor: "#1e6d7d",
       description:
         "Los Angeles, 2019. Rick Deckard traque des réplicants en fuite dans une société déshumanisée.",
       tags: ["Science-fiction"]
@@ -518,6 +528,7 @@
       sourceUrl: "https://vaplayer.ru/embed/movie/680493",
       embedUrl: "https://vaplayer.ru/embed/movie/680493",
       posterUrl: "https://m.media-amazon.com/images/M/MV5BOWVjYjU0ZTAtNGVlNi00NGM1LTgzZjctNTZjMjAyYTc4N2VlXkEyXkFqcGc@._V1_FMjpg_UY2998_.jpg",
+      accentColor: "#8a3038",
       description:
         "Retour dans l'univers Silent Hill, exploration psychologique et horreur atmosphérique centrée sur la mémoire, la perte et les manifestations de la ville.",
       tags: ["Horreur"]
@@ -529,6 +540,7 @@
       sourceName: "Dailymotion",
       allowExternalSource: false,
       posterUrl: "https://image.tmdb.org/t/p/w500/qo07tk7mF3c63G7MktMVA2GApZt.jpg",
+      accentColor: "#58b642",
       description:
         "Com\u00e9die de science-fiction anim\u00e9e centr\u00e9e sur les aventures interdimensionnelles de Rick Sanchez et Morty Smith, avec les \u00e9pisodes FR disponibles en player.",
       tags: ["Animation", "Science-fiction", "Com\u00e9die"],
@@ -542,6 +554,7 @@
       sourceName: "Dailymotion",
       allowExternalSource: false,
       posterUrl: "https://image.tmdb.org/t/p/w400/rffL4ayOB0NaY3jcD1L2VsVoh0n.jpg",
+      accentColor: "#52657d",
       description:
         "Sam et Dean Winchester sillonnent les \u00c9tats-Unis pour enqu\u00eater sur des ph\u00e9nom\u00e8nes paranormaux et affronter des cr\u00e9atures surnaturelles.",
       tags: ["Fantastique", "Horreur", "Surnaturel"],
@@ -561,6 +574,7 @@
       sourceUrl: "https://vidzy.org/embed-bk2tw1uqgprz.html",
       embedUrl: "https://vidzy.org/embed-bk2tw1uqgprz.html",
       posterUrl: "https://image.tmdb.org/t/p/w400/4jeFXQYytChdZYE9JYO7Un87IlW.jpg",
+      accentColor: "#5e55a3",
       description:
         "Coraline Jones est une fillette intrépide et douée d'une curiosité sans limites. Ses parents, qui ont tout juste emménagé avec elle dans une étrange maison, n'ont guère de temps à lui consacrer. Pour tromper son ennui, Coraline décide donc de jouer les exploratrices. Ouvrant une porte condamnée, elle pénètre dans un appartement identique au sien, mais où tout est différent. Dans cet Autre Monde, chaque chose lui paraît plus belle, plus colorée et plus attrayante. Son Autre Mère est pleinement disponible, son Autre Père prend la peine de lui mitonner des plats exquis, et même le Chat, si hautain dans la Vraie vie, daigne s'entretenir avec elle. Coraline est bien tentée d'élire domicile dans ce Monde merveilleux, qui répond à toutes ses attentes. Mais le rêve va très vite tourner au cauchemar. Prisonnière de l'Autre Mère, Coraline va devoir déployer des trésors de bravoure, d'imagination et de ténacité pour rentrer chez elle et sauver sa Vraie famille.",
       tags: ["Animation", "Familial", "Fantastique"]
@@ -578,6 +592,7 @@
       sourceUrl: "https://vidzy.live/embed-k1qmqmy44x63.html",
       embedUrl: "https://vidzy.live/embed-k1qmqmy44x63.html",
       posterUrl: "https://image.tmdb.org/t/p/w300/noHuScdXjsL9sWkQBOdqCVeTUrY.jpg",
+      accentColor: "#b62d39",
       description:
         "Après son licenciement, Elisabeth Sparkle teste une substance promettant une version plus jeune et parfaite d'elle-même, avec des conséquences physiques extrêmes.",
       tags: ["Horreur", "Science-fiction", "Body horror"]
@@ -595,6 +610,7 @@
       sourceUrl: "https://vidzy.live/embed-u7pmwypb4kp2.html",
       embedUrl: "https://vidzy.live/embed-u7pmwypb4kp2.html",
       posterUrl: "https://image.tmdb.org/t/p/w300/4moIv5Zewxg0gFuNC7m75x3JbDx.jpg",
+      accentColor: "#b9a03a",
       description:
         "Un homme piégé dans un couloir de métro cherche la sortie 8 en repérant les anomalies, sous peine de revenir au point de départ.",
       tags: ["Horreur", "Mystère", "Thriller"]
@@ -610,6 +626,7 @@
       language: "Fr",
       date: "2006",
       posterUrl: "https://image.tmdb.org/t/p/w400/kYo7TWASMC3YG3dJVsEsE4CNkd7.jpg",
+      accentColor: "#c28b24",
       description:
         "Pas de chance pour le jeune JB. Il est passionné de rock'n'roll dans une famille ultra religieuse qui considère cette musique comme l'œuvre du diable. Lorsque son père lui colle une raclée en arrachant tous les posters de ses idoles, JB s'enfuit et part pour Hollywood y chercher le secret du rock'n'roll... ",
       tags: ["Comédie", "Musique"]
@@ -627,6 +644,7 @@
       sourceUrl: "https://vidzy.org/embed-woqfe8k3cxj0.html",
       embedUrl: "https://vidzy.org/embed-woqfe8k3cxj0.html",
       posterUrl: "https://image.tmdb.org/t/p/w600_and_h900_bestv2/kSfvkCE8mwZCxRH0T4GxGz3SfLP.jpg",
+      accentColor: "#65715f",
       description:
         "Jacob Singer, un employé des postes new-yorkaises, est assailli par de nombreux cauchemars durant ses journées. Il voit des hommes aux visages déformés et se retrouve dans des lieux qu'il ne connaît pas. Jacob est victime des flashbacks incessants de son premier mariage, de la mort de son fils et de son service au Vietnam. Jours après jours, Jacob s'enfonce dans la folie en essayant de comprendre ce qui lui arrive avec l'aide de Jezebel, son épouse.",
       tags: ["Drame", "Mystère", "Horreur"]
@@ -644,6 +662,7 @@
       sourceUrl: "https://vidzy.org/embed-e525be2gf8bi.html",
       embedUrl: "https://vidzy.org/embed-e525be2gf8bi.html",
       posterUrl: "https://image.tmdb.org/t/p/w600_and_h900_bestv2/thQQ3BBBhGDtWm3UTtabhyDJd8U.jpg",
+      accentColor: "#b99b37",
       description:
         "Un jeune cinéaste bascule dans une autre dimension vide et labyrinthique, qui semble abriter des êtres d'un autre monde.",
       tags: ["Horreur", "Mystère", "Science-Fiction"]
@@ -661,6 +680,7 @@
       sourceUrl: "https://vidzy.org/embed-kdd8mtwq0j1i.html",
       embedUrl: "https://vidzy.org/embed-kdd8mtwq0j1i.html",
       posterUrl: "https://image.tmdb.org/t/p/w600_and_h900_bestv2/mDCR1frpUvGfIKksuM440VLb7X9.jpg",
+      accentColor: "#b13e5a",
       description:
         "Et si vous pouviez réaliser votre rêve le plus fou ? Un jeune introverti met la main sur un objet magique capable d’exaucer n’importe quel souhait. Son crush de toujours tombe alors raide dingue de lui… jusqu’à l’obsession la plus totale. Faites attention à ce que vous souhaitez !",
       tags: ["Horreur"]
@@ -678,6 +698,7 @@
       sourceUrl: "https://vidzy.org/embed-7noyoadpqz9r.html",
       embedUrl: "https://vidzy.org/embed-7noyoadpqz9r.html",
       posterUrl: "https://image.tmdb.org/t/p/w400/h7uO28IWKtIIXhPWKvVdFOaPcSq.jpg",
+      accentColor: "#72844a",
       description:
         "Dans un futur proche, la Terre a été ravagée par une grande guerre entre les hommes et les puissantes machines qu'ils avaient créées. Sachant l'humanité condamnée, un scientifique crée 9 petites créatures, fragiles et sans défense à partir d'objets divers ramassés dans les décombres. Incapables de s'opposer aux machines, ils ont formé une petite communauté survivant au jour le jour dans les décombres. Mais le dernier né de cette famille, le Numéro 9 a une mission. Il détient en lui la clé de leur survie et devra convaincre ses camarades de quitter leur refuge de fortune pour s'aventurer au coeur du royaume des machines. Ce qu'ils vont découvrir en chemin représente peut-être le dernier espoir de l'Humanité.",
       tags: ["Action", "Aventure", "Animation", "Science-Fiction", "Thriller"]
@@ -695,6 +716,7 @@
       sourceUrl: "https://vidzy.org/embed-8bbcxyiitroi.html",
       embedUrl: "https://vidzy.org/embed-8bbcxyiitroi.html",
       posterUrl: "https://image.tmdb.org/t/p/w400/t1i10ptOivG4hV7erkX3tmKpiqm.jpg",
+      accentColor: "#c24568",
       description:
         "Le narrateur, sans identité précise, vit seul, travaille seul, dort seul, mange seul ses plateaux‐repas pour une personne comme beaucoup d’autres personnes seules qui connaissent la misère humaine, morale et sexuelle. C’est pourquoi il va devenir membre du Fight club, un lieu clandestin où il va pouvoir retrouver sa virilité, l’échange et la communication. Ce club est dirigé par Tyler Durden, une sorte d’anarchiste entre gourou et philosophe qui prêche l’amour de son prochain.",
       tags: ["Drame"]
@@ -712,6 +734,7 @@
       sourceUrl: "https://vaplayer.ru/embed/movie/950387",
       embedUrl: "https://vaplayer.ru/embed/movie/950387",
       posterUrl: "https://image.tmdb.org/t/p/w500/yFHHfHcUgGAxziP1C3lLt0q2T4s.jpg",
+      accentColor: "#509a42",
       description:
         "Four unlikely friends face everyday challenges until a mysterious portal transports them to the Overworld, a whimsical, blocky realm fueled by creativity. To return home, they must navigate this fantastical landscape, tackling unique obstacles along the way. With the help of the skilled crafter, Steve, the group embarks on an enchanting adventure that tests their ingenuity and teamwork. As they explore this vibrant world, they learn to embrace their differences and discover the power of friendship in overcoming adversity.",
       tags: ["Famille", "Aventure", "Comédie"]
@@ -737,6 +760,7 @@
       language: "EN",
       date: "2005",
       posterUrl: "miniatures/posters/Supernatural.jpg",
+      accentColor: "#52657d",
       description:
         "Sam et Dean Winchester parcourent les États-Unis pour traquer les forces du Mal.",
       tags: Object.freeze(["Fantastique", "Horreur", "Surnaturel"])

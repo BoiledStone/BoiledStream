@@ -9,14 +9,14 @@
       content="Catalogue vidéo moderne avec films, séries, saisons, épisodes et player dédié."
     >
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="css/styles.css?v=20260610-home-series-autoplay">
-    <script src="scripts/app-utils.js?v=20260610-home-series-autoplay" defer></script>
+    <link rel="stylesheet" href="css/styles.css?v=20260611-pill-hover-color">
+    <script src="scripts/app-utils.js?v=20260611-pill-hover-color" defer></script>
     <!-- videos.js doit être chargé avant catalog.js: il expose window.BOILED_VIDEOS. -->
-    <script src="scripts/videos.js?v=20260610-home-series-autoplay" defer></script>
-    <script src="scripts/catalog.js?v=20260610-home-series-autoplay" defer></script>
+    <script src="scripts/videos.js?v=20260611-pill-hover-color" defer></script>
+    <script src="scripts/catalog.js?v=20260611-pill-hover-color" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <script src="scripts/supabase-config.js?v=20260610-home-series-autoplay" defer></script>
-    <script src="scripts/community.js?v=20260610-home-series-autoplay" defer></script>
+    <script src="scripts/supabase-config.js?v=20260611-pill-hover-color" defer></script>
+    <script src="scripts/community.js?v=20260611-pill-hover-color" defer></script>
   </head>
   <body>
     <header class="site-header">
@@ -68,9 +68,20 @@
             id="search-input"
             type="search"
             autocomplete="off"
-            placeholder="Titre, saison, ambiance, source..."
+            placeholder="Titre, saison, ambiance..."
           >
         </label>
+        <div class="toolbar-menus">
+          <label class="search-box">
+            <span>Trier</span>
+            <select id="sort-select" aria-label="Trier le catalogue">
+              <option value="catalogue">Catalogue</option>
+              <option value="title">Titre A-Z</option>
+              <option value="year-desc">Année récente</option>
+              <option value="year-asc">Année ancienne</option>
+            </select>
+          </label>
+        </div>
         <div class="filter-group" id="filter-group" aria-label="Filtrer par catégorie"></div>
       </section>
 
