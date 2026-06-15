@@ -232,10 +232,18 @@
         const provider = String(episode.provider || "").toLowerCase();
         const buildSource = PROVIDERS[provider];
         const source = buildSource ? buildSource(episode) : {};
+        const {
+          provider: _provider,
+          videoId: _videoId,
+          fileId: _fileId,
+          sources: _sources,
+          ...episodeDetails
+        } = episode;
 
         return [
           episode.episodeNumber,
           {
+            ...episodeDetails,
             sources: {
               [language]: {
                 language,

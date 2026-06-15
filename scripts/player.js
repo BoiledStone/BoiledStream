@@ -322,6 +322,10 @@
     );
   }
 
+  function formatCountLabel(count, singular, plural = `${singular}s`) {
+    return `${count} ${count > 1 ? plural : singular}`;
+  }
+
   function centerActiveOption(containerSelector, activeSelector) {
     const container = seriesPanel?.querySelector(containerSelector);
     const activeOption = container?.querySelector(activeSelector);
@@ -471,8 +475,8 @@
     const totalEpisodes = season.totalEpisodes || availableEpisodes;
     const episodeCountText =
       availableEpisodes === totalEpisodes
-        ? `${availableEpisodes} episodes`
-        : `${availableEpisodes}/${totalEpisodes} episodes`;
+        ? formatCountLabel(availableEpisodes, "épisode", "épisodes")
+        : `${availableEpisodes}/${totalEpisodes} épisodes`;
     const panelMeta = [selectedSourceName, formatLanguage(language), episodeCountText]
       .filter(Boolean)
       .map((entry) => `<span>${escapeHtml(entry)}</span>`)
@@ -900,6 +904,9 @@
       : null;
     const seriesSource =
       seriesPlayback?.sourceUrl || seriesState?.episode?.sourceUrl || seriesState?.season?.sourceUrl || item.sourceUrl;
+    const episodeDuration = seriesPlayback?.duration || seriesState?.episode?.duration || "";
+    const episodeResolution = seriesPlayback?.resolution || seriesState?.episode?.resolution || "";
+    const episodeFormat = seriesPlayback?.format || seriesState?.episode?.format || "";
 
     document.title = `BoiledStream - ${item.title}`;
     if (title) {
@@ -909,7 +916,7 @@
       category.textContent = seriesState?.season
         ? `Série / ${seriesState.season.label}`
         : item.seriesId
-          ? "Episode"
+          ? "Épisode"
           : "Lecture";
     }
     if (description) {
@@ -919,13 +926,27 @@
       playerDate.textContent = item.date || "Non renseignée";
     }
     if (duration) {
+      const seriesDuration = `${formatCountLabel(item.seasons?.length || 0, "saison")} / ${formatCountLabel(
+        getEpisodeCount(item),
+        "épisode",
+        "épisodes"
+      )}`;
+
       duration.textContent =
         item.type === "series"
-          ? `${item.seasons?.length || 0} saisons / ${getEpisodeCount(item)} épisodes`
-          : item.duration || "Non renseignee";
+          ? seriesState?.episode
+            ? episodeDuration || "Non renseignée"
+            : seriesDuration
+          : item.duration || "Non renseignée";
     }
     if (quality) {
-      quality.textContent = [item.resolution, item.format].filter(Boolean).join(" - ") || "Non renseignée";
+      quality.textContent =
+        [
+          seriesState?.episode ? episodeResolution || item.resolution : item.resolution,
+          seriesState?.episode ? episodeFormat || item.format : item.format
+        ]
+          .filter(Boolean)
+          .join(" - ") || "Non renseignée";
     }
     if (playerLanguage) {
       playerLanguage.textContent = seriesState?.language ? formatLanguage(seriesState.language) : inferLanguage(item);
@@ -965,12 +986,12 @@
 
       if (previousEpisode) {
         previousLink.href = buildPlayerUrl(previousEpisode.id);
-        previousLink.textContent = "Episode precedent";
+        previousLink.textContent = "Épisode précédent";
         previousLink.setAttribute("aria-label", `Lire ${previousEpisode.title}`);
       }
       if (nextEpisode) {
         nextLink.href = buildPlayerUrl(nextEpisode.id);
-        nextLink.textContent = "Prochain episode";
+        nextLink.textContent = "Épisode suivant";
         nextLink.setAttribute("aria-label", `Lire ${nextEpisode.title}`);
       }
       return;

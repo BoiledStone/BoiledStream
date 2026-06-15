@@ -123,44 +123,54 @@ Utiliser `provider: "direct"` seulement pour une vraie URL `.mp4` ou compatible 
 }
 ```
 
-## Ajouter Une Serie
+## Ajouter Une Série
 
-Dans `scripts/videos.js`, ajouter un bloc avec `provider: "series"`. La carte apparait dans le catalogue, puis le player affiche les boutons de saisons et la liste des episodes.
+Dans `scripts/videos.js`, créer d'abord la liste des épisodes, puis la liste des saisons, et enfin ajouter un appel `buildSeries(...)` dans le tableau `catalogue`. La carte apparaît dans la section séries, puis le player affiche les boutons de saisons, langues et épisodes.
 
 ```js
-{
-  provider: "series",
+const MA_SERIE_EPISODES = [
+  {
+    provider: "dailymotion",
+    seasonNumber: 1,
+    episodeNumber: 1,
+    title: "Épisode 1",
+    videoId: "ID_DAILYMOTION_1",
+    duration: "00:42:00",
+    resolution: "1280x720"
+  },
+  {
+    provider: "dailymotion",
+    seasonNumber: 1,
+    episodeNumber: 2,
+    title: "Épisode 2",
+    videoId: "ID_DAILYMOTION_2",
+    duration: "00:43:00",
+    resolution: "1280x720"
+  }
+];
+
+const MA_SERIE_SEASONS = [
+  {
+    number: 1,
+    episodeNumbers: MA_SERIE_EPISODES.map((episode) => episode.episodeNumber),
+    episodeSources: buildProviderEpisodeSources("FR", MA_SERIE_EPISODES),
+    languages: ["FR"],
+    description: "Résumé court de la saison."
+  }
+];
+
+buildSeries({
   id: "ma-serie",
-  title: "Ma Serie",
-  category: "Serie",
-  language: "Fr",
+  title: "Ma Série",
   date: "2024",
+  sourceName: "Dailymotion",
+  allowExternalSource: false,
   posterUrl: "miniatures/posters/ma-serie.webp",
-  description: "Resume court de la serie.",
+  description: "Résumé court de la série.",
   tags: ["Action"],
-  seasons: [
-    {
-      number: 1,
-      title: "Saison 1",
-      episodes: [
-        {
-          provider: "uqload",
-          title: "Episode 1",
-          fileId: "code-uqload-episode-1",
-          duration: "00:42:00",
-          resolution: "1280x720"
-        },
-        {
-          provider: "uqload",
-          title: "Episode 2",
-          fileId: "code-uqload-episode-2",
-          duration: "00:43:00",
-          resolution: "1280x720"
-        }
-      ]
-    }
-  ]
-}
+  languages: ["FR"],
+  seasons: MA_SERIE_SEASONS
+})
 ```
 
 Pour Dailymotion, utilise `provider: "dailymotion"` et mets seulement l'id dans `videoId`.
@@ -168,7 +178,9 @@ Pour Dailymotion, utilise `provider: "dailymotion"` et mets seulement l'id dans 
 ```js
 {
   provider: "dailymotion",
-  title: "Episode 1",
+  seasonNumber: 1,
+  episodeNumber: 1,
+  title: "Épisode 1",
   videoId: "ID_DAILYMOTION",
   duration: "00:42:00",
   resolution: "1280x720"
@@ -182,7 +194,7 @@ URL Dailymotion: https://www.dailymotion.com/video/x8abcde
 videoId: "x8abcde"
 ```
 
-Les episodes peuvent aussi utiliser `provider: "youtube"`, `provider: "embed"` ou `provider: "direct"`, comme les films. Le bouton `Prochain episode` apparait automatiquement dans le lecteur quand il existe un episode suivant.
+Les épisodes peuvent aussi utiliser `provider: "youtube"`, `provider: "uqload"`, `provider: "embed"` ou `provider: "direct"`, comme les films. Le bouton `Épisode suivant` apparaît automatiquement dans le lecteur quand il existe un épisode suivant.
 
 ## Règles Des Champs
 
