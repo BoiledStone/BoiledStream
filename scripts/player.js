@@ -315,6 +315,10 @@
     return [];
   }
 
+  function hasSelectableSources(item) {
+    return getSourceLanguages(item?.sources).length > 1;
+  }
+
   function uniqueNormalizedValues(values) {
     return values.filter(
       (entry, index, list) =>
@@ -362,6 +366,24 @@
     return { season, episode, language, languages };
   }
 
+  function getMovieState(item) {
+    const currentParams = new URLSearchParams(window.location.search);
+    const requestedLanguage = currentParams.get("lang") || "";
+    const sourceLanguages = getSourceLanguages(item.sources);
+    const languages = uniqueNormalizedValues(
+      sourceLanguages.length
+        ? [...(item.languages || []), ...sourceLanguages]
+        : [...(item.languages || []), item.language].filter(Boolean)
+    );
+    const language =
+      languages.find((entry) => normalizeKey(entry) === normalizeKey(requestedLanguage)) ||
+      languages[0] ||
+      item.language ||
+      "";
+
+    return { language, languages };
+  }
+
   function updateSeriesAddress(item, season, episode, language) {
     const nextParams = new URLSearchParams(window.location.search);
     nextParams.set("video", item.id);
@@ -376,6 +398,25 @@
     } else {
       nextParams.delete("lang");
     }
+    const nextUrl = new URL(window.location.href);
+    nextUrl.search = nextParams.toString();
+    window.history.replaceState(null, "", nextUrl);
+  }
+
+  function updateMovieAddress(item, language) {
+    const nextParams = new URLSearchParams(window.location.search);
+
+    if (!watchMatch || nextParams.has("video")) {
+      nextParams.set("video", item.id);
+    }
+    nextParams.delete("season");
+    nextParams.delete("episode");
+    if (language) {
+      nextParams.set("lang", language);
+    } else {
+      nextParams.delete("lang");
+    }
+
     const nextUrl = new URL(window.location.href);
     nextUrl.search = nextParams.toString();
     window.history.replaceState(null, "", nextUrl);
@@ -602,6 +643,75 @@
     });
   }
 
+  function renderMovieSourcePanel(item) {
+    if (!seriesPanel) {
+      return;
+    }
+
+    const { language, languages } = getMovieState(item);
+    if (!hasSelectableSources(item)) {
+      seriesPanel.hidden = true;
+      seriesPanel.innerHTML = "";
+      return;
+    }
+
+    const playback = getMoviePlaybackSource(item, language);
+    const selectedSourceName = playback.sourceName || item.sourceName || "Player";
+    const panelMeta = [selectedSourceName, formatLanguage(language), playback.resolution || item.resolution]
+      .filter(Boolean)
+      .map((entry) => `<span>${escapeHtml(entry)}</span>`)
+      .join("");
+    const languageButtons = languages
+      .map((entry) => {
+        const isActive = normalizeKey(entry) === normalizeKey(language);
+        return `
+          <button class="language-button${isActive ? " active" : ""}" type="button" data-language="${escapeHtml(entry)}" aria-pressed="${isActive}">
+            ${escapeHtml(entry)}
+          </button>
+        `;
+      })
+      .join("");
+
+    seriesPanel.hidden = false;
+    seriesPanel.innerHTML = `
+      <div class="series-panel-head">
+        <div>
+          <p class="section-kicker">Player film</p>
+          <h2>${escapeHtml(item.title)}</h2>
+        </div>
+      </div>
+      <div class="series-now">
+        <div class="series-now-poster" aria-hidden="true">
+          <div class="generated-poster"></div>
+          ${renderPosterImage(item.posterUrl, "eager")}
+        </div>
+        <div class="series-now-copy">
+          <p class="section-kicker">Sélection active</p>
+          <h3>${escapeHtml(item.title)} - ${escapeHtml(formatLanguage(language))}</h3>
+          <div class="series-now-meta" aria-label="Détails de la sélection">
+            ${panelMeta}
+          </div>
+        </div>
+      </div>
+      <div class="movie-source-controls" aria-label="Sélection langue film">
+        <section class="series-control-block" aria-label="Langues">
+          <h3>Langues <span>${languages.length}</span></h3>
+          <div class="language-list">${languageButtons}</div>
+        </section>
+      </div>
+    `;
+
+    bindImageFallbacks(seriesPanel, ".series-now-poster img");
+    seriesPanel.querySelectorAll("[data-language]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const nextLanguage = button.dataset.language || language;
+        updateMovieAddress(item, nextLanguage);
+        renderPlayer(item);
+        renderMetadata(item);
+      });
+    });
+  }
+
   function getEpisodePlaybackSource(episode, language) {
     const sources = episode?.sources;
 
@@ -639,6 +749,45 @@
     }
 
     return episode || {};
+  }
+
+  function getMoviePlaybackSource(item, language) {
+    const sources = item?.sources;
+
+    if (Array.isArray(sources) && sources.length) {
+      const selected = sources.find((entry) => normalizeKey(entry.language) === normalizeKey(language));
+
+      if (!selected) {
+        return item || {};
+      }
+
+      return {
+        ...item,
+        ...selected,
+        sourceName: selected.sourceName || item.sourceName,
+        sourceUrl: selected.sourceUrl || item.sourceUrl
+      };
+    }
+
+    if (sources && typeof sources === "object") {
+      const selectedKey = Object.keys(sources).find(
+        (key) => normalizeKey(key) === normalizeKey(language)
+      );
+      if (!selectedKey) {
+        return item || {};
+      }
+      const selected = sources[selectedKey] || {};
+
+      return {
+        ...item,
+        ...selected,
+        language: selected.language || selectedKey,
+        sourceName: selected.sourceName || item.sourceName,
+        sourceUrl: selected.sourceUrl || item.sourceUrl
+      };
+    }
+
+    return item || {};
   }
 
   function renderEpisodePlayback(item, season, episode, language) {
@@ -825,31 +974,45 @@
   }
 
   function renderPlayer(item) {
-    if (seriesPanel) {
-      seriesPanel.hidden = item.type !== "series";
-      if (item.type !== "series") {
-        seriesPanel.innerHTML = "";
-      }
-    }
-
     if (item.type === "series") {
       renderSeriesExperience(item);
       return;
     }
 
     showPlayerMount();
+    const movieState = getMovieState(item);
+    const hasMovieSourceChoices = hasSelectableSources(item);
+    const playback = hasMovieSourceChoices ? getMoviePlaybackSource(item, movieState.language) : item;
+    const playbackItem = {
+      ...item,
+      ...playback,
+      title: item.title,
+      posterUrl: item.posterUrl,
+      sourceName: playback.sourceName || item.sourceName,
+      sourceUrl: playback.sourceUrl || item.sourceUrl,
+      resolution: playback.resolution || item.resolution,
+      duration: playback.duration || item.duration
+    };
 
-    if (item.embedUrl) {
-      if (isUqloadEmbed(item)) {
-        renderUqloadProxy(item);
+    if (hasMovieSourceChoices) {
+      updateMovieAddress(item, movieState.language);
+      renderMovieSourcePanel(item);
+    } else if (seriesPanel) {
+      seriesPanel.hidden = true;
+      seriesPanel.innerHTML = "";
+    }
+
+    if (playbackItem.embedUrl) {
+      if (isUqloadEmbed(playbackItem)) {
+        renderUqloadProxy(playbackItem);
         return;
       }
 
       playerMount.innerHTML = `
         <iframe
           class="main-video"
-          src="${escapeHtml(buildAutoplayEmbedUrl(item.embedUrl))}"
-          title="${escapeHtml(item.title)}"
+          src="${escapeHtml(buildAutoplayEmbedUrl(playbackItem.embedUrl))}"
+          title="${escapeHtml(playbackItem.title)}"
           ${buildIframePolicy()}
           referrerpolicy="origin"
         ></iframe>
@@ -861,12 +1024,12 @@
       return;
     }
 
-    if (item.videoUrl) {
-      const posterUrl = getAssetUrl(item.posterUrl);
+    if (playbackItem.videoUrl) {
+      const posterUrl = getAssetUrl(playbackItem.posterUrl);
       const posterAttribute = posterUrl ? ` poster="${escapeHtml(posterUrl)}"` : "";
       playerMount.innerHTML = `
         <video class="main-video" controls preload="metadata" playsinline${posterAttribute}>
-          <source src="${escapeHtml(item.videoUrl)}" type="video/mp4">
+          <source src="${escapeHtml(playbackItem.videoUrl)}" type="${escapeHtml(playbackItem.mimeType || "video/mp4")}">
           Votre navigateur ne prend pas en charge la lecture vidéo HTML5.
         </video>
       `;
@@ -877,8 +1040,8 @@
       return;
     }
 
-    if (item.sourceUrl) {
-      renderExternalGate(item, {
+    if (playbackItem.sourceUrl) {
+      renderExternalGate(playbackItem, {
         context: "Fiche source externe référencée dans BoiledStream."
       });
       return;
@@ -891,8 +1054,8 @@
     `;
     renderPlayerChrome();
     if (playerHelp) {
-      playerHelp.innerHTML = item.sourceUrl
-        ? `<a class="button primary" href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noreferrer">Ouvrir la source</a>`
+      playerHelp.innerHTML = playbackItem.sourceUrl
+        ? `<a class="button primary" href="${escapeHtml(playbackItem.sourceUrl)}" target="_blank" rel="noreferrer">Ouvrir la source</a>`
         : "";
     }
   }
@@ -904,9 +1067,14 @@
       : null;
     const seriesSource =
       seriesPlayback?.sourceUrl || seriesState?.episode?.sourceUrl || seriesState?.season?.sourceUrl || item.sourceUrl;
+    const movieState = item.type === "series" ? null : getMovieState(item);
+    const moviePlayback = movieState ? getMoviePlaybackSource(item, movieState.language) : null;
+    const movieSource = moviePlayback?.sourceUrl || item.sourceUrl;
     const episodeDuration = seriesPlayback?.duration || seriesState?.episode?.duration || "";
     const episodeResolution = seriesPlayback?.resolution || seriesState?.episode?.resolution || "";
     const episodeFormat = seriesPlayback?.format || seriesState?.episode?.format || "";
+    const movieResolution = moviePlayback?.resolution || item.resolution || "";
+    const movieFormat = moviePlayback?.format || item.format || "";
 
     document.title = `BoiledStream - ${item.title}`;
     if (title) {
@@ -941,19 +1109,25 @@
     }
     if (quality) {
       quality.textContent =
-        [
-          seriesState?.episode ? episodeResolution || item.resolution : item.resolution,
-          seriesState?.episode ? episodeFormat || item.format : item.format
-        ]
+        (item.type === "series"
+          ? [
+              seriesState?.episode ? episodeResolution || item.resolution : item.resolution,
+              seriesState?.episode ? episodeFormat || item.format : item.format
+            ]
+          : [movieResolution, movieFormat])
           .filter(Boolean)
           .join(" - ") || "Non renseignée";
     }
     if (playerLanguage) {
-      playerLanguage.textContent = seriesState?.language ? formatLanguage(seriesState.language) : inferLanguage(item);
+      playerLanguage.textContent = seriesState?.language
+        ? formatLanguage(seriesState.language)
+        : movieState?.language
+          ? formatLanguage(movieState.language)
+          : inferLanguage(item);
     }
     if (source) {
-      const sourceLabel = seriesPlayback?.sourceName || item.sourceName || "Source";
-      source.href = seriesSource || item.sourceUrl || "#";
+      const sourceLabel = seriesPlayback?.sourceName || moviePlayback?.sourceName || item.sourceName || "Source";
+      source.href = seriesState ? seriesSource || item.sourceUrl || "#" : movieSource || "#";
       source.textContent = seriesState?.episode
         ? `${sourceLabel} - ${seriesState.season.label} épisode ${seriesState.episode.number}`
         : sourceLabel;

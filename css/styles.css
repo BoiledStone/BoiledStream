@@ -1528,6 +1528,12 @@ h3 {
   gap: 14px;
 }
 
+.movie-source-controls {
+  display: grid;
+  grid-template-columns: minmax(160px, 320px);
+  gap: 14px;
+}
+
 .series-control-block {
   min-width: 0;
   padding: 14px;

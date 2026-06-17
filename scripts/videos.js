@@ -497,6 +497,90 @@
       tags: ["Action", "Comédie noire"]
     },
     {
+      provider: "embed",
+      id: "superbad",
+      title: "Superbad",
+      category: "Film",
+      duration: "1h53",
+      resolution: "HD",
+      language: "FR+EN",
+      languages: ["FR", "EN"],
+      date: "2007",
+      sourceName: "Vidzy",
+      sourceUrl: "https://vidzy.org/embed-6uytjx9c8cta.html",
+      embedUrl: "https://vidzy.org/embed-6uytjx9c8cta.html",
+      posterUrl: "https://image.tmdb.org/t/p/w400/ek8e8txUyUwd2BNqj6lFEerJfbq.jpg",
+      accentColor: "#d96c2f",
+      description:
+        "Evan et Seth sont deux amis pas très futés qui ne peuvent pas se passer l'un de l'autre. Pourtant, il va bien falloir qu'ils apprennent, parce que cette année, ils sont inscrits dans deux universités différentes ! Evan est craquant, plutôt intelligent et constamment terrifié par la vie - et les filles en particulier. De son côté, Seth parle trop, ne tient pas en place et s'intéresse vraiment beaucoup à tous les aspects de la reproduction humaine... Pour ces deux-là, il est temps d'affronter l'existence, les filles et leur destin, mais pour cela, ils doivent d'abord survivre à cette nuit fatidique, leur première nuit, celle qui vous excite, vous terrifie et dont vous vous souviendrez toute votre vie !",
+      tags: ["Comédie"],
+      sources: {
+        FR: {
+          language: "FR",
+          sourceName: "Vidzy",
+          sourceUrl: "https://vidzy.org/embed-6uytjx9c8cta.html",
+          embedUrl: "https://vidzy.org/embed-6uytjx9c8cta.html"
+        },
+        EN: {
+          language: "EN",
+          sourceName: "Vaplayer",
+          sourceUrl: "https://vaplayer.ru/embed/movie/8363",
+          embedUrl: "https://vaplayer.ru/embed/movie/8363"
+        }
+      }
+    },
+    {
+      provider: "embed",
+      id: "project-x-2012",
+      title: "Project X",
+      category: "Film",
+      duration: "1h28",
+      resolution: "HD",
+      language: "EN",
+      date: "2012",
+      sourceName: "Vaplayer",
+      sourceUrl: "https://vaplayer.ru/embed/movie/57214",
+      embedUrl: "https://vaplayer.ru/embed/movie/57214",
+      posterUrl: "https://image.tmdb.org/t/p/w500/lUPDGT3lyRrq8SvWuNWG2DP64bR.jpg",
+      accentColor: "#c9342f",
+      description:
+        "Three high school seniors aim to elevate their social status by hosting an unforgettable party. What starts as a simple gathering quickly escalates into an outlandish celebration as excitement builds and more guests arrive. Chaos ensues as the night unfolds, with the trio struggling to manage the growing crowd and the mayhem that follows. Their attempt to create a memorable night spirals into unforeseen consequences, challenging their friendships and reputations while showcasing the unpredictable nature of youth and celebration.",
+      tags: ["Comédie", "Found footage"]
+    },
+    {
+      provider: "embed",
+      id: "idiocracy",
+      title: "Idiocracy",
+      category: "Film",
+      duration: "1h24",
+      resolution: "HD",
+      language: "FR+EN",
+      languages: ["FR", "EN"],
+      date: "2006",
+      sourceName: "Vidzy",
+      sourceUrl: "https://vidzy.org/embed-s7w75tja413n.html",
+      embedUrl: "https://vidzy.org/embed-s7w75tja413n.html",
+      posterUrl: "https://image.tmdb.org/t/p/w400/rKsiNxKjhWEwndOgWPs273oy9EZ.jpg",
+      accentColor: "#d7bc2f",
+      description:
+        "Aux États-Unis, l'armée a mis au point des caissons d'hibernation permettant de conserver ses meilleurs soldats pour les réveiller en cas de conflits. Le Pentagone demande un test pour s'assurer de la fiabilité. Deux cobayes sont choisis pour leur Q.I moyen et sans aucune famille : Joe Bowers, un homme sans ambition, et Rita, une prostituée. Le projet est oublié dans un hangar militaire. 500 ans plus tard, le caisson de Joe est accidentellement ouvert et il découvre le résultat de la culture américaine : des débiles gavés de marketing qui ne savent plus rien faire.",
+      tags: ["Comédie", "Science-fiction", "Satire"],
+      sources: {
+        FR: {
+          language: "FR",
+          sourceName: "Vidzy",
+          sourceUrl: "https://vidzy.org/embed-s7w75tja413n.html",
+          embedUrl: "https://vidzy.org/embed-s7w75tja413n.html"
+        },
+        EN: {
+          language: "EN",
+          sourceName: "Vaplayer",
+          sourceUrl: "https://vaplayer.ru/embed/movie/7512",
+          embedUrl: "https://vaplayer.ru/embed/movie/7512"
+        }
+      }
+    },
+    {
       provider: "uqload",
       id: "blade-runner-2049",
       title: "Blade Runner 2049",
