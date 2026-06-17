@@ -545,7 +545,7 @@
       accentColor: "#c9342f",
       description:
         "Three high school seniors aim to elevate their social status by hosting an unforgettable party. What starts as a simple gathering quickly escalates into an outlandish celebration as excitement builds and more guests arrive. Chaos ensues as the night unfolds, with the trio struggling to manage the growing crowd and the mayhem that follows. Their attempt to create a memorable night spirals into unforeseen consequences, challenging their friendships and reputations while showcasing the unpredictable nature of youth and celebration.",
-      tags: ["Comédie", "Found footage"]
+      tags: ["Comédie"]
     },
     {
       provider: "embed",
