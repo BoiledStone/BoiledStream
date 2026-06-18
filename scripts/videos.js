@@ -45,6 +45,13 @@
         sourceUrl: item.sourceUrl || item.videoUrl,
         videoUrl: item.videoUrl
       };
+    },
+    googleDrive(item) {
+      return {
+        sourceName: "Google Drive",
+        sourceUrl: `https://drive.google.com/file/d/${item.fileId}/view`,
+        embedUrl: `https://drive.google.com/file/d/${item.fileId}/preview`
+      };
     }
   };
 
@@ -399,6 +406,504 @@
     }
   ];
 
+  const SMILING_FRIENDS_EPISODES = [
+    {
+      id: "smiling-friends-s01e01",
+      title: "Desmonds Big Day Out",
+      seasonNumber: 1,
+      episodeNumber: 1,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1lawhqCgnYYPLEesGLM26E1Fm0Prce01b/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1lawhqCgnYYPLEesGLM26E1Fm0Prce01b/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s01e02",
+      title: "Mr Frog",
+      seasonNumber: 1,
+      episodeNumber: 2,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1dITO7Sj5rXIAjvqqICVNoZZtMfZgBJk5/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1dITO7Sj5rXIAjvqqICVNoZZtMfZgBJk5/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s01e03",
+      title: "Shrimps Odyssey",
+      seasonNumber: 1,
+      episodeNumber: 3,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1yqhajG3KM0HAA-2t_FEUpNbTQCehA8iM/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1yqhajG3KM0HAA-2t_FEUpNbTQCehA8iM/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s01e04",
+      title: "A Silly Halloween Special",
+      seasonNumber: 1,
+      episodeNumber: 4,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1qNrjoVSr_oMRFMzLqZhSBmAdVa2RPSnT/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1qNrjoVSr_oMRFMzLqZhSBmAdVa2RPSnT/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s01e05",
+      title: "Who Violently Murdered Simon S Salty",
+      seasonNumber: 1,
+      episodeNumber: 5,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1Yl7blgYpxyPiYR7Gj4Lg4T5LDUQse3i2/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1Yl7blgYpxyPiYR7Gj4Lg4T5LDUQse3i2/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s01e06",
+      title: "Enchanted Forest",
+      seasonNumber: 1,
+      episodeNumber: 6,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1qhsNCZzcbbZ7C-0eKzRvo2HggA9Tyi0_/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1qhsNCZzcbbZ7C-0eKzRvo2HggA9Tyi0_/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s01e07",
+      title: "Frowning Friends",
+      seasonNumber: 1,
+      episodeNumber: 7,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1eVSeDJpjGUIIuE5wR8b0lJ8wqhGXgdXJ/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1eVSeDJpjGUIIuE5wR8b0lJ8wqhGXgdXJ/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s01e08",
+      title: "Charlie Dies and Doesnt Come Back",
+      seasonNumber: 1,
+      episodeNumber: 8,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1htSCliOMtS-dICrxewkemDuQkw-FSLzE/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1htSCliOMtS-dICrxewkemDuQkw-FSLzE/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s01e09",
+      title: "Smiling Friends Go to Brazil",
+      seasonNumber: 1,
+      episodeNumber: 9,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1fkgIUEfOoSAS91dhksvo_x_2MKSfcQSq/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1fkgIUEfOoSAS91dhksvo_x_2MKSfcQSq/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s02e01",
+      title: "Gwimbly",
+      seasonNumber: 2,
+      episodeNumber: 1,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1Tl6j1b4l9wxf-vINl_tW-4KlO9XrzyNS/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1Tl6j1b4l9wxf-vINl_tW-4KlO9XrzyNS/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s02e02",
+      title: "Mr President",
+      seasonNumber: 2,
+      episodeNumber: 2,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/10Ez3BrLDlpuex8r46SHJhN7uSDeYJohT/view",
+          embedUrl:
+            "https://drive.google.com/file/d/10Ez3BrLDlpuex8r46SHJhN7uSDeYJohT/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s02e03",
+      title: "A Allan Adventure",
+      seasonNumber: 2,
+      episodeNumber: 3,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1yy3qsqD_PxkIbnhDkkqmGB65iSVmdblA/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1yy3qsqD_PxkIbnhDkkqmGB65iSVmdblA/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s02e04",
+      title: "Erm the Boss Finds Love",
+      seasonNumber: 2,
+      episodeNumber: 4,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1XB6802H-Y_vvK6-qY6quLHn3E2dYfKfy/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1XB6802H-Y_vvK6-qY6quLHn3E2dYfKfy/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s02e05",
+      title: "Brothers Egg",
+      seasonNumber: 2,
+      episodeNumber: 5,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/10hIwqMmeWSbnlnZ-VrpW4E09jv0l6asJ/view",
+          embedUrl:
+            "https://drive.google.com/file/d/10hIwqMmeWSbnlnZ-VrpW4E09jv0l6asJ/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s02e06",
+      title: "Charlie Pim and Bill vs The Alien",
+      seasonNumber: 2,
+      episodeNumber: 6,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1gzhg6n7Dk1xOAPyujy-QdaIkUZ_9KWLG/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1gzhg6n7Dk1xOAPyujy-QdaIkUZ_9KWLG/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s02e07",
+      title: "The Magical Red Jewel (aka Tyler Gets Fired)",
+      seasonNumber: 2,
+      episodeNumber: 7,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1h2KIsdRCBfuvPqiktBDRD-DQP7FwDqzk/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1h2KIsdRCBfuvPqiktBDRD-DQP7FwDqzk/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s02e08",
+      title: "Pim Finally Turns Green",
+      seasonNumber: 2,
+      episodeNumber: 8,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1ypjJ4JZho-NVPCR63qHH82MF_-ni7sOM/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1ypjJ4JZho-NVPCR63qHH82MF_-ni7sOM/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s03e01",
+      title: "Silly Samuel",
+      seasonNumber: 3,
+      episodeNumber: 1,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1DTpZVAJKtEc35nVolD36r6-RPp2HXjs-/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1DTpZVAJKtEc35nVolD36r6-RPp2HXjs-/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s03e02",
+      title: "Le Voyage Incroyable de Monsieur Grenouille",
+      seasonNumber: 3,
+      episodeNumber: 2,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1a2-qFGK3lQmS7T38F8c5_PMOc_7gnQiv/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1a2-qFGK3lQmS7T38F8c5_PMOc_7gnQiv/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s03e03",
+      title: "Mole Man",
+      seasonNumber: 3,
+      episodeNumber: 3,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1di10djT8TRDdyNitBx_26TmlMjTaiD_K/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1di10djT8TRDdyNitBx_26TmlMjTaiD_K/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s03e04",
+      title: "Curse of the Green Halloween Witch",
+      seasonNumber: 3,
+      episodeNumber: 4,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1fIhVOXU9YJgepJu4w7kLHKi57UsDWJvi/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1fIhVOXU9YJgepJu4w7kLHKi57UsDWJvi/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s03e05",
+      title: "Pim and Charlie Save Mother Nature",
+      seasonNumber: 3,
+      episodeNumber: 5,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1elmWWO29f4EsRrkB-r2JumaateTFGtv9/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1elmWWO29f4EsRrkB-r2JumaateTFGtv9/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s03e06",
+      title: "Squim Returns",
+      seasonNumber: 3,
+      episodeNumber: 6,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1VaHIH3YUpCBWiK8Z1OB40SHa3ERLg3Dg/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1VaHIH3YUpCBWiK8Z1OB40SHa3ERLg3Dg/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s03e07",
+      title: "Shmaloogles",
+      seasonNumber: 3,
+      episodeNumber: 7,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1ULDM01lpyg_1r090YBzmmFvkT4ZE2nkW/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1ULDM01lpyg_1r090YBzmmFvkT4ZE2nkW/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s03e08",
+      title: "The Glep Ep",
+      seasonNumber: 3,
+      episodeNumber: 8,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1Px2ZVn92yP2udwoZP9YZuDbpEyQYy4ku/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1Px2ZVn92yP2udwoZP9YZuDbpEyQYy4ku/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s03e09",
+      title: "Friend-Bot (Version 12589218731809213528796879521)",
+      seasonNumber: 3,
+      episodeNumber: 9,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/1OdGhIsgJu5VrqO8wmpyImAOU_Ilhu9gf/view",
+          embedUrl:
+            "https://drive.google.com/file/d/1OdGhIsgJu5VrqO8wmpyImAOU_Ilhu9gf/preview"
+        }
+      }
+    },
+    {
+      id: "smiling-friends-s03e10",
+      title: "Charlie's Uncle Dies and Doesn't Come Back",
+      seasonNumber: 3,
+      episodeNumber: 10,
+      sources: {
+        EN: {
+          language: "EN",
+          sourceName: "Google Drive",
+          sourceUrl:
+            "https://drive.google.com/file/d/145xPW-Ub4DnHGkG9Xk50igzANPl15BsX/view",
+          embedUrl:
+            "https://drive.google.com/file/d/145xPW-Ub4DnHGkG9Xk50igzANPl15BsX/preview"
+        }
+      }
+    }
+  ];
+
+  const SMILING_FRIENDS_SEASONS = [
+    {
+      number: 1,
+      episodeNumbers: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      sourceUrl: "",
+      posterUrl:
+        "https://m.media-amazon.com/images/M/MV5BYjNkMjdiZGEtMTg3Mi00YTAzLWJkMGYtMmIxMzNjMmRhOGNmXkEyXkFqcGc@._V1_.jpg",
+      episodeSources: {
+        1: SMILING_FRIENDS_EPISODES[0],
+        2: SMILING_FRIENDS_EPISODES[1],
+        3: SMILING_FRIENDS_EPISODES[2],
+        4: SMILING_FRIENDS_EPISODES[3],
+        5: SMILING_FRIENDS_EPISODES[4],
+        6: SMILING_FRIENDS_EPISODES[5],
+        7: SMILING_FRIENDS_EPISODES[6],
+        8: SMILING_FRIENDS_EPISODES[7],
+        9: SMILING_FRIENDS_EPISODES[8]
+      },
+      languages: ["EN"]
+    },
+    {
+      number: 2,
+      episodeNumbers: [1,2,3,4,5,6,7,8],
+      sourceUrl: "",
+      posterUrl:
+        "https://m.media-amazon.com/images/M/MV5BYjNkMjdiZGEtMTg3Mi00YTAzLWJkMGYtMmIxMzNjMmRhOGNmXkEyXkFqcGc@._V1_.jpg",
+      episodeSources: {
+        1: SMILING_FRIENDS_EPISODES[9],
+        2: SMILING_FRIENDS_EPISODES[10],
+        3: SMILING_FRIENDS_EPISODES[11],
+        4: SMILING_FRIENDS_EPISODES[12],
+        5: SMILING_FRIENDS_EPISODES[13],
+        6: SMILING_FRIENDS_EPISODES[14],
+        7: SMILING_FRIENDS_EPISODES[15],
+        8: SMILING_FRIENDS_EPISODES[16]
+      },
+      languages: ["EN"],
+      description:
+        "Charlie et Pim continuent d'aider les gens à retrouver le sourire dans des situations toujours plus absurdes."
+    },
+    {
+      number: 3,
+      episodeNumbers: [1,2,3,4,5,6,7,8,9,10],
+      sourceUrl: "",
+      posterUrl:
+        "https://m.media-amazon.com/images/M/MV5BYjNkMjdiZGEtMTg3Mi00YTAzLWJkMGYtMmIxMzNjMmRhOGNmXkEyXkFqcGc@._V1_.jpg",
+      episodeSources: {
+        1: SMILING_FRIENDS_EPISODES[17],
+        2: SMILING_FRIENDS_EPISODES[18],
+        3: SMILING_FRIENDS_EPISODES[19],
+        4: SMILING_FRIENDS_EPISODES[20],
+        5: SMILING_FRIENDS_EPISODES[21],
+        6: SMILING_FRIENDS_EPISODES[22],
+        7: SMILING_FRIENDS_EPISODES[23],
+        8: SMILING_FRIENDS_EPISODES[24],
+        9: SMILING_FRIENDS_EPISODES[25],
+        10: SMILING_FRIENDS_EPISODES[26]
+      },
+      languages: ["EN"]
+    }
+  ];
+
+
   const catalogue = [
     {
       provider: "uqload",
@@ -659,6 +1164,21 @@
       tags: ["Fantastique", "Horreur", "Surnaturel"],
       languages: ["EN"],
       seasons: SUPERNATURAL_SEASONS
+    }),
+    buildSeries({
+      id: "smiling-friends",
+      title: "Smiling Friends",
+      date: "2020",
+      sourceName: "Google Drive",
+      allowExternalSource: false,
+      posterUrl:
+        "https://m.media-amazon.com/images/M/MV5BYjNkMjdiZGEtMTg3Mi00YTAzLWJkMGYtMmIxMzNjMmRhOGNmXkEyXkFqcGc@._V1_.jpg",
+      accentColor: "#f2d74c",
+      description:
+        "Charlie et Pim travaillent chez Smiling Friends, une entreprise dont le but est d'aider les gens à retrouver le sourire.",
+      tags: ["Animation", "Comédie"],
+      languages: ["EN"],
+      seasons: SMILING_FRIENDS_SEASONS
     }),
     {
       provider: "embed",
