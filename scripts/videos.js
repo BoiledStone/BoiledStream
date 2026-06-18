@@ -525,7 +525,7 @@
       number: 1,
       episodeNumbers: SUPERNATURAL_EN_EPISODES.map((episode) => episode.episodeNumber),
       sourceUrl: "",
-      posterUrl: "https://image.tmdb.org/t/p/w400/rffL4ayOB0NaY3jcD1L2VsVoh0n.jpg",
+      posterUrl: "https://m.media-amazon.com/images/I/91J4-cAmM4L._AC_UF1000,1000_QL80_.jpg",
       episodeSources: buildProviderEpisodeSources("EN", SUPERNATURAL_EN_EPISODES),
       languages: ["EN"],
       description:
@@ -1284,7 +1284,7 @@
       date: "2005",
       sourceName: "Dailymotion",
       allowExternalSource: false,
-      posterUrl: "https://static.wikia.nocookie.net/thecw/images/c/cf/Supernatural_poster.jpg/revision/latest/thumbnail/width/360/height/360?cb=20170914193502",
+      posterUrl: "https://image.tmdb.org/t/p/w400/rffL4ayOB0NaY3jcD1L2VsVoh0n.jpg",
       accentColor: "#52657d",
       description:
         "Sam et Dean Winchester sillonnent les \u00c9tats-Unis pour enqu\u00eater sur des ph\u00e9nom\u00e8nes paranormaux et affronter des cr\u00e9atures surnaturelles.",
