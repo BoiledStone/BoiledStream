@@ -854,7 +854,7 @@
       episodeNumbers: [1, 2, 3, 4, 5, 6, 7, 8, 9],
       sourceUrl: "",
       posterUrl:
-        "https://m.media-amazon.com/images/M/MV5BYjNkMjdiZGEtMTg3Mi00YTAzLWJkMGYtMmIxMzNjMmRhOGNmXkEyXkFqcGc@._V1_.jpg",
+        "https://m.media-amazon.com/images/I/61lNEhozW-L.jpg",
       episodeSources: {
         1: SMILING_FRIENDS_EPISODES[0],
         2: SMILING_FRIENDS_EPISODES[1],
@@ -873,7 +873,7 @@
       episodeNumbers: [1,2,3,4,5,6,7,8],
       sourceUrl: "",
       posterUrl:
-        "https://m.media-amazon.com/images/M/MV5BYjNkMjdiZGEtMTg3Mi00YTAzLWJkMGYtMmIxMzNjMmRhOGNmXkEyXkFqcGc@._V1_.jpg",
+        "https://image.tmdb.org/t/p/original/oDJ8HHzFeCH83QyWq86pN5i7nUt.jpg",
       episodeSources: {
         1: SMILING_FRIENDS_EPISODES[9],
         2: SMILING_FRIENDS_EPISODES[10],
@@ -1164,7 +1164,7 @@
       date: "2005",
       sourceName: "Dailymotion",
       allowExternalSource: false,
-      posterUrl: "https://image.tmdb.org/t/p/w400/rffL4ayOB0NaY3jcD1L2VsVoh0n.jpg",
+      posterUrl: "https://images.archambault.ca/images/PG/3380/3380781-gf.jpg?404=default",
       accentColor: "#52657d",
       description:
         "Sam et Dean Winchester sillonnent les \u00c9tats-Unis pour enqu\u00eater sur des ph\u00e9nom\u00e8nes paranormaux et affronter des cr\u00e9atures surnaturelles.",

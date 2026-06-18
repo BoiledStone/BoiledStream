@@ -535,14 +535,14 @@
     const seasonButtons = seasons
       .map((entry) => {
         const isActive = entry.number === season.number;
-        const countText =
-          entry.availableEpisodes === entry.totalEpisodes
-            ? `${entry.availableEpisodes}/${entry.totalEpisodes}`
-            : `${entry.availableEpisodes} dispo / ${entry.totalEpisodes}`;
+        const posterUrl = entry.posterUrl || item.posterUrl;
         return `
           <button class="season-button${isActive ? " active" : ""}" type="button" data-season="${entry.number}" aria-pressed="${isActive}">
-            <span>${escapeHtml(entry.label)}</span>
-            <small>${escapeHtml(countText)}</small>
+            <span class="season-button-poster" aria-hidden="true">
+              <span class="generated-poster"></span>
+              ${renderPosterImage(posterUrl)}
+            </span>
+            <span class="season-button-label">${escapeHtml(entry.label)}</span>
           </button>
         `;
       })
@@ -593,7 +593,7 @@
         </div>
       </div>
       <div class="series-controls" aria-label="Sélection saison langue épisode">
-        <section class="series-control-block" aria-label="Saisons">
+        <section class="series-control-block season-block" aria-label="Saisons">
           <h3>Saisons <span>${seasons.length}</span></h3>
           <div class="season-list">${seasonButtons}</div>
         </section>
@@ -610,6 +610,7 @@
     `;
 
     bindImageFallbacks(seriesPanel, ".series-now-poster img");
+    bindImageFallbacks(seriesPanel, ".season-button-poster img");
     centerActiveOption(".season-list", ".season-button.active");
     centerActiveOption(".episode-list", ".episode-button.active");
 
