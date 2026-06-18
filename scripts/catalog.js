@@ -185,19 +185,27 @@
       .sort(compare);
   }
 
-  function renderBrowseLinks(mount, values, key, activeValue = "") {
-    if (!mount) {
+  function renderBrowseSelect(select, values, key, activeValue = "", placeholder = "Choisir") {
+    if (!select) {
       return;
     }
 
-    mount.innerHTML = values
+    select.innerHTML = [
+      `<option value="">${escapeHtml(placeholder)}</option>`,
+      ...values
       .map((value) => {
         const isActive = normalizeKey(value) === normalizeKey(activeValue);
         const href = buildSearchUrl({ [key]: value });
 
-        return `<a class="browse-link${isActive ? " active" : ""}" href="${escapeHtml(href)}">${escapeHtml(value)}</a>`;
+        return `<option value="${escapeHtml(href)}"${isActive ? " selected" : ""}>${escapeHtml(value)}</option>`;
       })
-      .join("");
+    ].join("");
+
+    select.onchange = () => {
+      if (select.value) {
+        window.location.href = select.value;
+      }
+    };
   }
 
   function renderBrowseGroups() {
@@ -213,9 +221,9 @@
       (first, second) => Number(second) - Number(first)
     ).slice(0, 14);
 
-    renderBrowseLinks(browseTags, tags, "tag", state.tag);
-    renderBrowseLinks(browseLanguages, languages, "lang", state.lang);
-    renderBrowseLinks(browseYears, years, "year", state.year);
+    renderBrowseSelect(browseTags, tags, "tag", state.tag, "Choisir un genre ou thème");
+    renderBrowseSelect(browseLanguages, languages, "lang", state.lang, "Choisir une langue");
+    renderBrowseSelect(browseYears, years, "year", state.year, "Choisir une année");
   }
 
   function renderActiveFilters() {

@@ -237,7 +237,6 @@ iframe {
 
 .top-nav a,
 .back-link,
-.browse-link,
 .active-filters a,
 .home-notice a,
 .site-footer a,
@@ -250,8 +249,6 @@ iframe {
 .top-nav a:focus-visible,
 .back-link:hover,
 .back-link:focus-visible,
-.browse-link:hover,
-.browse-link:focus-visible,
 .active-filters a:hover,
 .active-filters a:focus-visible,
 .home-notice a:hover,
@@ -421,22 +418,47 @@ h3 {
   border-radius: var(--radius);
 }
 
-.browse-panel h3 {
-  margin-bottom: 12px;
+.browse-select {
+  display: grid;
+  gap: 9px;
+}
+
+.browse-select span {
   color: var(--muted);
   font-size: 0.78rem;
   font-weight: 900;
   text-transform: uppercase;
 }
 
-.browse-links,
 .active-filters {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.browse-link,
+.browse-select select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 38px 0 12px;
+  color: var(--ink);
+  background:
+    linear-gradient(45deg, transparent 50%, var(--muted) 50%) calc(100% - 18px) 50% / 6px 6px no-repeat,
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%) calc(100% - 13px) 50% / 6px 6px no-repeat,
+    #0b0f16;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  appearance: none;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.browse-select select:hover,
+.browse-select select:focus {
+  border-color: rgba(244, 134, 37, 0.5);
+  outline: 3px solid rgba(244, 134, 37, 0.12);
+}
+
 .active-filters span,
 .active-filters a {
   display: inline-flex;
@@ -455,9 +477,6 @@ h3 {
   white-space: nowrap;
 }
 
-.browse-link:hover,
-.browse-link:focus-visible,
-.browse-link.active,
 .active-filters a:hover,
 .active-filters a:focus-visible {
   color: #fff;
@@ -855,8 +874,7 @@ h3 {
   opacity: 0.72;
 }
 
-.type-pill,
-.duration-pill {
+.type-pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -940,20 +958,12 @@ h3 {
   transform: translate(-50%, -50%) scale(1);
 }
 
-.duration-pill {
-  color: var(--muted);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.062), rgba(255, 255, 255, 0.03));
-  border: 1px solid rgba(243, 241, 237, 0.12);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.055);
-}
-
 .card-body {
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-rows: auto auto auto 58px;
-  gap: 9px;
+  grid-template-rows: auto auto 58px;
+  gap: 10px;
   padding: 12px;
   min-width: 0;
 }
@@ -978,31 +988,6 @@ h3 {
   font-size: 0.75rem;
   font-weight: 900;
   text-transform: uppercase;
-}
-
-.card-facts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  min-height: 24px;
-  overflow: hidden;
-}
-
-.card-facts span {
-  display: inline-flex;
-  align-items: center;
-  min-height: 22px;
-  max-width: 100%;
-  padding: 0 7px;
-  overflow: hidden;
-  color: var(--muted);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(243, 241, 237, 0.09);
-  border-radius: 999px;
-  font-size: 0.66rem;
-  font-weight: 850;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .card-tags {
@@ -2005,7 +1990,7 @@ h3 {
 .video-card.related-card .card-body {
   /* Les cartes "À regarder ensuite" n'affichent pas les tags : on évite donc
      la ligne vide réservée aux tags dans la grille standard. */
-  grid-template-rows: auto auto auto;
+  grid-template-rows: auto auto;
 }
 
 .video-card.related-card .card-meta {
@@ -2014,8 +1999,7 @@ h3 {
   gap: 7px;
 }
 
-.video-card.related-card .type-pill,
-.video-card.related-card .duration-pill {
+.video-card.related-card .type-pill {
   justify-self: start;
   min-height: 22px;
   padding: 0 7px;
@@ -2461,7 +2445,7 @@ h3 {
   }
 
   .card-body {
-    grid-template-rows: auto auto auto 50px;
+    grid-template-rows: auto auto 50px;
     padding: 10px;
   }
 
@@ -2475,18 +2459,7 @@ h3 {
     max-height: 50px;
   }
 
-  .card-facts {
-    min-height: 22px;
-  }
-
-  .card-facts span {
-    min-height: 20px;
-    padding: 0 6px;
-    font-size: 0.62rem;
-  }
-
-  .type-pill,
-  .duration-pill {
+  .type-pill {
     min-height: 22px;
     padding: 0 7px;
     font-size: 0.66rem;

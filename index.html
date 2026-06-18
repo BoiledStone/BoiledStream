@@ -9,14 +9,14 @@
       content="Catalogue vidéo moderne avec films, séries, saisons, épisodes et player dédié."
     >
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="css/styles.css?v=20260618-browse-language-gate">
-    <script src="scripts/app-utils.js?v=20260618-browse-language-gate" defer></script>
+    <link rel="stylesheet" href="css/styles.css?v=20260618-dropdown-scroll-fix">
+    <script src="scripts/app-utils.js?v=20260618-dropdown-scroll-fix" defer></script>
     <!-- videos.js doit être chargé avant catalog.js: il expose window.BOILED_VIDEOS. -->
-    <script src="scripts/videos.js?v=20260618-browse-language-gate" defer></script>
-    <script src="scripts/catalog.js?v=20260618-browse-language-gate" defer></script>
+    <script src="scripts/videos.js?v=20260618-dropdown-scroll-fix" defer></script>
+    <script src="scripts/catalog.js?v=20260618-dropdown-scroll-fix" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <script src="scripts/supabase-config.js?v=20260618-browse-language-gate" defer></script>
-    <script src="scripts/community.js?v=20260618-browse-language-gate" defer></script>
+    <script src="scripts/supabase-config.js?v=20260618-dropdown-scroll-fix" defer></script>
+    <script src="scripts/community.js?v=20260618-dropdown-scroll-fix" defer></script>
   </head>
   <body>
     <header class="site-header">
@@ -70,16 +70,22 @@
         </div>
         <div class="browse-grid" aria-label="Liens de recherche rapides">
           <section class="browse-panel" aria-labelledby="browse-tags-title">
-            <h3 id="browse-tags-title">Genres et thèmes</h3>
-            <div class="browse-links" id="browse-tags"></div>
+            <label class="browse-select" for="browse-tags">
+              <span id="browse-tags-title">Genres et thèmes</span>
+              <select id="browse-tags" aria-label="Genres et thèmes"></select>
+            </label>
           </section>
           <section class="browse-panel" aria-labelledby="browse-languages-title">
-            <h3 id="browse-languages-title">Langues</h3>
-            <div class="browse-links" id="browse-languages"></div>
+            <label class="browse-select" for="browse-languages">
+              <span id="browse-languages-title">Langues</span>
+              <select id="browse-languages" aria-label="Langues"></select>
+            </label>
           </section>
           <section class="browse-panel" aria-labelledby="browse-years-title">
-            <h3 id="browse-years-title">Années</h3>
-            <div class="browse-links" id="browse-years"></div>
+            <label class="browse-select" for="browse-years">
+              <span id="browse-years-title">Années</span>
+              <select id="browse-years" aria-label="Années"></select>
+            </label>
           </section>
         </div>
       </section>

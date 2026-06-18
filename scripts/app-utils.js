@@ -150,16 +150,6 @@
     return video.type === "series" ? "Série" : "Film";
   }
 
-  function getCardStat(video) {
-    if (video.type === "series") {
-      const seasonLabel = getSeasonLabel(video);
-
-      return seasonLabel;
-    }
-
-    return video.duration || "";
-  }
-
   function splitLanguageTokens(value) {
     return String(value || "")
       .split(/[+/,&|]/)
@@ -208,23 +198,8 @@
     return `<div class="card-tags" aria-label="Tags">${tagList}</div>`;
   }
 
-  function renderCardFacts(video) {
-    const languages = getVideoLanguages(video)
-      .map(formatLanguage)
-      .filter(Boolean)
-      .slice(0, 2);
-    const facts = [video.date, video.resolution, ...languages]
-      .filter(Boolean)
-      .slice(0, 4)
-      .map((fact) => `<span>${escapeHtml(fact)}</span>`)
-      .join("");
-
-    return facts ? `<div class="card-facts" aria-label="Infos">${facts}</div>` : "";
-  }
-
   function renderVideoCard(video, options = {}) {
     const { related = false, tagLimit = 2 } = options;
-    const cardStat = getCardStat(video);
     const cardType = getCardTypeLabel(video);
     const playerHref = video.type === "series" ? buildDirectPlayerUrl(video.id) : buildPlayerUrl(video.id);
     const accentStyle = buildAccentStyle(video.accentColor);
@@ -241,9 +216,7 @@
           <h3>${escapeHtml(video.title)}</h3>
           <div class="card-meta">
             <span class="type-pill">${escapeHtml(cardType)}</span>
-            <span class="duration-pill">${escapeHtml(cardStat)}</span>
           </div>
-          ${renderCardFacts(video)}
           ${tagLimit > 0 ? renderCardTags(video, tagLimit) : ""}
         </div>
       </a>

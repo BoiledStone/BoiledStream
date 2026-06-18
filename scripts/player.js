@@ -1418,29 +1418,10 @@
   }
 
   function updateMiniPlayer() {
-    const communitySection = document.querySelector("#community-section");
-    if (!communitySection || !playerMount || playerMount.hidden || playerMount.querySelector(".source-gate")) {
-      setMiniPlayer(false);
-      return;
-    }
-
-    const stageRect = playerMount.parentElement?.getBoundingClientRect();
-    const placeholderHeight =
-      Number.parseFloat(playerMount.parentElement?.style.getPropertyValue("--mini-placeholder-height")) ||
-      playerMount.offsetHeight;
-    const communityRect = communitySection.getBoundingClientRect();
-    const shouldMini =
-      stageRect &&
-      stageRect.top + placeholderHeight < 0 &&
-      communityRect.top < window.innerHeight * 0.82 &&
-      communityRect.bottom > 120;
-
-    setMiniPlayer(shouldMini);
+    setMiniPlayer(false);
   }
 
   function bindMiniPlayer() {
-    window.addEventListener("scroll", updateMiniPlayer, { passive: true });
-    window.addEventListener("resize", updateMiniPlayer);
     updateMiniPlayer();
   }
 
