@@ -43,8 +43,7 @@ body {
   overflow-x: clip;
   color: var(--ink);
   background:
-    linear-gradient(250deg, rgba(229, 72, 77, 0.07), transparent 48%),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 84px),
+    linear-gradient(250deg, rgba(229, 72, 77, 0.055), transparent 48%),
     var(--page);
 }
 
@@ -53,10 +52,9 @@ body::before {
   inset: 0;
   z-index: -1;
   background:
-    linear-gradient(180deg, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0.72) 78%),
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 4px);
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0.72) 78%);
   content: "";
-  opacity: 0.48;
+  opacity: 0.42;
   pointer-events: none;
 }
 
@@ -314,7 +312,7 @@ iframe {
   position: relative;
   z-index: 4;
   max-width: 1180px;
-  margin: 0 auto -38px;
+  margin: 0 auto;
   padding: 10px 14px;
   overflow-wrap: anywhere;
   color: var(--muted);
@@ -339,10 +337,10 @@ iframe {
   position: relative;
   isolation: isolate;
   display: block;
-  min-height: clamp(440px, 48vh, 540px);
+  min-height: clamp(350px, 38vh, 430px);
   margin-top: 0;
   overflow: hidden;
-  padding: 98px max(28px, calc((100vw - 1180px) / 2 + 48px)) 92px;
+  padding: 76px max(28px, calc((100vw - 1180px) / 2 + 48px)) 62px;
   background:
     linear-gradient(90deg, #06070a 0%, rgba(6, 7, 10, 0.94) 40%, rgba(6, 7, 10, 0.72) 72%, rgba(6, 7, 10, 0.94) 100%),
     #050609;
@@ -352,9 +350,7 @@ iframe {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background:
-    linear-gradient(180deg, rgba(5, 6, 9, 0.12) 0%, rgba(5, 6, 9, 0) 42%, #050609 100%),
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.017) 0 1px, transparent 1px 5px);
+  background: linear-gradient(180deg, rgba(5, 6, 9, 0.12) 0%, rgba(5, 6, 9, 0) 42%, #050609 100%);
   content: "";
   opacity: 0.34;
   pointer-events: none;
@@ -618,7 +614,7 @@ h3 {
   gap: 12px;
   align-items: end;
   width: min(980px, calc(100% - 64px));
-  margin: -72px auto 24px;
+  margin: 18px auto 28px;
   padding: 12px;
   background:
     linear-gradient(135deg, rgba(244, 134, 37, 0.16), transparent 34%),
@@ -634,11 +630,11 @@ h3 {
 
 .toolbar::before {
   position: absolute;
-  top: -42px;
+  top: -34px;
   left: 50%;
   z-index: -1;
   width: 100vw;
-  height: 148px;
+  height: 124px;
   background:
     linear-gradient(
       180deg,
@@ -715,13 +711,45 @@ h3 {
 .catalog-section,
 .related-section,
 .community-section {
-  padding: 28px 48px 56px;
+  padding: 24px 48px 56px;
 }
 
 .catalog-section {
   position: relative;
   isolation: isolate;
+  overflow: hidden;
   scroll-margin-top: 96px;
+}
+
+.catalog-section::before {
+  position: absolute;
+  top: clamp(92px, 8vw, 116px);
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+  background:
+    linear-gradient(
+      180deg,
+      #050609 0%,
+      rgba(5, 6, 9, 0.88) 8%,
+      rgba(5, 6, 9, 0.22) 34%,
+      rgba(5, 6, 9, 0) 72%
+    ),
+    radial-gradient(circle at 52% 10%, rgba(244, 134, 37, 0.13), transparent 30%),
+    linear-gradient(rgba(244, 134, 37, 0.11) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(244, 134, 37, 0.09) 1px, transparent 1px);
+  background-size:
+    auto,
+    auto,
+    14px 14px,
+    14px 14px;
+  content: "";
+  opacity: 0.58;
+  pointer-events: none;
+  animation: catalog-grid-drift-right 8.5s linear infinite;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 42px, #000 82%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 42px, #000 82%, transparent 100%);
 }
 
 .section-heading {
@@ -756,30 +784,7 @@ h3 {
 }
 
 .video-grid::before {
-  position: absolute;
-  inset: -28px -48px -76px;
-  z-index: -1;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(5, 6, 9, 0.92) 0%,
-      rgba(5, 6, 9, 0.62) 16%,
-      rgba(5, 6, 9, 0.08) 44%,
-      rgba(5, 6, 9, 0) 72%
-    ),
-    radial-gradient(circle at 52% 8%, rgba(244, 134, 37, 0.16), transparent 38%),
-    linear-gradient(rgba(244, 134, 37, 0.12) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(244, 134, 37, 0.1) 1px, transparent 1px);
-  background-size:
-    auto,
-    auto,
-    14px 14px,
-    14px 14px;
-  border-radius: 18px;
-  content: "";
-  opacity: 0.64;
-  pointer-events: none;
-  animation: catalog-grid-drift-right 4.8s linear infinite;
+  display: none;
 }
 
 .video-card {
@@ -826,16 +831,7 @@ h3 {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background:
-    radial-gradient(circle at var(--hover-x) var(--hover-y), rgba(244, 134, 37, 0.2), transparent 38%),
-    linear-gradient(rgba(244, 134, 37, 0.18) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(244, 134, 37, 0.16) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(244, 134, 37, 0.08), transparent 58%);
-  background-size:
-    auto,
-    18px 18px,
-    18px 18px,
-    auto;
+  background: transparent;
   border-radius: inherit;
   opacity: 0;
   transition: opacity 220ms ease;
@@ -884,7 +880,7 @@ h3 {
   border-color: rgba(244, 134, 37, 0.46);
   box-shadow:
     0 22px 54px rgba(0, 0, 0, 0.46),
-    inset 0 0 0 1px rgba(244, 134, 37, 0.18);
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
   filter: saturate(1.025);
   outline: 0;
   transform:
@@ -897,7 +893,7 @@ h3 {
 .video-card.is-hovered::before,
 .video-card:hover::before,
 .video-card:focus-visible::before {
-  opacity: 0.7;
+  opacity: 0;
 }
 
 .video-card.is-hovered::after,
@@ -2474,9 +2470,9 @@ h3 {
   }
 
   .catalog-hero {
-    min-height: 530px;
-    padding-top: 96px;
-    padding-bottom: 104px;
+    min-height: 430px;
+    padding-top: 72px;
+    padding-bottom: 64px;
   }
 
   .hero-poster-rail {
@@ -2500,7 +2496,7 @@ h3 {
   }
 
   .home-notice {
-    margin: 0 28px -18px;
+    margin: 0 28px;
     padding: 10px 12px;
   }
 
@@ -2534,22 +2530,28 @@ h3 {
   }
 
   .catalog-hero {
-    min-height: 470px;
-    padding-top: 74px;
-    padding-bottom: 82px;
+    min-height: 360px;
+    padding-top: 52px;
+    padding-bottom: 46px;
+  }
+
+  .hero-copy p:not(.section-kicker) {
+    max-width: 300px;
+    font-size: 0.96rem;
+    line-height: 1.5;
   }
 
   .toolbar {
     position: static;
     width: calc(100% - 48px);
-    margin-top: -66px;
-    margin-bottom: 14px;
+    margin-top: 16px;
+    margin-bottom: 18px;
     padding: 10px;
   }
 
   .toolbar::before {
-    top: -18px;
-    height: 112px;
+    top: -14px;
+    height: 92px;
   }
 
   .hero-copy {
