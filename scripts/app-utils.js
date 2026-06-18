@@ -184,9 +184,10 @@
 
   function renderPosterImage(posterUrl, loading = "lazy") {
     const resolvedPosterUrl = getAssetUrl(posterUrl);
+    const fetchPriority = loading === "eager" ? "high" : "low";
 
     return resolvedPosterUrl
-      ? `<img src="${escapeHtml(resolvedPosterUrl)}" alt="" loading="${escapeHtml(loading)}">`
+      ? `<img src="${escapeHtml(resolvedPosterUrl)}" alt="" loading="${escapeHtml(loading)}" decoding="async" fetchpriority="${fetchPriority}">`
       : "";
   }
 

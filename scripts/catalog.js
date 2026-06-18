@@ -234,15 +234,15 @@
 
     const featuredItems = movieItems
       .filter((video) => video.posterUrl)
-      .slice(0, 7);
+      .slice(0, 10);
 
     heroPosterRail.innerHTML = featuredItems
       .map(
         (video, index) => `
-          <a class="hero-poster" href="${buildSearchUrl({ q: video.title })}" style="--poster-index: ${index};" aria-label="Rechercher ${escapeHtml(video.title)}">
+          <div class="hero-poster" style="--poster-index: ${index};">
             <div class="generated-poster" aria-hidden="true"></div>
-            ${renderPosterImage(video.posterUrl, index < 3 ? "eager" : "lazy")}
-          </a>
+            ${renderPosterImage(video.posterUrl, index < 2 ? "eager" : "lazy")}
+          </div>
         `
       )
       .join("");

@@ -54,6 +54,7 @@
   const previousVideo = allVideos[(currentIndex - 1 + allVideos.length) % allVideos.length];
   const nextVideo = allVideos[(currentIndex + 1) % allVideos.length];
   let fullscreenButtons = [];
+  let miniButtons = [];
   let isPseudoFullscreen = false;
   let isMiniPlayer = false;
   let controlsIdleTimer = null;
@@ -77,6 +78,7 @@
     setMiniPlayer(false);
     window.clearTimeout(controlsIdleTimer);
     fullscreenButtons = fullscreenButtons.filter((button) => document.contains(button));
+    miniButtons = miniButtons.filter((button) => document.contains(button));
     playerMount.hidden = true;
     playerMount.innerHTML = "";
     playerMount.classList.remove("controls-idle");
@@ -186,11 +188,25 @@
     });
   }
 
+  function updateMiniButton() {
+    miniButtons = miniButtons.filter((button) => document.contains(button));
+    miniButtons.forEach((button) => {
+      button.textContent = isMiniPlayer ? "Agrandir" : "Minimiser";
+      button.setAttribute(
+        "aria-label",
+        isMiniPlayer ? "Agrandir le player" : "Minimiser le player"
+      );
+      button.title = isMiniPlayer ? "Agrandir" : "Minimiser";
+    });
+  }
+
   function setFloatingControlsIdle(isIdle) {
-    playerMount.classList.toggle("controls-idle", isIdle);
+    const shouldIdle = isIdle && !isMiniPlayer;
+
+    playerMount.classList.toggle("controls-idle", shouldIdle);
     playerMount
       .querySelector(".player-floating-controls")
-      ?.classList.toggle("controls-idle", isIdle);
+      ?.classList.toggle("controls-idle", shouldIdle);
   }
 
   function scheduleFloatingControlsIdle() {
@@ -280,14 +296,32 @@
             : ""
         }
         <div class="player-floating-controls" aria-label="Contrôles du player">
+          <button class="player-control-button player-control-button-wide" type="button" data-player-mini>Minimiser</button>
           <button class="player-control-button" type="button" data-player-fullscreen>Plein écran</button>
         </div>
       `
     );
+    bindMiniButton(playerMount.querySelector("[data-player-mini]"));
     bindFullscreenButton(playerMount.querySelector("[data-player-fullscreen]"));
     bindPlayerActivity();
     showFloatingControls();
     updateFullscreenButton();
+    updateMiniButton();
+  }
+
+  function bindMiniButton(button) {
+    if (!button) {
+      return;
+    }
+
+    miniButtons.push(button);
+    button.addEventListener("click", (event) => {
+      if (event.detail > 0) {
+        button.blur();
+      }
+
+      setMiniPlayer(!isMiniPlayer);
+    });
   }
 
   function bindFullscreenButton(button) {
@@ -1353,6 +1387,16 @@
     );
   }
 
+  function adjustNativeVolume(videoElement, delta) {
+    if (!videoElement) {
+      return;
+    }
+
+    const nextVolume = Math.min(1, Math.max(0, videoElement.volume + delta));
+    videoElement.volume = nextVolume;
+    videoElement.muted = nextVolume === 0;
+  }
+
   function handlePlayerShortcuts(event) {
     if (playerMount.hidden) {
       return;
@@ -1376,19 +1420,43 @@
       return;
     }
 
+    if (key === "arrowleft") {
+      event.preventDefault();
+      seekNativeVideo(videoElement, -5);
+      return;
+    }
+
+    if (key === "arrowright") {
+      event.preventDefault();
+      seekNativeVideo(videoElement, 5);
+      return;
+    }
+
+    if (key === "arrowup") {
+      event.preventDefault();
+      adjustNativeVolume(videoElement, 0.05);
+      return;
+    }
+
+    if (key === "arrowdown") {
+      event.preventDefault();
+      adjustNativeVolume(videoElement, -0.05);
+      return;
+    }
+
     if (key === " " || key === "k") {
       event.preventDefault();
       toggleNativePlayback(videoElement);
       return;
     }
 
-    if (key === "arrowleft" || key === "j") {
+    if (key === "j") {
       event.preventDefault();
       seekNativeVideo(videoElement, -10);
       return;
     }
 
-    if (key === "arrowright" || key === "l") {
+    if (key === "l") {
       event.preventDefault();
       seekNativeVideo(videoElement, 10);
       return;
@@ -1408,6 +1476,7 @@
     isMiniPlayer = active;
     playerMount.classList.toggle("player-mini", active);
     playerMount.parentElement?.classList.toggle("mini-player-active", active);
+    updateMiniButton();
 
     if (active) {
       playerMount.parentElement?.style.setProperty("--mini-placeholder-height", `${playerMount.offsetHeight}px`);
