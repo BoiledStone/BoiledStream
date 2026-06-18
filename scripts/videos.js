@@ -1284,7 +1284,7 @@
       date: "2005",
       sourceName: "Dailymotion",
       allowExternalSource: false,
-      posterUrl: "https://images.archambault.ca/images/PG/3380/3380781-gf.jpg?404=default",
+      posterUrl: "https://static.wikia.nocookie.net/thecw/images/c/cf/Supernatural_poster.jpg/revision/latest/thumbnail/width/360/height/360?cb=20170914193502",
       accentColor: "#52657d",
       description:
         "Sam et Dean Winchester sillonnent les \u00c9tats-Unis pour enqu\u00eater sur des ph\u00e9nom\u00e8nes paranormaux et affronter des cr\u00e9atures surnaturelles.",
