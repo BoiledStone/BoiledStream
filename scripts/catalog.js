@@ -234,7 +234,7 @@
 
     const featuredItems = movieItems
       .filter((video) => video.posterUrl)
-      .slice(0, 10);
+      .slice(0, 8);
 
     heroPosterRail.innerHTML = featuredItems
       .map(
