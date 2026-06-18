@@ -5,7 +5,7 @@ const vm = require("vm");
 const ROOT = path.resolve(__dirname, "..");
 const SITE_URL = "https://boiledstone.github.io/BoiledStream";
 const WATCH_DIR = path.join(ROOT, "watch");
-const ASSET_VERSION = "20260618-orange-logo-soft-hero";
+const ASSET_VERSION = "20260618-toolbar-gradient";
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -46,7 +46,9 @@ function loadPlayerBody() {
   const source = fs.readFileSync(path.join(ROOT, "player.html"), "utf8");
   const body = source.match(/<body>([\s\S]*)<\/body>/i)?.[1] || "";
 
-  return body.replaceAll('href="index.html', 'href="../index.html');
+  return body
+    .replaceAll('href="index.html', 'href="../index.html')
+    .replaceAll('src="favicon.svg', 'src="../favicon.svg');
 }
 
 function renderWatchPage(video) {
@@ -77,7 +79,7 @@ function renderWatchPage(video) {
     <meta name="twitter:title" content="${escapeHtml(title)}">
     <meta name="twitter:description" content="${escapeHtml(description)}">
     <meta name="twitter:image" content="${escapeHtml(image)}">
-    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="../favicon.svg?v=${ASSET_VERSION}" type="image/svg+xml">
     <link rel="stylesheet" href="../css/styles.css?v=${ASSET_VERSION}">
     <script src="../scripts/app-utils.js?v=${ASSET_VERSION}" defer></script>
     <script src="../scripts/videos.js?v=${ASSET_VERSION}" defer></script>

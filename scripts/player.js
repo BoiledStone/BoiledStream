@@ -53,38 +53,100 @@
   const currentIndex = allVideos.findIndex((item) => item.id === video.id);
   const previousVideo = allVideos[(currentIndex - 1 + allVideos.length) % allVideos.length];
   const nextVideo = allVideos[(currentIndex + 1) % allVideos.length];
-  let fullscreenButtons = [];
-  let miniButtons = [];
-  let isPseudoFullscreen = false;
-  let isMiniPlayer = false;
-  let controlsIdleTimer = null;
-  let hasBoundPlayerActivity = false;
+  let posterLightbox = null;
+  let lastFocusedElement = null;
 
   function showPlayerMount() {
     playerMount.hidden = false;
   }
 
   function hidePlayerMount() {
-    const fullscreenElement = getFullscreenElement();
-
-    if (fullscreenElement === playerMount) {
-      const exitFullscreen = document.exitFullscreen?.() || document.webkitExitFullscreen?.();
-      Promise.resolve(exitFullscreen).catch(() => {});
-    }
-    if (isPseudoFullscreen) {
-      exitPseudoFullscreen();
-    }
-
-    setMiniPlayer(false);
-    window.clearTimeout(controlsIdleTimer);
-    fullscreenButtons = fullscreenButtons.filter((button) => document.contains(button));
-    miniButtons = miniButtons.filter((button) => document.contains(button));
     playerMount.hidden = true;
     playerMount.innerHTML = "";
-    playerMount.classList.remove("controls-idle");
     if (playerHelp) {
       playerHelp.innerHTML = "";
     }
+  }
+
+  function createPosterLightbox() {
+    if (posterLightbox) {
+      return posterLightbox;
+    }
+
+    posterLightbox = document.createElement("div");
+    posterLightbox.className = "poster-lightbox";
+    posterLightbox.hidden = true;
+    posterLightbox.setAttribute("role", "dialog");
+    posterLightbox.setAttribute("aria-modal", "true");
+    posterLightbox.innerHTML = `
+      <button class="poster-lightbox-close" type="button" aria-label="Fermer l'affiche">Fermer</button>
+      <div class="poster-lightbox-stage">
+        <img class="poster-lightbox-image" alt="">
+      </div>
+    `;
+
+    const closeButton = posterLightbox.querySelector(".poster-lightbox-close");
+    const stage = posterLightbox.querySelector(".poster-lightbox-stage");
+
+    const resetTilt = () => {
+      stage?.style.removeProperty("--lightbox-x");
+      stage?.style.removeProperty("--lightbox-y");
+      stage?.style.removeProperty("--lightbox-tilt-x");
+      stage?.style.removeProperty("--lightbox-tilt-y");
+    };
+
+    posterLightbox.addEventListener("click", (event) => {
+      if (event.target === posterLightbox || event.target === closeButton) {
+        closePosterLightbox();
+      }
+    });
+
+    stage?.addEventListener("pointermove", (event) => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return;
+      }
+
+      const rect = stage.getBoundingClientRect();
+      const x = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
+      const y = Math.min(1, Math.max(0, (event.clientY - rect.top) / rect.height));
+
+      stage.style.setProperty("--lightbox-x", `${Math.round(x * 100)}%`);
+      stage.style.setProperty("--lightbox-y", `${Math.round(y * 100)}%`);
+      stage.style.setProperty("--lightbox-tilt-x", `${((0.5 - y) * 10).toFixed(2)}deg`);
+      stage.style.setProperty("--lightbox-tilt-y", `${((x - 0.5) * 12).toFixed(2)}deg`);
+    });
+    stage?.addEventListener("pointerleave", resetTilt);
+
+    document.body.append(posterLightbox);
+    return posterLightbox;
+  }
+
+  function openPosterLightbox(src, label) {
+    if (!src) {
+      return;
+    }
+
+    const lightbox = createPosterLightbox();
+    const image = lightbox.querySelector(".poster-lightbox-image");
+
+    lastFocusedElement = document.activeElement;
+    image.src = src;
+    image.alt = label ? `Affiche de ${label}` : "Affiche agrandie";
+    lightbox.setAttribute("aria-label", image.alt);
+    lightbox.hidden = false;
+    document.body.classList.add("poster-lightbox-open");
+    lightbox.querySelector(".poster-lightbox-close")?.focus();
+  }
+
+  function closePosterLightbox() {
+    if (!posterLightbox || posterLightbox.hidden) {
+      return;
+    }
+
+    posterLightbox.hidden = true;
+    posterLightbox.querySelector(".poster-lightbox-image")?.removeAttribute("src");
+    document.body.classList.remove("poster-lightbox-open");
+    lastFocusedElement?.focus?.();
   }
 
   function inferLanguage(item) {
@@ -161,182 +223,6 @@
     const allow = "autoplay; fullscreen; picture-in-picture; encrypted-media";
 
     return `allow="${allow}" allowfullscreen`;
-  }
-
-  function getFullscreenElement() {
-    return document.fullscreenElement || document.webkitFullscreenElement || null;
-  }
-
-  function updateFullscreenButton() {
-    fullscreenButtons = fullscreenButtons.filter((button) => document.contains(button));
-    const isFullscreen = getFullscreenElement() === playerMount || isPseudoFullscreen;
-
-    fullscreenButtons.forEach((button) => {
-      const isCompact = button.classList.contains("player-control-button");
-      button.textContent = isCompact
-        ? isFullscreen
-          ? "×"
-          : "⛶"
-        : isFullscreen
-          ? "Quitter"
-          : "Plein écran";
-      button.setAttribute(
-        "aria-label",
-        isFullscreen ? "Quitter le plein écran" : "Afficher le player en plein écran"
-      );
-      button.title = isFullscreen ? "Quitter le plein écran" : "Plein écran";
-    });
-  }
-
-  function updateMiniButton() {
-    miniButtons = miniButtons.filter((button) => document.contains(button));
-    miniButtons.forEach((button) => {
-      button.textContent = isMiniPlayer ? "Agrandir" : "Minimiser";
-      button.setAttribute(
-        "aria-label",
-        isMiniPlayer ? "Agrandir le player" : "Minimiser le player"
-      );
-      button.title = isMiniPlayer ? "Agrandir" : "Minimiser";
-    });
-  }
-
-  function setFloatingControlsIdle(isIdle) {
-    const shouldIdle = isIdle && !isMiniPlayer;
-
-    playerMount.classList.toggle("controls-idle", shouldIdle);
-    playerMount
-      .querySelector(".player-floating-controls")
-      ?.classList.toggle("controls-idle", shouldIdle);
-  }
-
-  function scheduleFloatingControlsIdle() {
-    window.clearTimeout(controlsIdleTimer);
-    controlsIdleTimer = window.setTimeout(() => {
-      setFloatingControlsIdle(true);
-    }, 3000);
-  }
-
-  function showFloatingControls() {
-    setFloatingControlsIdle(false);
-    scheduleFloatingControlsIdle();
-  }
-
-  function bindPlayerActivity() {
-    if (hasBoundPlayerActivity) {
-      return;
-    }
-
-    hasBoundPlayerActivity = true;
-    ["mousemove", "pointermove", "pointerdown", "touchstart", "focusin"].forEach((eventName) => {
-      playerMount.addEventListener(eventName, showFloatingControls, { passive: true });
-    });
-    document.addEventListener("keydown", showFloatingControls);
-  }
-
-  function enterPseudoFullscreen() {
-    isPseudoFullscreen = true;
-    document.body.classList.add("player-pseudo-fullscreen-active");
-    playerMount.classList.add("player-pseudo-fullscreen");
-    updateFullscreenButton();
-  }
-
-  function exitPseudoFullscreen() {
-    isPseudoFullscreen = false;
-    document.body.classList.remove("player-pseudo-fullscreen-active");
-    playerMount.classList.remove("player-pseudo-fullscreen");
-    updateFullscreenButton();
-  }
-
-  async function togglePlayerFullscreen() {
-    if (!playerMount || playerMount.hidden) {
-      return;
-    }
-
-    try {
-      if (isPseudoFullscreen) {
-        exitPseudoFullscreen();
-        return;
-      }
-
-      if (getFullscreenElement()) {
-        if (document.exitFullscreen) {
-          await document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
-        }
-        return;
-      }
-
-      setMiniPlayer(false);
-      if (playerMount.requestFullscreen) {
-        await playerMount.requestFullscreen();
-      } else if (playerMount.webkitRequestFullscreen) {
-        playerMount.webkitRequestFullscreen();
-      } else {
-        enterPseudoFullscreen();
-      }
-    } catch (_error) {
-      enterPseudoFullscreen();
-    } finally {
-      updateFullscreenButton();
-    }
-  }
-
-  function renderPlayerChrome() {
-    playerMount.querySelector(".player-floating-controls")?.remove();
-    playerMount.querySelector(".player-activity-capture")?.remove();
-    const needsActivityCapture = Boolean(playerMount.querySelector("iframe"));
-
-    playerMount.insertAdjacentHTML(
-      "beforeend",
-      `
-        ${
-          needsActivityCapture
-            ? '<div class="player-activity-capture" aria-hidden="true"></div>'
-            : ""
-        }
-        <div class="player-floating-controls" aria-label="Contrôles du player">
-          <button class="player-control-button player-control-button-wide" type="button" data-player-mini>Minimiser</button>
-          <button class="player-control-button" type="button" data-player-fullscreen>Plein écran</button>
-        </div>
-      `
-    );
-    bindMiniButton(playerMount.querySelector("[data-player-mini]"));
-    bindFullscreenButton(playerMount.querySelector("[data-player-fullscreen]"));
-    bindPlayerActivity();
-    showFloatingControls();
-    updateFullscreenButton();
-    updateMiniButton();
-  }
-
-  function bindMiniButton(button) {
-    if (!button) {
-      return;
-    }
-
-    miniButtons.push(button);
-    button.addEventListener("click", (event) => {
-      if (event.detail > 0) {
-        button.blur();
-      }
-
-      setMiniPlayer(!isMiniPlayer);
-    });
-  }
-
-  function bindFullscreenButton(button) {
-    if (!button) {
-      return;
-    }
-
-    fullscreenButtons.push(button);
-    button.addEventListener("click", (event) => {
-      if (event.detail > 0) {
-        button.blur();
-      }
-
-      togglePlayerFullscreen();
-    });
   }
 
   function getSourceLanguages(sources) {
@@ -522,6 +408,23 @@
     }
   }
 
+  function formatLaunchLanguage(value) {
+    const key = normalizeKey(value);
+
+    if (["vostfr", "en", "english"].includes(key)) {
+      return "Anglais";
+    }
+    if (["fr", "francais", "vf", "french", "truefrench"].includes(key)) {
+      return "Français";
+    }
+
+    return formatLanguage(value);
+  }
+
+  function formatLaunchButtonLabel(value, choiceCount) {
+    return choiceCount > 1 ? `Lancer - ${formatLaunchLanguage(value)}` : "Lancer";
+  }
+
   function renderLanguageGate(item, languages, onSelect, options = {}) {
     showPlayerMount();
 
@@ -533,7 +436,7 @@
       .map(
         (entry) => `
           <button class="language-gate-button" type="button" data-language="${escapeHtml(entry)}">
-            <span>${escapeHtml(formatLanguage(entry))}</span>
+            <span>${escapeHtml(formatLaunchButtonLabel(entry, choices.length))}</span>
           </button>
         `
       )
@@ -923,7 +826,6 @@
             referrerpolicy="origin"
           ></iframe>
         `;
-        renderPlayerChrome();
         if (playerHelp) {
           playerHelp.innerHTML = "";
         }
@@ -940,7 +842,6 @@
           Votre navigateur ne prend pas en charge la lecture vidéo HTML5.
         </video>
       `;
-      renderPlayerChrome();
       if (playerHelp) {
         playerHelp.innerHTML = "";
       }
@@ -1049,7 +950,6 @@
             <p>Player Externe</p>
             <div class="embed-actions">
               <button class="button primary embed-launch" type="button">Lancer</button>
-              <button class="button secondary embed-fullscreen" type="button">Plein écran</button>
             </div>
           </div>
         </div>
@@ -1058,13 +958,9 @@
 
     const customPlayer = playerMount.querySelector(".custom-embed-player");
     const launchButton = playerMount.querySelector(".embed-launch");
-    const fullscreenGateButton = playerMount.querySelector(".embed-fullscreen");
     if (playerHelp) {
       playerHelp.innerHTML = "";
     }
-
-    bindFullscreenButton(fullscreenGateButton);
-    updateFullscreenButton();
 
     launchButton?.addEventListener("click", () => {
       const iframe = document.createElement("iframe");
@@ -1079,7 +975,6 @@
         iframe.credentialless = true;
       }
       customPlayer?.replaceChildren(iframe);
-      renderPlayerChrome();
     });
   }
 
@@ -1090,11 +985,18 @@
 
     const seriesState = item.type === "series" ? getSeriesState(item) : null;
     const posterUrl = seriesState?.season?.posterUrl || item.posterUrl;
+    const resolvedPosterUrl = getAssetUrl(posterUrl);
 
     playerPoster.innerHTML = `
       <div class="generated-poster" aria-hidden="true"></div>
       ${renderPosterImage(posterUrl, "eager")}
     `;
+    playerPoster.disabled = !resolvedPosterUrl;
+    playerPoster.dataset.posterSrc = resolvedPosterUrl;
+    playerPoster.setAttribute(
+      "aria-label",
+      resolvedPosterUrl ? `Agrandir l'affiche de ${item.title}` : "Affiche indisponible"
+    );
     bindImageFallbacks(playerPoster, "img");
   }
 
@@ -1162,7 +1064,6 @@
           referrerpolicy="origin"
         ></iframe>
       `;
-      renderPlayerChrome();
       if (playerHelp) {
         playerHelp.innerHTML = "";
       }
@@ -1178,7 +1079,6 @@
           Votre navigateur ne prend pas en charge la lecture vidéo HTML5.
         </video>
       `;
-      renderPlayerChrome();
       if (playerHelp) {
         playerHelp.innerHTML = "";
       }
@@ -1197,7 +1097,6 @@
         <p>Aucun player n'est disponible pour cette vidéo.</p>
       </div>
     `;
-    renderPlayerChrome();
     if (playerHelp) {
       playerHelp.innerHTML = playbackItem.sourceUrl
         ? `<a class="button primary" href="${escapeHtml(playbackItem.sourceUrl)}" target="_blank" rel="noreferrer">Ouvrir la source</a>`
@@ -1398,6 +1297,15 @@
   }
 
   function handlePlayerShortcuts(event) {
+    if (event.key === "Escape" && document.body.classList.contains("poster-lightbox-open")) {
+      closePosterLightbox();
+      return;
+    }
+
+    if (document.body.classList.contains("poster-lightbox-open")) {
+      return;
+    }
+
     if (playerMount.hidden) {
       return;
     }
@@ -1408,17 +1316,6 @@
 
     const key = event.key.toLowerCase();
     const videoElement = getNativeVideo();
-
-    if (key === "f") {
-      event.preventDefault();
-      togglePlayerFullscreen();
-      return;
-    }
-
-    if (key === "escape" && isPseudoFullscreen) {
-      exitPseudoFullscreen();
-      return;
-    }
 
     if (key === "arrowleft") {
       event.preventDefault();
@@ -1468,32 +1365,6 @@
     }
   }
 
-  function setMiniPlayer(active) {
-    if (active === isMiniPlayer || getFullscreenElement() === playerMount || isPseudoFullscreen) {
-      return;
-    }
-
-    isMiniPlayer = active;
-    playerMount.classList.toggle("player-mini", active);
-    playerMount.parentElement?.classList.toggle("mini-player-active", active);
-    updateMiniButton();
-
-    if (active) {
-      playerMount.parentElement?.style.setProperty("--mini-placeholder-height", `${playerMount.offsetHeight}px`);
-      showFloatingControls();
-    } else {
-      playerMount.parentElement?.style.removeProperty("--mini-placeholder-height");
-    }
-  }
-
-  function updateMiniPlayer() {
-    setMiniPlayer(false);
-  }
-
-  function bindMiniPlayer() {
-    updateMiniPlayer();
-  }
-
   if (!requestedId || requestedId !== video.id) {
     window.history.replaceState(null, "", buildPlayerUrl(video.id));
   }
@@ -1503,11 +1374,10 @@
   renderMetadata(video);
   renderNavigation();
   renderRelated();
-  bindMiniPlayer();
 
-  document.addEventListener("fullscreenchange", updateFullscreenButton);
-  document.addEventListener("webkitfullscreenchange", updateFullscreenButton);
-  document.addEventListener("fullscreenchange", updateMiniPlayer);
-  document.addEventListener("webkitfullscreenchange", updateMiniPlayer);
+  playerPoster?.addEventListener("click", () => {
+    openPosterLightbox(playerPoster.dataset.posterSrc, video.title);
+  });
+
   document.addEventListener("keydown", handlePlayerShortcuts);
 })();

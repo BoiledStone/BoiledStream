@@ -3,7 +3,6 @@
     "film",
     "serie",
     "series",
-    "anime",
     "animation",
     "francais",
     "anglais",

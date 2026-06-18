@@ -2,7 +2,6 @@
   const videos = window.BOILED_VIDEOS || [];
   const utils = window.BOILED_UTILS;
   const grid = document.querySelector("#video-grid");
-  const filterGroup = document.querySelector("#filter-group");
   const searchInput = document.querySelector("#search-input");
   const sortSelect = document.querySelector("#sort-select");
   const resultCount = document.querySelector("#result-count");
@@ -11,44 +10,31 @@
   const movieCount = document.querySelector("#movie-count");
   const seriesCount = document.querySelector("#series-count");
   const heroPosterRail = document.querySelector("#hero-poster-rail");
-  const seriesSearchInput = document.querySelector("#series-search-input");
-  const seriesResultCount = document.querySelector("#series-result-count");
-  const seriesRow = document.querySelector("#series-row");
-  const seriesEmptyState = document.querySelector("#series-empty-state");
+  const homeHoverBackdrop = document.querySelector("#home-hover-backdrop");
   const emptyState = document.querySelector("#empty-state");
   const browseTags = document.querySelector("#browse-tags");
   const browseLanguages = document.querySelector("#browse-languages");
   const browseYears = document.querySelector("#browse-years");
   const activeFilters = document.querySelector("#active-filters");
-  const FILTER_ALL = "Tout";
-  const FILTER_ANIMATED = "Animé";
   const state = {
-    category: FILTER_ALL,
+    view: "all",
     query: "",
     tag: "",
     year: "",
     lang: "",
     sort: "catalogue"
   };
-  const seriesState = {
-    query: ""
-  };
 
-  if (!utils || !grid || !filterGroup || !searchInput) {
+  if (!utils || !grid || !searchInput) {
     return;
   }
 
   const {
-    buildAccentStyle,
-    buildDirectPlayerUrl,
     buildSearchUrl,
     escapeHtml,
     formatLanguage,
-    getCardTypeLabel,
     getDisplayTags,
     getVideoLanguages,
-    getSeasonLabel,
-    hasCategoryOrTag,
     normalizeKey,
     renderPosterImage,
     renderVideoCard,
@@ -58,14 +44,30 @@
   const seriesItems = videos.filter((video) => video.type === "series");
   const movieItems = videos.filter((video) => video.type !== "series");
   const initialParams = new URLSearchParams(window.location.search);
+  const initialType = normalizeKey(initialParams.get("type") || "");
+  const legacyCategory = initialParams.get("category") || "";
   state.query = initialParams.get("q") || "";
   state.tag = initialParams.get("tag") || "";
   state.year = initialParams.get("year") || "";
   state.lang = initialParams.get("lang") || "";
-  state.category = initialParams.get("category") || FILTER_ALL;
+  if (["films", "film", "movie", "movies"].includes(initialType)) {
+    state.view = "films";
+  } else if (["series", "serie", "série", "séries"].includes(initialType)) {
+    state.view = "series";
+  }
+  if (normalizeKey(legacyCategory) === "anime") {
+    state.tag = state.tag || "Animé";
+  } else if (normalizeKey(legacyCategory) === "film") {
+    state.view = "films";
+  } else if (["serie", "series", "série", "séries"].includes(normalizeKey(legacyCategory))) {
+    state.view = "series";
+  }
 
   if (searchInput) {
     searchInput.value = state.query;
+  }
+  if (sortSelect) {
+    sortSelect.value = state.view === "all" ? state.sort : state.view;
   }
 
   function getReleaseYear(video) {
@@ -100,14 +102,15 @@
     return !query || normalizeKey(searchableText(video)).includes(query);
   }
 
-  function matchesCategory(video) {
-    if (state.category === FILTER_ALL) {
-      return true;
+  function matchesView(video) {
+    if (state.view === "films") {
+      return video.type !== "series";
+    }
+    if (state.view === "series") {
+      return video.type === "series";
     }
 
-    return state.category === FILTER_ANIMATED
-      ? hasCategoryOrTag(video, "anime")
-      : video.category === state.category;
+    return true;
   }
 
   function matchesTag(video) {
@@ -165,9 +168,9 @@
 
   function getFilteredVideos() {
     return sortVideos(
-      movieItems.filter(
+      videos.filter(
         (video) =>
-          matchesCategory(video) &&
+          matchesView(video) &&
           matchesTag(video) &&
           matchesYear(video) &&
           matchesLanguage(video) &&
@@ -210,15 +213,14 @@
   }
 
   function renderBrowseGroups() {
-    const allItems = [...movieItems, ...seriesItems];
-    const tags = uniqueSorted(allItems.flatMap((video) => getDisplayTags(video))).slice(0, 36);
+    const tags = uniqueSorted(videos.flatMap((video) => getDisplayTags(video))).slice(0, 36);
     const languages = uniqueSorted(
-      allItems
+      videos
         .flatMap((video) => getVideoLanguages(video))
         .map(formatLanguage)
     );
     const years = uniqueSorted(
-      allItems.map((video) => String(getReleaseYear(video) || "")),
+      videos.map((video) => String(getReleaseYear(video) || "")),
       (first, second) => Number(second) - Number(first)
     ).slice(0, 14);
 
@@ -232,11 +234,22 @@
       return;
     }
 
-    const featuredItems = movieItems
-      .filter((video) => video.posterUrl)
-      .slice(0, 8);
+    const posterSource = videos.filter((video) => video.posterUrl);
 
-    heroPosterRail.innerHTML = featuredItems
+    if (!posterSource.length) {
+      heroPosterRail.innerHTML = "";
+      return;
+    }
+
+    const featuredItems = Array.from(
+      { length: Math.max(28, posterSource.length) },
+      (_item, index) => posterSource[index % posterSource.length]
+    );
+    const posterItems = [...featuredItems, ...featuredItems];
+
+    heroPosterRail.innerHTML = `
+        <div class="hero-poster-track">
+          ${posterItems
       .map(
         (video, index) => `
           <div class="hero-poster" style="--poster-index: ${index};">
@@ -245,9 +258,80 @@
           </div>
         `
       )
-      .join("");
+      .join("")}
+        </div>
+      `;
 
     bindImageFallbacks(heroPosterRail, ".hero-poster img");
+  }
+
+  function bindHomeHoverBackdrop() {
+    if (!homeHoverBackdrop || homeHoverBackdrop.dataset.hoverBackdropBound === "true") {
+      return;
+    }
+
+    homeHoverBackdrop.dataset.hoverBackdropBound = "true";
+
+    document.addEventListener("pointermove", (event) => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return;
+      }
+
+      homeHoverBackdrop.style.setProperty("--home-hover-x", `${Math.round((event.clientX / window.innerWidth) * 100)}%`);
+      homeHoverBackdrop.style.setProperty("--home-hover-y", `${Math.round((event.clientY / window.innerHeight) * 100)}%`);
+    });
+  }
+
+  function bindCardHoverEffects(root) {
+    if (!root || root.dataset.hoverEffectsBound === "true") {
+      return;
+    }
+
+    root.dataset.hoverEffectsBound = "true";
+
+    const resetCard = (card) => {
+      card?.classList.remove("is-hovered");
+      card?.style.removeProperty("--hover-x");
+      card?.style.removeProperty("--hover-y");
+      card?.style.removeProperty("--tilt-x");
+      card?.style.removeProperty("--tilt-y");
+    };
+
+    root.addEventListener("pointermove", (event) => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return;
+      }
+
+      const card = event.target.closest(".video-card");
+      if (!card || !root.contains(card)) {
+        return;
+      }
+
+      const rect = card.getBoundingClientRect();
+      const x = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
+      const y = Math.min(1, Math.max(0, (event.clientY - rect.top) / rect.height));
+      const tiltY = (x - 0.5) * 2.4;
+      const tiltX = (0.5 - y) * 1.8;
+
+      card.classList.add("is-hovered");
+      card.style.setProperty("--hover-x", `${Math.round(x * 100)}%`);
+      card.style.setProperty("--hover-y", `${Math.round(y * 100)}%`);
+      card.style.setProperty("--tilt-x", `${tiltX.toFixed(2)}deg`);
+      card.style.setProperty("--tilt-y", `${tiltY.toFixed(2)}deg`);
+    });
+
+    root.addEventListener("pointerout", (event) => {
+      const card = event.target.closest(".video-card");
+      if (!card || card.contains(event.relatedTarget)) {
+        return;
+      }
+
+      resetCard(card);
+    });
+
+    root.addEventListener("focusout", (event) => {
+      resetCard(event.target.closest(".video-card"));
+    });
   }
 
   function renderActiveFilters() {
@@ -257,10 +341,11 @@
 
     const filters = [
       state.query ? `Recherche: ${state.query}` : "",
+      state.view === "films" ? "Affichage: Films" : "",
+      state.view === "series" ? "Affichage: Séries" : "",
       state.tag ? `Tag: ${state.tag}` : "",
       state.year ? `Année: ${state.year}` : "",
-      state.lang ? `Langue: ${state.lang}` : "",
-      state.category !== FILTER_ALL ? `Catégorie: ${state.category}` : ""
+      state.lang ? `Langue: ${state.lang}` : ""
     ].filter(Boolean);
 
     activeFilters.hidden = filters.length === 0;
@@ -269,109 +354,19 @@
       : "";
   }
 
-  function renderFilters() {
-    const categories = [
-      ...new Set([
-        FILTER_ALL,
-        FILTER_ANIMATED,
-        ...movieItems
-          .map((video) => video.category)
-          .filter(Boolean)
-      ])
-    ];
-
-    filterGroup.innerHTML = categories
-      .map((category) => {
-        const isActive = category === state.category;
-        return `
-          <button
-            class="filter-button${isActive ? " active" : ""}"
-            type="button"
-            data-category="${escapeHtml(category)}"
-            aria-pressed="${isActive}"
-          >
-            ${escapeHtml(category)}
-          </button>
-        `;
-      })
-      .join("");
-  }
-
   function renderVideos() {
     const filteredVideos = getFilteredVideos();
     grid.innerHTML = filteredVideos.map((video) => renderVideoCard(video)).join("");
     if (resultCount) {
-      resultCount.textContent = `${filteredVideos.length} titre${filteredVideos.length > 1 ? "s" : ""}`;
+      resultCount.textContent = `${filteredVideos.length} résultat${filteredVideos.length > 1 ? "s" : ""}`;
     }
     if (emptyState) {
       emptyState.hidden = filteredVideos.length > 0;
     }
     bindImageFallbacks(grid);
+    bindCardHoverEffects(grid);
     renderActiveFilters();
   }
-
-  function renderSeriesRow() {
-    if (!seriesRow) {
-      return;
-    }
-
-    const filteredSeries = seriesItems.filter((series) => matchesSearch(series, seriesState.query));
-
-    if (seriesResultCount) {
-      seriesResultCount.textContent = `${filteredSeries.length} série${filteredSeries.length > 1 ? "s" : ""}`;
-    }
-    if (seriesEmptyState) {
-      seriesEmptyState.hidden = filteredSeries.length > 0;
-    }
-
-    seriesRow.innerHTML = filteredSeries
-      .map((series) => {
-        const typeLabel = getCardTypeLabel(series);
-        const seasonLabel = getSeasonLabel(series) || "Série";
-        const accentStyle = buildAccentStyle(series.accentColor);
-        const accentLock = series.accentColor ? ' data-accent-lock="true"' : "";
-        const languages = (series.languages || []).map(formatLanguage).filter(Boolean);
-        const languagePill = languages.length ? `<span>${escapeHtml(languages.join(" + "))}</span>` : "";
-        const tags = getDisplayTags(series, 3)
-          .map((tag) => `<span>${escapeHtml(tag)}</span>`)
-          .join("");
-
-        return `
-          <a class="series-card" href="${buildDirectPlayerUrl(series.id)}"${accentLock}${accentStyle} aria-label="Ouvrir ${escapeHtml(series.title)}">
-            <div class="series-card-poster">
-              <div class="generated-poster" aria-hidden="true"></div>
-              ${renderPosterImage(series.posterUrl)}
-            </div>
-            <div class="series-card-copy">
-              <h3>${escapeHtml(series.title)}</h3>
-              <div class="series-card-meta">
-                <span class="type-pill">${escapeHtml(typeLabel)}</span>
-                ${languagePill}
-              </div>
-              <p>${escapeHtml(series.description || "")}</p>
-              <div class="series-card-stats">
-                <span>${escapeHtml(seasonLabel)}</span>
-              </div>
-              <div class="series-card-tags">${tags}</div>
-            </div>
-          </a>
-        `;
-      })
-      .join("");
-
-    bindImageFallbacks(seriesRow, ".series-card-poster img");
-  }
-
-  filterGroup.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-category]");
-    if (!button) {
-      return;
-    }
-
-    state.category = button.dataset.category;
-    renderFilters();
-    renderVideos();
-  });
 
   searchInput.addEventListener("input", (event) => {
     state.query = event.target.value;
@@ -379,13 +374,17 @@
   });
 
   sortSelect?.addEventListener("change", (event) => {
-    state.sort = event.target.value || "catalogue";
-    renderVideos();
-  });
+    const value = event.target.value || "catalogue";
 
-  seriesSearchInput?.addEventListener("input", (event) => {
-    seriesState.query = event.target.value;
-    renderSeriesRow();
+    if (value === "films" || value === "series") {
+      state.view = value;
+      state.sort = "catalogue";
+    } else {
+      state.view = "all";
+      state.sort = value;
+    }
+
+    renderVideos();
   });
 
   if (videoCount) {
@@ -402,7 +401,6 @@
   }
   renderBrowseGroups();
   renderHeroPosterRail();
-  renderSeriesRow();
-  renderFilters();
+  bindHomeHoverBackdrop();
   renderVideos();
 })();
