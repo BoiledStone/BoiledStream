@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Smiling Friends - S03E03 - Mole Man | BoiledStream</title>
+    <meta name="description" content="Charlie et Pim travaillent chez Smiling Friends, une entreprise dont le but est d&#039;aider les gens à retrouver le sourire.">
+    <link rel="canonical" href="https://boiledstone.github.io/BoiledStream/watch/smiling-friends-s03e03.html">
+    <meta property="og:site_name" content="BoiledStream">
+    <meta property="og:type" content="video.episode">
+    <meta property="og:url" content="https://boiledstone.github.io/BoiledStream/watch/smiling-friends-s03e03.html">
+    <meta property="og:title" content="Smiling Friends - S03E03 - Mole Man | BoiledStream">
+    <meta property="og:description" content="Charlie et Pim travaillent chez Smiling Friends, une entreprise dont le but est d&#039;aider les gens à retrouver le sourire.">
+    <meta property="og:image" content="https://m.media-amazon.com/images/M/MV5BYjNkMjdiZGEtMTg3Mi00YTAzLWJkMGYtMmIxMzNjMmRhOGNmXkEyXkFqcGc@._V1_.jpg">
+    <meta property="og:image:secure_url" content="https://m.media-amazon.com/images/M/MV5BYjNkMjdiZGEtMTg3Mi00YTAzLWJkMGYtMmIxMzNjMmRhOGNmXkEyXkFqcGc@._V1_.jpg">
+    <meta property="og:image:alt" content="Mole Man">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Smiling Friends - S03E03 - Mole Man | BoiledStream">
+    <meta name="twitter:description" content="Charlie et Pim travaillent chez Smiling Friends, une entreprise dont le but est d&#039;aider les gens à retrouver le sourire.">
+    <meta name="twitter:image" content="https://m.media-amazon.com/images/M/MV5BYjNkMjdiZGEtMTg3Mi00YTAzLWJkMGYtMmIxMzNjMmRhOGNmXkEyXkFqcGc@._V1_.jpg">
+    <link rel="icon" href="../favicon.svg?v=20260618-series-watch-embeds" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/styles.css?v=20260618-series-watch-embeds">
+    <script src="../scripts/app-utils.js?v=20260618-series-watch-embeds" defer></script>
+    <script src="../scripts/videos.js?v=20260618-series-watch-embeds" defer></script>
+    <script src="../scripts/player.js?v=20260618-series-watch-embeds" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="../scripts/supabase-config.js?v=20260618-series-watch-embeds" defer></script>
+    <script src="../scripts/community.js?v=20260618-series-watch-embeds" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../index.html" aria-label="Accueil BoiledStream">
+        <img class="brand-mark" src="../favicon.svg?v=20260618-visual-layer-clean" alt="" aria-hidden="true">
+        <span>BoiledStream</span>
+      </a>
+      <div class="header-actions">
+        <nav class="top-nav" aria-label="Navigation principale">
+          <a href="../index.html#catalogue">Catalogue</a>
+          <a href="../index.html#sources">Sources</a>
+        </nav>
+        <div class="account-controls" id="account-controls" aria-live="polite"></div>
+      </div>
+    </header>
+
+    <main>
+      <section class="player-layout" aria-labelledby="player-title">
+        <div class="player-stage">
+          <a class="back-link" href="../index.html#catalogue">Retour au catalogue</a>
+          <div id="player-mount" class="player-mount" aria-label="Lecteur vidéo"></div>
+          <div id="player-help" class="player-help"></div>
+          <div id="series-panel" class="series-panel" hidden></div>
+        </div>
+
+        <aside class="player-details" aria-label="Informations vidéo">
+          <button class="player-poster" id="player-poster" type="button" aria-label="Agrandir l'affiche"></button>
+          <p class="section-kicker" id="player-category"></p>
+          <h1 id="player-title"></h1>
+          <p class="player-description" id="player-description"></p>
+          <dl class="meta-list">
+            <div>
+              <dt>Année</dt>
+              <dd id="player-date"></dd>
+            </div>
+            <div>
+              <dt>Durée</dt>
+              <dd id="player-duration"></dd>
+            </div>
+            <div>
+              <dt>Qualité</dt>
+              <dd id="player-quality"></dd>
+            </div>
+            <div>
+              <dt>Source</dt>
+              <dd><a id="player-source" href="#" target="_blank" rel="noreferrer"></a></dd>
+            </div>
+            <div>
+              <dt>Langue</dt>
+              <dd id="player-language"></dd>
+            </div>
+          </dl>
+          <div class="tag-row" id="player-tags"></div>
+          <div class="player-actions" id="player-actions">
+            <a class="button secondary" id="previous-link" href="#">Précédent</a>
+            <a class="button primary" id="next-link" href="#">Suivant</a>
+          </div>
+        </aside>
+      </section>
+
+      <section class="related-section" aria-labelledby="related-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">À regarder ensuite</p>
+            <h2 id="related-title">Même catalogue</h2>
+          </div>
+        </div>
+        <div class="video-grid compact" id="related-grid"></div>
+      </section>
+
+      <section class="community-section" id="community-section" aria-labelledby="community-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Communauté</p>
+            <h2 id="community-title">Notes et commentaires</h2>
+          </div>
+        </div>
+        <div class="community-grid">
+          <section class="community-card" aria-labelledby="rating-title">
+            <h3 id="rating-title">Score spectateurs</h3>
+            <p class="rating-summary" id="rating-summary">Chargement du score...</p>
+            <div class="rating-stars" id="rating-stars" aria-label="Noter ce film"></div>
+            <p class="community-status" id="rating-status" aria-live="polite"></p>
+          </section>
+
+          <section class="community-card comments-card" aria-labelledby="comments-title">
+            <h3 id="comments-title">Commentaires</h3>
+            <p class="community-status" id="comment-login-note">Connecte-toi pour laisser un commentaire.</p>
+            <form class="comment-form" id="comment-form" hidden>
+              <label for="comment-body">Ton commentaire</label>
+              <textarea id="comment-body" maxlength="1000" rows="4" placeholder="Ambiance, qualité, moment préféré..."></textarea>
+              <button class="button primary" type="submit">Publier</button>
+              <p class="community-status" id="comment-status" aria-live="polite"></p>
+            </form>
+            <div class="comments-list" id="comments-list"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer" id="sources">
+      <p>
+        Les films sont référencés depuis leurs hébergeurs externes et affichés dans une page player interne.
+      </p>
+    </footer>
+  </body>
+</html>

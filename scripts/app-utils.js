@@ -201,7 +201,7 @@
   function renderVideoCard(video, options = {}) {
     const { related = false, tagLimit = 2 } = options;
     const cardType = getCardTypeLabel(video);
-    const playerHref = video.type === "series" ? buildDirectPlayerUrl(video.id) : buildPlayerUrl(video.id);
+    const playerHref = buildPlayerUrl(video.id);
     const accentStyle = buildAccentStyle(video.accentColor);
     const accentLock = video.accentColor ? ' data-accent-lock="true"' : "";
 

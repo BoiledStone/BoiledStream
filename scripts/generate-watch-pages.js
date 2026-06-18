@@ -5,7 +5,7 @@ const vm = require("vm");
 const ROOT = path.resolve(__dirname, "..");
 const SITE_URL = "https://boiledstone.github.io/BoiledStream";
 const WATCH_DIR = path.join(ROOT, "watch");
-const ASSET_VERSION = "20260618-visual-layer-clean";
+const ASSET_VERSION = "20260618-series-watch-embeds";
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -51,12 +51,68 @@ function loadPlayerBody() {
     .replaceAll('src="favicon.svg', 'src="../favicon.svg');
 }
 
+function padEpisodeNumber(value) {
+  return String(value || 0).padStart(2, "0");
+}
+
+function getWatchTitle(video) {
+  if (video.seriesId) {
+    const episodeCode =
+      video.seasonNumber && video.episodeNumber
+        ? `S${padEpisodeNumber(video.seasonNumber)}E${padEpisodeNumber(video.episodeNumber)}`
+        : "";
+    return [video.seriesTitle, episodeCode, video.title].filter(Boolean).join(" - ");
+  }
+
+  return video.title;
+}
+
+function getWatchDescription(video, title) {
+  if (video.description) {
+    return video.description;
+  }
+
+  if (video.seriesId) {
+    const season = video.seasonNumber ? ` saison ${video.seasonNumber}` : "";
+    const episode = video.episodeNumber ? ` episode ${video.episodeNumber}` : "";
+    return `Regarder ${video.seriesTitle || "la serie"}${season}${episode} sur BoiledStream.`;
+  }
+
+  if (video.type === "series") {
+    const seasonCount = video.seasons?.length || 0;
+    const episodeCount = (video.seasons || []).reduce((total, season) => total + (season.episodes || []).length, 0);
+    const countText = [
+      seasonCount ? `${seasonCount} saison${seasonCount > 1 ? "s" : ""}` : "",
+      episodeCount ? `${episodeCount} episode${episodeCount > 1 ? "s" : ""}` : ""
+    ]
+      .filter(Boolean)
+      .join(", ");
+
+    return `Serie disponible sur BoiledStream${countText ? `: ${countText}.` : "."}`;
+  }
+
+  return `Regarder ${title} sur BoiledStream.`;
+}
+
+function getOgType(video) {
+  if (video.seriesId) {
+    return "video.episode";
+  }
+
+  if (video.type === "series") {
+    return "video.tv_show";
+  }
+
+  return "video.movie";
+}
+
 function renderWatchPage(video) {
   const watchUrl = `${SITE_URL}/watch/${encodeURIComponent(video.id)}.html`;
-  const titleParts = [video.seriesTitle, video.title].filter(Boolean);
-  const title = `${titleParts.join(" - ")} | BoiledStream`;
-  const description = video.description || `Regarder ${titleParts.join(" - ") || video.title} sur BoiledStream.`;
+  const watchTitle = getWatchTitle(video);
+  const title = `${watchTitle} | BoiledStream`;
+  const description = getWatchDescription(video, watchTitle);
   const image = absoluteUrl(video.posterUrl);
+  const ogType = getOgType(video);
   const body = loadPlayerBody();
 
   return `<!doctype html>
@@ -68,7 +124,7 @@ function renderWatchPage(video) {
     <meta name="description" content="${escapeHtml(description)}">
     <link rel="canonical" href="${escapeHtml(watchUrl)}">
     <meta property="og:site_name" content="BoiledStream">
-    <meta property="og:type" content="video.movie">
+    <meta property="og:type" content="${escapeHtml(ogType)}">
     <meta property="og:url" content="${escapeHtml(watchUrl)}">
     <meta property="og:title" content="${escapeHtml(title)}">
     <meta property="og:description" content="${escapeHtml(description)}">

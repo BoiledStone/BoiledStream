@@ -241,6 +241,10 @@
     return getSourceLanguages(item?.sources).length > 1;
   }
 
+  function hasAnySource(item) {
+    return getSourceLanguages(item?.sources).length > 0;
+  }
+
   function uniqueNormalizedValues(values) {
     return values.filter(
       (entry, index, list) =>
@@ -1008,8 +1012,9 @@
 
     showPlayerMount();
     const movieState = getMovieState(item);
+    const hasMovieSources = hasAnySource(item);
     const hasMovieSourceChoices = hasSelectableSources(item);
-    const playback = hasMovieSourceChoices ? getMoviePlaybackSource(item, movieState.language) : item;
+    const playback = hasMovieSources ? getMoviePlaybackSource(item, movieState.language) : item;
     const playbackItem = {
       ...item,
       ...playback,
@@ -1044,6 +1049,12 @@
     if (hasMovieSourceChoices) {
       updateMovieAddress(item, movieState.language);
       renderMovieSourcePanel(item);
+    } else if (hasMovieSources) {
+      updateMovieAddress(item, movieState.language);
+      if (seriesPanel) {
+        seriesPanel.hidden = true;
+        seriesPanel.innerHTML = "";
+      }
     } else if (seriesPanel) {
       seriesPanel.hidden = true;
       seriesPanel.innerHTML = "";

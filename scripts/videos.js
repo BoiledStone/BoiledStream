@@ -143,8 +143,12 @@
         title: `Épisode ${episodeNumber}`,
         sourceName,
         sourceUrl,
+        date: defaults.date || "",
+        description: config.description || defaults.description || "",
+        language: languages.join("+"),
         accentColor: config.accentColor || defaults.accentColor,
         posterUrl: config.posterUrl || defaults.posterUrl,
+        tags: Object.freeze([...(defaults.tags || [])]),
         languages: [...languages],
         ...directSource
       };
@@ -213,6 +217,9 @@
       languages,
       sourceUrl: details.sourceUrl,
       posterUrl: details.posterUrl,
+      date: details.date,
+      description: details.description,
+      tags: details.tags,
       accentColor: details.accentColor,
       seasonSourceMaps,
       allowExternalSource
@@ -1405,5 +1412,7 @@
 
   const videos = catalogue.map(buildVideo);
   window.BOILED_VIDEOS = Object.freeze(videos);
-  window.BOILED_EPISODES = Object.freeze(SUPERNATURAL_EN_EPISODES.map(buildStandaloneEpisode));
+  window.BOILED_EPISODES = Object.freeze(
+    videos.flatMap((item) => item.seasons?.flatMap((season) => season.episodes || []) || [])
+  );
 })();
