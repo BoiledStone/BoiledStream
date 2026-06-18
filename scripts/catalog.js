@@ -10,11 +10,7 @@
   const movieCount = document.querySelector("#movie-count");
   const seriesCount = document.querySelector("#series-count");
   const heroPosterRail = document.querySelector("#hero-poster-rail");
-  const homeHoverBackdrop = document.querySelector("#home-hover-backdrop");
   const emptyState = document.querySelector("#empty-state");
-  const browseTags = document.querySelector("#browse-tags");
-  const browseLanguages = document.querySelector("#browse-languages");
-  const browseYears = document.querySelector("#browse-years");
   const activeFilters = document.querySelector("#active-filters");
   const state = {
     view: "all",
@@ -179,56 +175,6 @@
     );
   }
 
-  function uniqueSorted(values, compare = (first, second) => first.localeCompare(second, "fr")) {
-    return values
-      .filter(Boolean)
-      .filter(
-        (entry, index, list) =>
-          list.findIndex((value) => normalizeKey(value) === normalizeKey(entry)) === index
-      )
-      .sort(compare);
-  }
-
-  function renderBrowseSelect(select, values, key, activeValue = "", placeholder = "Choisir") {
-    if (!select) {
-      return;
-    }
-
-    select.innerHTML = [
-      `<option value="">${escapeHtml(placeholder)}</option>`,
-      ...values
-      .map((value) => {
-        const isActive = normalizeKey(value) === normalizeKey(activeValue);
-        const href = buildSearchUrl({ [key]: value });
-
-        return `<option value="${escapeHtml(href)}"${isActive ? " selected" : ""}>${escapeHtml(value)}</option>`;
-      })
-    ].join("");
-
-    select.onchange = () => {
-      if (select.value) {
-        window.location.href = select.value;
-      }
-    };
-  }
-
-  function renderBrowseGroups() {
-    const tags = uniqueSorted(videos.flatMap((video) => getDisplayTags(video))).slice(0, 36);
-    const languages = uniqueSorted(
-      videos
-        .flatMap((video) => getVideoLanguages(video))
-        .map(formatLanguage)
-    );
-    const years = uniqueSorted(
-      videos.map((video) => String(getReleaseYear(video) || "")),
-      (first, second) => Number(second) - Number(first)
-    ).slice(0, 14);
-
-    renderBrowseSelect(browseTags, tags, "tag", state.tag, "Choisir un genre ou thème");
-    renderBrowseSelect(browseLanguages, languages, "lang", state.lang, "Choisir une langue");
-    renderBrowseSelect(browseYears, years, "year", state.year, "Choisir une année");
-  }
-
   function renderHeroPosterRail() {
     if (!heroPosterRail) {
       return;
@@ -263,23 +209,6 @@
       `;
 
     bindImageFallbacks(heroPosterRail, ".hero-poster img");
-  }
-
-  function bindHomeHoverBackdrop() {
-    if (!homeHoverBackdrop || homeHoverBackdrop.dataset.hoverBackdropBound === "true") {
-      return;
-    }
-
-    homeHoverBackdrop.dataset.hoverBackdropBound = "true";
-
-    document.addEventListener("pointermove", (event) => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        return;
-      }
-
-      homeHoverBackdrop.style.setProperty("--home-hover-x", `${Math.round((event.clientX / window.innerWidth) * 100)}%`);
-      homeHoverBackdrop.style.setProperty("--home-hover-y", `${Math.round((event.clientY / window.innerHeight) * 100)}%`);
-    });
   }
 
   function bindCardHoverEffects(root) {
@@ -399,8 +328,6 @@
   if (seriesCount) {
     seriesCount.textContent = String(seriesItems.length);
   }
-  renderBrowseGroups();
   renderHeroPosterRail();
-  bindHomeHoverBackdrop();
   renderVideos();
 })();

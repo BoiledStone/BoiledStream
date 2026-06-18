@@ -8,20 +8,20 @@
       name="description"
       content="Catalogue vidéo moderne avec films, séries, saisons, épisodes et player dédié."
     >
-    <link rel="icon" href="favicon.svg?v=20260618-poster-grid-only" type="image/svg+xml">
-    <link rel="stylesheet" href="css/styles.css?v=20260618-poster-grid-only">
-    <script src="scripts/app-utils.js?v=20260618-poster-grid-only" defer></script>
+    <link rel="icon" href="favicon.svg?v=20260618-catalog-grid-fix" type="image/svg+xml">
+    <link rel="stylesheet" href="css/styles.css?v=20260618-catalog-grid-fix">
+    <script src="scripts/app-utils.js?v=20260618-catalog-grid-fix" defer></script>
     <!-- videos.js doit être chargé avant catalog.js: il expose window.BOILED_VIDEOS. -->
-    <script src="scripts/videos.js?v=20260618-poster-grid-only" defer></script>
-    <script src="scripts/catalog.js?v=20260618-poster-grid-only" defer></script>
+    <script src="scripts/videos.js?v=20260618-catalog-grid-fix" defer></script>
+    <script src="scripts/catalog.js?v=20260618-catalog-grid-fix" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <script src="scripts/supabase-config.js?v=20260618-poster-grid-only" defer></script>
-    <script src="scripts/community.js?v=20260618-poster-grid-only" defer></script>
+    <script src="scripts/supabase-config.js?v=20260618-catalog-grid-fix" defer></script>
+    <script src="scripts/community.js?v=20260618-catalog-grid-fix" defer></script>
   </head>
   <body>
     <header class="site-header">
       <a class="brand" href="index.html" aria-label="Accueil BoiledStream">
-        <img class="brand-mark" src="favicon.svg?v=20260618-poster-grid-only" alt="" aria-hidden="true">
+        <img class="brand-mark" src="favicon.svg?v=20260618-catalog-grid-fix" alt="" aria-hidden="true">
         <span>BoiledStream</span>
       </a>
       <div class="header-actions">
@@ -44,7 +44,6 @@
 
       <section class="catalog-hero" aria-labelledby="page-title">
         <div class="hero-media" aria-hidden="true">
-          <div class="home-hover-backdrop" id="home-hover-backdrop"></div>
           <div class="hero-poster-rail" id="hero-poster-rail"></div>
         </div>
         <div class="hero-copy">
@@ -89,35 +88,6 @@
           </label>
         </div>
         <div class="active-filters" id="active-filters" aria-live="polite"></div>
-      </section>
-
-      <section class="browse-section" aria-labelledby="browse-title">
-        <div class="section-heading">
-          <div>
-            <p class="section-kicker">Explorer</p>
-            <h2 id="browse-title">Explorer le catalogue</h2>
-          </div>
-        </div>
-        <div class="browse-grid" aria-label="Liens de recherche rapides">
-          <section class="browse-panel" aria-labelledby="browse-tags-title">
-            <label class="browse-select" for="browse-tags">
-              <span id="browse-tags-title">Genres et thèmes</span>
-              <select id="browse-tags" aria-label="Genres et thèmes"></select>
-            </label>
-          </section>
-          <section class="browse-panel" aria-labelledby="browse-languages-title">
-            <label class="browse-select" for="browse-languages">
-              <span id="browse-languages-title">Langues</span>
-              <select id="browse-languages" aria-label="Langues"></select>
-            </label>
-          </section>
-          <section class="browse-panel" aria-labelledby="browse-years-title">
-            <label class="browse-select" for="browse-years">
-              <span id="browse-years-title">Années</span>
-              <select id="browse-years" aria-label="Années"></select>
-            </label>
-          </section>
-        </div>
       </section>
 
       <section class="catalog-section" id="catalogue" aria-labelledby="catalog-title">
