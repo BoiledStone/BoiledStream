@@ -5,7 +5,7 @@ const vm = require("vm");
 const ROOT = path.resolve(__dirname, "..");
 const SITE_URL = "https://boiledstone.github.io/BoiledStream";
 const WATCH_DIR = path.join(ROOT, "watch");
-const ASSET_VERSION = "20260618-series-watch-embeds";
+const ASSET_VERSION = "20260618-better-discord-embeds";
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -55,6 +55,62 @@ function padEpisodeNumber(value) {
   return String(value || 0).padStart(2, "0");
 }
 
+function cleanText(value) {
+  return String(value || "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function truncateText(value, maxLength) {
+  const text = cleanText(value);
+
+  return text.length > maxLength ? `${text.slice(0, maxLength - 1).trim()}…` : text;
+}
+
+function formatLanguage(value) {
+  const labels = {
+    en: "EN",
+    english: "EN",
+    fr: "FR",
+    francais: "FR",
+    french: "FR",
+    vf: "VF",
+    vostfr: "VOSTFR",
+    truefrench: "TrueFrench"
+  };
+  const key = String(value || "").trim().toLowerCase();
+
+  return labels[key] || String(value || "").trim();
+}
+
+function getLanguages(video) {
+  const values = [
+    ...(video.languages || []),
+    video.language,
+    ...Object.keys(video.sources || {})
+  ];
+  const seen = new Set();
+
+  return values
+    .flatMap((value) => String(value || "").split(/[+/|,]/))
+    .map(formatLanguage)
+    .filter(Boolean)
+    .filter((value) => {
+      const key = value.toLowerCase();
+
+      if (seen.has(key)) {
+        return false;
+      }
+
+      seen.add(key);
+      return true;
+    });
+}
+
+function getEpisodeCount(video) {
+  return (video.seasons || []).reduce((total, season) => total + (season.episodes || []).length, 0);
+}
+
 function getWatchTitle(video) {
   if (video.seriesId) {
     const episodeCode =
@@ -67,31 +123,49 @@ function getWatchTitle(video) {
   return video.title;
 }
 
-function getWatchDescription(video, title) {
-  if (video.description) {
-    return video.description;
-  }
+function getEmbedSummary(video) {
+  const source = video.sourceName || "";
+  const year = String(video.date || "").match(/\d{4}/)?.[0] || "";
+  const languages = getLanguages(video).join(" + ");
 
   if (video.seriesId) {
-    const season = video.seasonNumber ? ` saison ${video.seasonNumber}` : "";
-    const episode = video.episodeNumber ? ` episode ${video.episodeNumber}` : "";
-    return `Regarder ${video.seriesTitle || "la serie"}${season}${episode} sur BoiledStream.`;
+    return [
+      "Épisode",
+      video.seasonNumber && video.episodeNumber
+        ? `S${padEpisodeNumber(video.seasonNumber)}E${padEpisodeNumber(video.episodeNumber)}`
+        : "",
+      languages,
+      source,
+      year
+    ].filter(Boolean).join(" • ");
   }
 
   if (video.type === "series") {
     const seasonCount = video.seasons?.length || 0;
-    const episodeCount = (video.seasons || []).reduce((total, season) => total + (season.episodes || []).length, 0);
-    const countText = [
-      seasonCount ? `${seasonCount} saison${seasonCount > 1 ? "s" : ""}` : "",
-      episodeCount ? `${episodeCount} episode${episodeCount > 1 ? "s" : ""}` : ""
-    ]
-      .filter(Boolean)
-      .join(", ");
+    const episodeCount = getEpisodeCount(video);
 
-    return `Serie disponible sur BoiledStream${countText ? `: ${countText}.` : "."}`;
+    return [
+      "Série",
+      seasonCount ? `${seasonCount} saison${seasonCount > 1 ? "s" : ""}` : "",
+      episodeCount ? `${episodeCount} épisodes` : "",
+      languages,
+      year
+    ].filter(Boolean).join(" • ");
   }
 
-  return `Regarder ${title} sur BoiledStream.`;
+  return ["Film", languages, source, year].filter(Boolean).join(" • ");
+}
+
+function getWatchDescription(video, title) {
+  const summary = getEmbedSummary(video);
+  const fallback = video.seriesId
+    ? `Regarder ${video.seriesTitle || title} sur BoiledStream.`
+    : video.type === "series"
+      ? "Série disponible sur BoiledStream."
+      : `Regarder ${title} sur BoiledStream.`;
+  const description = video.description || fallback;
+
+  return truncateText([summary, description].filter(Boolean).join(" — "), 220);
 }
 
 function getOgType(video) {
@@ -106,6 +180,40 @@ function getOgType(video) {
   return "video.movie";
 }
 
+function getImageSize(imageUrl) {
+  if (/\/w(300|400|500|600|780|1280)\//i.test(imageUrl) || /\/w600_and_h900/i.test(imageUrl)) {
+    return { width: 600, height: 900 };
+  }
+
+  if (/miniatures\/posters\//i.test(imageUrl) || /media-amazon\.com/i.test(imageUrl)) {
+    return { width: 600, height: 900 };
+  }
+
+  return { width: 1200, height: 630 };
+}
+
+function getThemeColor(video) {
+  const color = String(video.accentColor || "").trim();
+
+  return /^#[0-9a-f]{6}$/i.test(color) ? color : "#d95b43";
+}
+
+function renderOptionalMeta(video) {
+  const tags = (video.tags || [])
+    .slice(0, 6)
+    .map((tag) => `    <meta property="video:tag" content="${escapeHtml(tag)}">`)
+    .join("\n");
+  const seriesMeta = video.seriesId
+    ? [
+        `    <meta property="video:series" content="${escapeHtml(video.seriesTitle || "")}">`,
+        video.seasonNumber ? `    <meta property="video:season" content="${escapeHtml(video.seasonNumber)}">` : "",
+        video.episodeNumber ? `    <meta property="video:episode" content="${escapeHtml(video.episodeNumber)}">` : ""
+      ].filter(Boolean).join("\n")
+    : "";
+
+  return [tags, seriesMeta].filter(Boolean).join("\n");
+}
+
 function renderWatchPage(video) {
   const watchUrl = `${SITE_URL}/watch/${encodeURIComponent(video.id)}.html`;
   const watchTitle = getWatchTitle(video);
@@ -113,6 +221,9 @@ function renderWatchPage(video) {
   const description = getWatchDescription(video, watchTitle);
   const image = absoluteUrl(video.posterUrl);
   const ogType = getOgType(video);
+  const imageSize = getImageSize(image);
+  const themeColor = getThemeColor(video);
+  const optionalMeta = renderOptionalMeta(video);
   const body = loadPlayerBody();
 
   return `<!doctype html>
@@ -122,15 +233,20 @@ function renderWatchPage(video) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>${escapeHtml(title)}</title>
     <meta name="description" content="${escapeHtml(description)}">
+    <meta name="theme-color" content="${escapeHtml(themeColor)}">
     <link rel="canonical" href="${escapeHtml(watchUrl)}">
     <meta property="og:site_name" content="BoiledStream">
+    <meta property="og:locale" content="fr_CA">
     <meta property="og:type" content="${escapeHtml(ogType)}">
     <meta property="og:url" content="${escapeHtml(watchUrl)}">
     <meta property="og:title" content="${escapeHtml(title)}">
     <meta property="og:description" content="${escapeHtml(description)}">
     <meta property="og:image" content="${escapeHtml(image)}">
     <meta property="og:image:secure_url" content="${escapeHtml(image)}">
+    <meta property="og:image:width" content="${imageSize.width}">
+    <meta property="og:image:height" content="${imageSize.height}">
     <meta property="og:image:alt" content="${escapeHtml(video.title)}">
+${optionalMeta ? `${optionalMeta}\n` : ""}    <meta name="twitter:site" content="@BoiledStream">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${escapeHtml(title)}">
     <meta name="twitter:description" content="${escapeHtml(description)}">
