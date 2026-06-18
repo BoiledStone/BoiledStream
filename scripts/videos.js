@@ -1158,7 +1158,7 @@
       languages: ["FR"],
       seasons: RICK_AND_MORTY_SEASONS
     }),
-    buildSeries({
+    buildSeries({//test
       id: "supernatural",
       title: "Supernatural",
       date: "2005",
