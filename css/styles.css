@@ -32,7 +32,7 @@
 }
 
 html {
-  overflow-x: hidden;
+  overflow-x: clip;
   scroll-behavior: smooth;
 }
 
@@ -40,7 +40,7 @@ body {
   position: relative;
   min-width: 320px;
   margin: 0;
-  overflow-x: hidden;
+  overflow-x: clip;
   color: var(--ink);
   background:
     linear-gradient(250deg, rgba(229, 72, 77, 0.07), transparent 48%),
@@ -397,7 +397,7 @@ h1,
 h2,
 h3,
 p {
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 h1,
@@ -610,16 +610,15 @@ h3 {
 }
 
 .toolbar {
-  position: sticky;
-  top: 74px;
-  z-index: 9;
+  position: relative;
+  z-index: 5;
   isolation: isolate;
   display: grid;
   grid-template-columns: minmax(340px, 1fr) minmax(170px, 220px);
   gap: 12px;
   align-items: end;
   width: min(980px, calc(100% - 64px));
-  margin: -72px auto 20px;
+  margin: -72px auto 24px;
   padding: 12px;
   background:
     linear-gradient(135deg, rgba(244, 134, 37, 0.16), transparent 34%),
@@ -635,11 +634,11 @@ h3 {
 
 .toolbar::before {
   position: absolute;
-  top: -54px;
+  top: -42px;
   left: 50%;
   z-index: -1;
   width: 100vw;
-  height: 170px;
+  height: 148px;
   background:
     linear-gradient(
       180deg,
@@ -722,9 +721,12 @@ h3 {
 .catalog-section {
   position: relative;
   isolation: isolate;
+  scroll-margin-top: 96px;
 }
 
 .section-heading {
+  position: relative;
+  z-index: 2;
   display: flex;
   align-items: end;
   justify-content: space-between;
@@ -741,7 +743,7 @@ h3 {
 
 .video-grid {
   position: relative;
-  z-index: 0;
+  z-index: 1;
   isolation: isolate;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(178px, 1fr));
@@ -755,14 +757,14 @@ h3 {
 
 .video-grid::before {
   position: absolute;
-  inset: -158px -64px -76px;
+  inset: -28px -48px -76px;
   z-index: -1;
   background:
     linear-gradient(
       180deg,
-      #050609 0%,
-      rgba(5, 6, 9, 0.95) 18%,
-      rgba(5, 6, 9, 0.52) 42%,
+      rgba(5, 6, 9, 0.92) 0%,
+      rgba(5, 6, 9, 0.62) 16%,
+      rgba(5, 6, 9, 0.08) 44%,
       rgba(5, 6, 9, 0) 72%
     ),
     radial-gradient(circle at 52% 8%, rgba(244, 134, 37, 0.16), transparent 38%),
@@ -775,7 +777,7 @@ h3 {
     14px 14px;
   border-radius: 18px;
   content: "";
-  opacity: 0.7;
+  opacity: 0.64;
   pointer-events: none;
   animation: catalog-grid-drift-right 4.8s linear infinite;
 }
