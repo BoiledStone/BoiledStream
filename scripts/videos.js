@@ -397,6 +397,126 @@
       videoId: "k33mvqpriQGgtlGyLjo",
       duration: "00:43:18",
       resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e11",
+      provider: "dailymotion",
+      title: "Scarecrow",
+      seasonNumber: 1,
+      episodeNumber: 11,
+      videoId: "k929VNIg1c7yEPGQ9hM",
+      duration: "00:42:38",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e12",
+      provider: "dailymotion",
+      title: "Faith",
+      seasonNumber: 1,
+      episodeNumber: 12,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e13",
+      provider: "dailymotion",
+      title: "Route 666",
+      seasonNumber: 1,
+      episodeNumber: 13,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e14",
+      provider: "dailymotion",
+      title: "Nightmare",
+      seasonNumber: 1,
+      episodeNumber: 14,
+      videoId: "k1LQwD9ytCC7vwGQ9hY",
+      duration: "00:42:49",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e15",
+      provider: "dailymotion",
+      title: "The Benders",
+      seasonNumber: 1,
+      episodeNumber: 15,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e16",
+      provider: "dailymotion",
+      title: "Shadow",
+      seasonNumber: 1,
+      episodeNumber: 16,
+      videoId: "k2k4mkXKt6CASWGQ9hU",
+      duration: "00:41:48",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e17",
+      provider: "dailymotion",
+      title: "Hell House",
+      seasonNumber: 1,
+      episodeNumber: 17,
+      videoId: "k5L6wkLeoV5QF7GQ9ia",
+      duration: "00:40:42",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e18",
+      provider: "dailymotion",
+      title: "Somethings Wicked",
+      seasonNumber: 1,
+      episodeNumber: 18,
+      videoId: "kOzUCPsNcLAshoGQ9ie",
+      duration: "00:41:50",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e19",
+      provider: "dailymotion",
+      title: "Provenance",
+      seasonNumber: 1,
+      episodeNumber: 19,
+      videoId: "k4NOpXBOtKMFKeGQ9i6",
+      duration: "00:43:28",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e20",
+      provider: "dailymotion",
+      title: "Dead Man's Blood",
+      seasonNumber: 1,
+      episodeNumber: 20,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e20",
+      provider: "dailymotion",
+      title: "Salvation",
+      seasonNumber: 1,
+      episodeNumber: 21,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e20",
+      provider: "dailymotion",
+      title: "Devil's Trap",
+      seasonNumber: 1,
+      episodeNumber: 22,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
     }
   ];
 
