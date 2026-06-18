@@ -61,7 +61,7 @@ body::before {
 .home-hover-backdrop {
   --home-hover-x: 50%;
   --home-hover-y: 40%;
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 0;
   overflow: hidden;
@@ -103,7 +103,6 @@ body::before {
 main,
 .site-footer {
   position: relative;
-  z-index: 1;
 }
 
 body.modal-open {
@@ -509,7 +508,7 @@ h3 {
 .hero-poster-rail {
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: 1;
   width: auto;
   overflow: hidden;
   opacity: 0.28;
