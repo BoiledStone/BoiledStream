@@ -36,12 +36,14 @@
   }
 
   const {
+    buildSearchUrl,
     buildPlayerUrl,
     escapeHtml,
     formatLanguage,
     getAssetUrl,
     getEpisodeCount,
     getDisplayTags,
+    getVideoLanguages,
     normalizeKey,
     renderPosterImage,
     renderVideoCard,
@@ -349,6 +351,7 @@
     const requestedSeason = Number(currentParams.get("season"));
     const requestedEpisode = Number(currentParams.get("episode"));
     const requestedLanguage = currentParams.get("lang") || "";
+    const hasLanguageParam = currentParams.has("lang") && Boolean(requestedLanguage);
     const season = seasons.find((entry) => entry.number === requestedSeason) || seasons[0];
     const selectedEpisode =
       season?.episodes?.find((entry) => entry.number === requestedEpisode) || null;
@@ -363,12 +366,13 @@
       item.language ||
       "";
 
-    return { season, episode, language, languages };
+    return { season, episode, language, languages, hasLanguageParam };
   }
 
   function getMovieState(item) {
     const currentParams = new URLSearchParams(window.location.search);
     const requestedLanguage = currentParams.get("lang") || "";
+    const hasLanguageParam = currentParams.has("lang") && Boolean(requestedLanguage);
     const sourceLanguages = getSourceLanguages(item.sources);
     const languages = uniqueNormalizedValues(
       sourceLanguages.length
@@ -381,7 +385,7 @@
       item.language ||
       "";
 
-    return { language, languages };
+    return { language, languages, hasLanguageParam };
   }
 
   function updateSeriesAddress(item, season, episode, language) {
@@ -484,12 +488,61 @@
     }
   }
 
-  function renderSeriesPanel(item) {
+  function renderLanguageGate(item, languages, onSelect, options = {}) {
+    showPlayerMount();
+
+    const choices = uniqueNormalizedValues(languages.length ? languages : getVideoLanguages(item));
+    const titleText = options.title || item.title;
+    const contextText = options.context || "Choisis la langue avant de lancer le player.";
+    const posterUrl = options.posterUrl || item.posterUrl;
+    const languageButtons = choices
+      .map(
+        (entry) => `
+          <button class="language-gate-button" type="button" data-language="${escapeHtml(entry)}">
+            <span>${escapeHtml(formatLanguage(entry))}</span>
+          </button>
+        `
+      )
+      .join("");
+
+    playerMount.innerHTML = `
+      <div class="main-video source-gate language-gate">
+        <div class="source-gate-content language-gate-content">
+          <div class="language-gate-poster" aria-hidden="true">
+            <div class="generated-poster"></div>
+            ${renderPosterImage(posterUrl, "eager")}
+          </div>
+          <div class="embed-meta-row" aria-label="Informations de lecture">
+            <span>${escapeHtml(options.typeLabel || "Langue")}</span>
+            <span>${escapeHtml(choices.length)} option${choices.length > 1 ? "s" : ""}</span>
+          </div>
+          <h2>${escapeHtml(titleText)}</h2>
+          <p>${escapeHtml(contextText)}</p>
+          <div class="language-gate-actions" aria-label="Choix de langue">
+            ${languageButtons}
+          </div>
+        </div>
+      </div>
+    `;
+
+    bindImageFallbacks(playerMount, ".language-gate-poster img");
+    if (playerHelp) {
+      playerHelp.innerHTML = "";
+    }
+
+    playerMount.querySelectorAll("[data-language]").forEach((button) => {
+      button.addEventListener("click", () => {
+        onSelect(button.dataset.language || choices[0] || "");
+      });
+    });
+  }
+
+  function renderSeriesPanel(item, options = {}) {
     if (!seriesPanel) {
       return;
     }
 
-    const { season, episode, language, languages } = getSeriesState(item);
+    const { season, episode, language, languages, hasLanguageParam } = getSeriesState(item);
     if (!season) {
       seriesPanel.hidden = true;
       seriesPanel.innerHTML = "";
@@ -498,6 +551,8 @@
 
     const seasons = item.seasons || [];
     const hasEpisodeSelection = Boolean(episode);
+    const requiresLanguageSelection =
+      options.requireLanguageSelection || (hasEpisodeSelection && languages.length > 1 && !hasLanguageParam);
     const playback = hasEpisodeSelection ? getEpisodePlaybackSource(episode, language) : {};
     const selectedPosterUrl = season.posterUrl || item.posterUrl;
     const hasSelectedPlayer = hasEpisodeSelection && Boolean(playback.embedUrl || playback.videoUrl);
@@ -518,7 +573,11 @@
       availableEpisodes === totalEpisodes
         ? formatCountLabel(availableEpisodes, "épisode", "épisodes")
         : `${availableEpisodes}/${totalEpisodes} épisodes`;
-    const panelMeta = [selectedSourceName, formatLanguage(language), episodeCountText]
+    const panelMeta = [
+      selectedSourceName,
+      requiresLanguageSelection ? "Langue à choisir" : formatLanguage(language),
+      episodeCountText
+    ]
       .filter(Boolean)
       .map((entry) => `<span>${escapeHtml(entry)}</span>`)
       .join("");
@@ -549,7 +608,7 @@
       .join("");
     const languageButtons = languages
       .map((entry) => {
-        const isActive = normalizeKey(entry) === normalizeKey(language);
+        const isActive = !requiresLanguageSelection && normalizeKey(entry) === normalizeKey(language);
         return `
           <button class="language-button${isActive ? " active" : ""}" type="button" data-language="${escapeHtml(entry)}" aria-pressed="${isActive}">
             ${escapeHtml(entry)}
@@ -561,7 +620,11 @@
     const panelTitle = hasEpisodeSelection
       ? `${season.label} - ${episode.title}`
       : `${season.label} - Choisir un épisode`;
-    const nowKicker = hasEpisodeSelection ? "Sélection active" : "Épisode";
+    const nowKicker = requiresLanguageSelection
+      ? "Choix de langue"
+      : hasEpisodeSelection
+        ? "Sélection active"
+        : "Épisode";
     const nowTitle = hasEpisodeSelection
       ? `${item.title} - ${season.label} - ${episode.title}`
       : `${item.title} - ${season.label}`;
@@ -643,12 +706,13 @@
     });
   }
 
-  function renderMovieSourcePanel(item) {
+  function renderMovieSourcePanel(item, options = {}) {
     if (!seriesPanel) {
       return;
     }
 
-    const { language, languages } = getMovieState(item);
+    const { language, languages, hasLanguageParam } = getMovieState(item);
+    const requiresLanguageSelection = options.requireLanguageSelection || !hasLanguageParam;
     if (!hasSelectableSources(item)) {
       seriesPanel.hidden = true;
       seriesPanel.innerHTML = "";
@@ -656,14 +720,20 @@
     }
 
     const playback = getMoviePlaybackSource(item, language);
-    const selectedSourceName = playback.sourceName || item.sourceName || "Player";
-    const panelMeta = [selectedSourceName, formatLanguage(language), playback.resolution || item.resolution]
+    const selectedSourceName = requiresLanguageSelection
+      ? "Sources disponibles"
+      : playback.sourceName || item.sourceName || "Player";
+    const panelMeta = [
+      selectedSourceName,
+      requiresLanguageSelection ? "Langue à choisir" : formatLanguage(language),
+      playback.resolution || item.resolution
+    ]
       .filter(Boolean)
       .map((entry) => `<span>${escapeHtml(entry)}</span>`)
       .join("");
     const languageButtons = languages
       .map((entry) => {
-        const isActive = normalizeKey(entry) === normalizeKey(language);
+        const isActive = !requiresLanguageSelection && normalizeKey(entry) === normalizeKey(language);
         return `
           <button class="language-button${isActive ? " active" : ""}" type="button" data-language="${escapeHtml(entry)}" aria-pressed="${isActive}">
             ${escapeHtml(entry)}
@@ -686,8 +756,8 @@
           ${renderPosterImage(item.posterUrl, "eager")}
         </div>
         <div class="series-now-copy">
-          <p class="section-kicker">Sélection active</p>
-          <h3>${escapeHtml(item.title)} - ${escapeHtml(formatLanguage(language))}</h3>
+          <p class="section-kicker">${requiresLanguageSelection ? "Choix de langue" : "Sélection active"}</p>
+          <h3>${escapeHtml(item.title)}${requiresLanguageSelection ? "" : ` - ${escapeHtml(formatLanguage(language))}`}</h3>
           <div class="series-now-meta" aria-label="Détails de la sélection">
             ${panelMeta}
           </div>
@@ -848,7 +918,7 @@
   }
 
   function renderSeriesExperience(item) {
-    const { season, episode, language } = getSeriesState(item);
+    const { season, episode, language, languages, hasLanguageParam } = getSeriesState(item);
     if (!season) {
       renderExternalGate(item, {
         context: "Aucun épisode n'est référencé pour cette série."
@@ -860,6 +930,27 @@
       updateSeriesAddress(item, season, null, language);
       hidePlayerMount();
       renderSeriesPanel(item);
+      return;
+    }
+
+    if (episode && languages.length > 1 && !hasLanguageParam) {
+      updateSeriesAddress(item, season, episode, "");
+      renderSeriesPanel(item, { requireLanguageSelection: true });
+      renderLanguageGate(
+        item,
+        languages,
+        (nextLanguage) => {
+          updateSeriesAddress(item, season, episode, nextLanguage);
+          renderSeriesExperience(item);
+          renderMetadata(item);
+        },
+        {
+          title: `${item.title} - ${season.label} - ${episode.title}`,
+          context: "Choisis la langue avant de lancer cet épisode.",
+          posterUrl: season.posterUrl || item.posterUrl,
+          typeLabel: "Épisode"
+        }
+      );
       return;
     }
 
@@ -994,6 +1085,26 @@
       duration: playback.duration || item.duration
     };
 
+    if (hasMovieSourceChoices && !movieState.hasLanguageParam) {
+      updateMovieAddress(item, "");
+      renderMovieSourcePanel(item, { requireLanguageSelection: true });
+      renderLanguageGate(
+        item,
+        movieState.languages,
+        (nextLanguage) => {
+          updateMovieAddress(item, nextLanguage);
+          renderPlayer(item);
+          renderMetadata(item);
+        },
+        {
+          title: item.title,
+          context: "Choisis la langue du film avant de lancer le player.",
+          typeLabel: "Film"
+        }
+      );
+      return;
+    }
+
     if (hasMovieSourceChoices) {
       updateMovieAddress(item, movieState.language);
       renderMovieSourcePanel(item);
@@ -1091,7 +1202,10 @@
       description.textContent = seriesState?.season?.description || item.description || "";
     }
     if (playerDate) {
-      playerDate.textContent = item.date || "Non renseignée";
+      const year = String(item.date || "").match(/\d{4}/)?.[0] || "";
+      playerDate.innerHTML = year
+        ? `<a href="${escapeHtml(buildSearchUrl({ year }))}">${escapeHtml(item.date)}</a>`
+        : "Non renseignée";
     }
     if (duration) {
       const seriesDuration = `${formatCountLabel(item.seasons?.length || 0, "saison")} / ${formatCountLabel(
@@ -1119,11 +1233,14 @@
           .join(" - ") || "Non renseignée";
     }
     if (playerLanguage) {
-      playerLanguage.textContent = seriesState?.language
+      const languageText = seriesState?.language
         ? formatLanguage(seriesState.language)
         : movieState?.language
           ? formatLanguage(movieState.language)
           : inferLanguage(item);
+      playerLanguage.innerHTML = languageText
+        ? `<a href="${escapeHtml(buildSearchUrl({ lang: languageText }))}">${escapeHtml(languageText)}</a>`
+        : "Non renseignée";
     }
     if (source) {
       const sourceLabel = seriesPlayback?.sourceName || moviePlayback?.sourceName || item.sourceName || "Source";
@@ -1136,7 +1253,9 @@
     const visibleTags = getDisplayTags(item);
     if (tags) {
       tags.hidden = visibleTags.length === 0;
-      tags.innerHTML = visibleTags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
+      tags.innerHTML = visibleTags
+        .map((tag) => `<a class="tag" href="${escapeHtml(buildSearchUrl({ tag }))}">${escapeHtml(tag)}</a>`)
+        .join("");
     }
   }
 

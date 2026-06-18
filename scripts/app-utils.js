@@ -52,6 +52,25 @@
     return window.location.pathname.includes("/watch/") ? `../${url}` : url;
   }
 
+  function buildIndexUrl() {
+    return window.location.pathname.includes("/watch/") ? "../index.html" : "index.html";
+  }
+
+  function buildSearchUrl(filters = {}) {
+    const params = new URLSearchParams();
+
+    Object.entries(filters).forEach(([key, value]) => {
+      const cleanValue = String(value || "").trim();
+      if (cleanValue) {
+        params.set(key, cleanValue);
+      }
+    });
+
+    const query = params.toString();
+
+    return `${buildIndexUrl()}${query ? `?${query}` : ""}#catalogue`;
+  }
+
   function formatLanguage(value) {
     const labels = {
       en: "Anglais",
@@ -141,6 +160,38 @@
     return video.duration || "";
   }
 
+  function splitLanguageTokens(value) {
+    return String(value || "")
+      .split(/[+/,&|]/)
+      .map((entry) => entry.trim())
+      .filter(Boolean);
+  }
+
+  function getSourceLanguages(sources) {
+    if (Array.isArray(sources)) {
+      return sources.map((entry) => entry.language).filter(Boolean);
+    }
+
+    if (sources && typeof sources === "object") {
+      return Object.keys(sources);
+    }
+
+    return [];
+  }
+
+  function getVideoLanguages(video) {
+    const values = [
+      ...(video.languages || []),
+      ...splitLanguageTokens(video.language),
+      ...getSourceLanguages(video.sources)
+    ];
+
+    return values.filter(
+      (entry, index, list) =>
+        entry && list.findIndex((value) => normalizeKey(value) === normalizeKey(entry)) === index
+    );
+  }
+
   function renderPosterImage(posterUrl, loading = "lazy") {
     const resolvedPosterUrl = getAssetUrl(posterUrl);
 
@@ -155,6 +206,20 @@
       .join("");
 
     return `<div class="card-tags" aria-label="Tags">${tagList}</div>`;
+  }
+
+  function renderCardFacts(video) {
+    const languages = getVideoLanguages(video)
+      .map(formatLanguage)
+      .filter(Boolean)
+      .slice(0, 2);
+    const facts = [video.date, video.resolution, ...languages]
+      .filter(Boolean)
+      .slice(0, 4)
+      .map((fact) => `<span>${escapeHtml(fact)}</span>`)
+      .join("");
+
+    return facts ? `<div class="card-facts" aria-label="Infos">${facts}</div>` : "";
   }
 
   function renderVideoCard(video, options = {}) {
@@ -178,6 +243,7 @@
             <span class="type-pill">${escapeHtml(cardType)}</span>
             <span class="duration-pill">${escapeHtml(cardStat)}</span>
           </div>
+          ${renderCardFacts(video)}
           ${tagLimit > 0 ? renderCardTags(video, tagLimit) : ""}
         </div>
       </a>
@@ -413,6 +479,7 @@
   window.BOILED_UTILS = Object.freeze({
     buildPlayerUrl,
     buildDirectPlayerUrl,
+    buildSearchUrl,
     buildAccentStyle,
     escapeHtml,
     formatLanguage,
@@ -421,6 +488,7 @@
     getCardTypeLabel,
     getSeasonLabel,
     getDisplayTags,
+    getVideoLanguages,
     hasCategoryOrTag,
     normalizeKey,
     renderPosterImage,

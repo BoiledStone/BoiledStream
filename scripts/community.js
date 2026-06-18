@@ -963,7 +963,7 @@
     }
 
     if (!comments.length) {
-      commentsList.innerHTML = `<p class="empty-state">Aucun avis pour le moment.</p>`;
+      commentsList.innerHTML = `<p class="empty-state">Aucun commentaire pour le moment.</p>`;
       return;
     }
 
@@ -1012,7 +1012,7 @@
       .order("created_at", { ascending: false });
 
     if (error) {
-      commentsList.innerHTML = `<p class="empty-state">Avis indisponibles: exécute scripts/sqlSupabase/supabase-schema.sql dans Supabase.</p>`;
+      commentsList.innerHTML = `<p class="empty-state">Commentaires indisponibles: exécute scripts/sqlSupabase/supabase-schema.sql dans Supabase.</p>`;
       return;
     }
 
@@ -1035,7 +1035,7 @@
       }
 
       if (profiles.error) {
-        console.warn("Profils des avis indisponibles:", profiles.error.message);
+        console.warn("Profils des commentaires indisponibles:", profiles.error.message);
       } else {
         (profiles.data || []).forEach((profile) => {
           profilesById.set(profile.id, normalizeProfile(profile));
@@ -1060,7 +1060,7 @@
 
     const body = commentBody.value.trim();
     if (!body) {
-      setText(commentStatus, "Écris un avis avant de publier.");
+      setText(commentStatus, "Écris un commentaire avant de publier.");
       return;
     }
 
@@ -1088,7 +1088,7 @@
     }
 
     commentBody.value = "";
-    setText(commentStatus, "Avis publié.");
+    setText(commentStatus, "Commentaire publié.");
     await loadComments();
   }
 
@@ -1098,7 +1098,7 @@
     }
 
     const { error } = await supabaseClient.from("comments").delete().eq("id", id);
-    setText(commentStatus, error ? error.message : "Avis supprimé.");
+    setText(commentStatus, error ? error.message : "Commentaire supprimé.");
     await loadComments();
   }
 

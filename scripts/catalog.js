@@ -15,11 +15,18 @@
   const seriesRow = document.querySelector("#series-row");
   const seriesEmptyState = document.querySelector("#series-empty-state");
   const emptyState = document.querySelector("#empty-state");
+  const browseTags = document.querySelector("#browse-tags");
+  const browseLanguages = document.querySelector("#browse-languages");
+  const browseYears = document.querySelector("#browse-years");
+  const activeFilters = document.querySelector("#active-filters");
   const FILTER_ALL = "Tout";
   const FILTER_ANIMATED = "Animé";
   const state = {
     category: FILTER_ALL,
     query: "",
+    tag: "",
+    year: "",
+    lang: "",
     sort: "catalogue"
   };
   const seriesState = {
@@ -33,10 +40,12 @@
   const {
     buildAccentStyle,
     buildDirectPlayerUrl,
+    buildSearchUrl,
     escapeHtml,
     formatLanguage,
     getCardTypeLabel,
     getDisplayTags,
+    getVideoLanguages,
     getSeasonLabel,
     hasCategoryOrTag,
     normalizeKey,
@@ -47,6 +56,16 @@
 
   const seriesItems = videos.filter((video) => video.type === "series");
   const movieItems = videos.filter((video) => video.type !== "series");
+  const initialParams = new URLSearchParams(window.location.search);
+  state.query = initialParams.get("q") || "";
+  state.tag = initialParams.get("tag") || "";
+  state.year = initialParams.get("year") || "";
+  state.lang = initialParams.get("lang") || "";
+  state.category = initialParams.get("category") || FILTER_ALL;
+
+  if (searchInput) {
+    searchInput.value = state.query;
+  }
 
   function getReleaseYear(video) {
     const match = String(video.date || "").match(/\d{4}/);
@@ -90,6 +109,41 @@
       : video.category === state.category;
   }
 
+  function matchesTag(video) {
+    if (!state.tag) {
+      return true;
+    }
+
+    const expected = normalizeKey(state.tag);
+
+    return (
+      normalizeKey(video.category) === expected ||
+      getDisplayTags(video).some((tag) => normalizeKey(tag) === expected)
+    );
+  }
+
+  function matchesYear(video) {
+    if (!state.year) {
+      return true;
+    }
+
+    return String(getReleaseYear(video)) === String(state.year);
+  }
+
+  function matchesLanguage(video) {
+    if (!state.lang) {
+      return true;
+    }
+
+    const expected = normalizeKey(state.lang);
+
+    return getVideoLanguages(video).some(
+      (language) =>
+        normalizeKey(language) === expected ||
+        normalizeKey(formatLanguage(language)) === expected
+    );
+  }
+
   function sortVideos(items) {
     const sortedItems = [...items];
 
@@ -110,8 +164,77 @@
 
   function getFilteredVideos() {
     return sortVideos(
-      movieItems.filter((video) => matchesCategory(video) && matchesSearch(video))
+      movieItems.filter(
+        (video) =>
+          matchesCategory(video) &&
+          matchesTag(video) &&
+          matchesYear(video) &&
+          matchesLanguage(video) &&
+          matchesSearch(video)
+      )
     );
+  }
+
+  function uniqueSorted(values, compare = (first, second) => first.localeCompare(second, "fr")) {
+    return values
+      .filter(Boolean)
+      .filter(
+        (entry, index, list) =>
+          list.findIndex((value) => normalizeKey(value) === normalizeKey(entry)) === index
+      )
+      .sort(compare);
+  }
+
+  function renderBrowseLinks(mount, values, key, activeValue = "") {
+    if (!mount) {
+      return;
+    }
+
+    mount.innerHTML = values
+      .map((value) => {
+        const isActive = normalizeKey(value) === normalizeKey(activeValue);
+        const href = buildSearchUrl({ [key]: value });
+
+        return `<a class="browse-link${isActive ? " active" : ""}" href="${escapeHtml(href)}">${escapeHtml(value)}</a>`;
+      })
+      .join("");
+  }
+
+  function renderBrowseGroups() {
+    const allItems = [...movieItems, ...seriesItems];
+    const tags = uniqueSorted(allItems.flatMap((video) => getDisplayTags(video))).slice(0, 36);
+    const languages = uniqueSorted(
+      allItems
+        .flatMap((video) => getVideoLanguages(video))
+        .map(formatLanguage)
+    );
+    const years = uniqueSorted(
+      allItems.map((video) => String(getReleaseYear(video) || "")),
+      (first, second) => Number(second) - Number(first)
+    ).slice(0, 14);
+
+    renderBrowseLinks(browseTags, tags, "tag", state.tag);
+    renderBrowseLinks(browseLanguages, languages, "lang", state.lang);
+    renderBrowseLinks(browseYears, years, "year", state.year);
+  }
+
+  function renderActiveFilters() {
+    if (!activeFilters) {
+      return;
+    }
+
+    const filters = [
+      state.query ? `Recherche: ${state.query}` : "",
+      state.tag ? `Tag: ${state.tag}` : "",
+      state.year ? `Année: ${state.year}` : "",
+      state.lang ? `Langue: ${state.lang}` : "",
+      state.category !== FILTER_ALL ? `Catégorie: ${state.category}` : ""
+    ].filter(Boolean);
+
+    activeFilters.hidden = filters.length === 0;
+    activeFilters.innerHTML = filters.length
+      ? `${filters.map((filter) => `<span>${escapeHtml(filter)}</span>`).join("")}<a href="${escapeHtml(buildSearchUrl())}">Réinitialiser</a>`
+      : "";
   }
 
   function renderFilters() {
@@ -152,6 +275,7 @@
       emptyState.hidden = filteredVideos.length > 0;
     }
     bindImageFallbacks(grid);
+    renderActiveFilters();
   }
 
   function renderSeriesRow() {
@@ -244,6 +368,7 @@
   if (seriesCount) {
     seriesCount.textContent = String(seriesItems.length);
   }
+  renderBrowseGroups();
   renderSeriesRow();
   renderFilters();
   renderVideos();

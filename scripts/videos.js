@@ -1,5 +1,5 @@
 // Catalogue central: tout film ajouté dans `catalogue` apparaît automatiquement
-// sur l'accueil, dans la recherche, dans le player et dans les avis.
+// sur l'accueil, dans la recherche, dans le player et dans les commentaires.
 (function () {
   const PROVIDERS = {
     uqload(item) {
