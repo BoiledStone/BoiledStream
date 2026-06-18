@@ -462,7 +462,7 @@
       accentColor: "#8f3a2f",
       description:
         "Horreur brumeuse et oppressante autour d'une mère qui cherche sa fille dans une ville fantôme hantée par des visions cauchemardesques.",
-      tags: ["Horreur", "Survie", "Silent Hill"]
+      tags: ["Horreur", "Survie"]
     },
     {
       provider: "uqload",
@@ -478,7 +478,7 @@
       accentColor: "#8a2f33",
       description:
         "Retour dans l'univers Silent Hill avec une héroïne poursuivie par son passé, des cultes inquiétants et des créatures sorties du brouillard.",
-      tags: ["Horreur", "Survie", "Silent Hill"]
+      tags: ["Horreur", "Survie"]
     },
     {
       provider: "youtube",

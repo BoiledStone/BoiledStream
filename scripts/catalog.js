@@ -10,6 +10,7 @@
   const videoCountLabel = document.querySelector("#video-count-label");
   const movieCount = document.querySelector("#movie-count");
   const seriesCount = document.querySelector("#series-count");
+  const heroPosterRail = document.querySelector("#hero-poster-rail");
   const seriesSearchInput = document.querySelector("#series-search-input");
   const seriesResultCount = document.querySelector("#series-result-count");
   const seriesRow = document.querySelector("#series-row");
@@ -226,6 +227,29 @@
     renderBrowseSelect(browseYears, years, "year", state.year, "Choisir une année");
   }
 
+  function renderHeroPosterRail() {
+    if (!heroPosterRail) {
+      return;
+    }
+
+    const featuredItems = movieItems
+      .filter((video) => video.posterUrl)
+      .slice(0, 7);
+
+    heroPosterRail.innerHTML = featuredItems
+      .map(
+        (video, index) => `
+          <a class="hero-poster" href="${buildSearchUrl({ q: video.title })}" style="--poster-index: ${index};" aria-label="Rechercher ${escapeHtml(video.title)}">
+            <div class="generated-poster" aria-hidden="true"></div>
+            ${renderPosterImage(video.posterUrl, index < 3 ? "eager" : "lazy")}
+          </a>
+        `
+      )
+      .join("");
+
+    bindImageFallbacks(heroPosterRail, ".hero-poster img");
+  }
+
   function renderActiveFilters() {
     if (!activeFilters) {
       return;
@@ -377,6 +401,7 @@
     seriesCount.textContent = String(seriesItems.length);
   }
   renderBrowseGroups();
+  renderHeroPosterRail();
   renderSeriesRow();
   renderFilters();
   renderVideos();
