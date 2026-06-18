@@ -1182,7 +1182,7 @@
         "https://m.media-amazon.com/images/M/MV5BYjNkMjdiZGEtMTg3Mi00YTAzLWJkMGYtMmIxMzNjMmRhOGNmXkEyXkFqcGc@._V1_.jpg",
       accentColor: "#f2d74c",
       description:
-        "Charlie et Pim travaillent chez Smiling Friends, une entreprise dont le but est d'aider les gens à retrouver le sourire.",
+        "The adventures of the employees of a small company whose goal is to bring joy to a strange world. Charlie, the cynic, Pim, the model employee, and Allan, an organization freak, are on a mission to bring smiles back to people's faces.",
       tags: ["Animation", "Comédie"],
       languages: ["EN"],
       seasons: SMILING_FRIENDS_SEASONS
