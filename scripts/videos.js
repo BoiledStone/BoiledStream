@@ -1575,7 +1575,7 @@
       accentColor: "#b62d39",
       description:
         "Après son licenciement, Elisabeth Sparkle teste une substance promettant une version plus jeune et parfaite d'elle-même, avec des conséquences physiques extrêmes.",
-      tags: ["Horreur", "Science-fiction", "Body horror"]
+      tags: ["Horreur", "Body horror"]
     },
     {
       provider: "embed",
