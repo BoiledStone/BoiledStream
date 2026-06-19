@@ -1291,17 +1291,81 @@
     nextLink.setAttribute("aria-label", `Lire ${nextVideo.title}`);
   }
 
+  const RELATED_TAG_GROUPS = [
+    ["horreur", "surnaturel", "fantastique", "mystere", "thriller", "psychologique", "survie", "body horror"],
+    ["science-fiction", "science fiction", "espace", "anticipation", "satire"],
+    ["action", "aventure", "thriller", "survie"],
+    ["comedie", "satire", "musique", "animation", "famille", "familial"],
+    ["drame", "psychologique", "mystere", "thriller"],
+    ["anime", "animation", "fantastique", "science-fiction", "science fiction"]
+  ];
+
+  function getComparableTags(item) {
+    return getDisplayTags(item)
+      .map(normalizeKey)
+      .filter(Boolean);
+  }
+
+  function getRelatedTagScore(currentTags, candidateTags) {
+    const currentSet = new Set(currentTags);
+    const candidateSet = new Set(candidateTags);
+    let score = 0;
+
+    candidateSet.forEach((tag) => {
+      if (currentSet.has(tag)) {
+        score += 12;
+      }
+    });
+
+    RELATED_TAG_GROUPS.forEach((group) => {
+      const currentMatches = group.filter((tag) => currentSet.has(tag)).length;
+      const candidateMatches = group.filter((tag) => candidateSet.has(tag)).length;
+
+      if (currentMatches && candidateMatches) {
+        score += Math.min(currentMatches, candidateMatches) * 5;
+      }
+    });
+
+    return score;
+  }
+
+  function getRelatedSeedItem(item) {
+    return item.seriesId ? getSeriesForEpisode(item) || item : item;
+  }
+
+  function getRelatedItems(item, limit = 6) {
+    const seedItem = getRelatedSeedItem(item);
+    const seedTags = getComparableTags(seedItem);
+    const excludedIds = new Set([item.id, seedItem.id].filter(Boolean));
+    const scoredItems = videos
+      .filter((candidate) => !excludedIds.has(candidate.id))
+      .map((candidate, index) => ({
+        item: candidate,
+        index,
+        score: getRelatedTagScore(seedTags, getComparableTags(candidate))
+      }))
+      .filter((entry) => entry.score > 0)
+      .sort((first, second) => second.score - first.score || first.index - second.index)
+      .map((entry) => entry.item);
+
+    if (scoredItems.length >= limit) {
+      return scoredItems.slice(0, limit);
+    }
+
+    const usedIds = new Set([...excludedIds, ...scoredItems.map((candidate) => candidate.id)]);
+    const fallbackItems = videos.filter((candidate) => !usedIds.has(candidate.id));
+
+    return [...scoredItems, ...fallbackItems].slice(0, limit);
+  }
+
   function renderRelated() {
     if (!relatedGrid) {
       return;
     }
 
-    const relatedItems = video.seriesId
-      ? getSeriesEpisodes(getSeriesForEpisode(video)).filter((item) => item.id !== video.id)
-      : videos.filter((item) => item.id !== video.id);
+    const relatedItems = getRelatedItems(video);
 
     relatedGrid.innerHTML = relatedItems
-      .slice(0, 3)
       .map((item) => renderVideoCard(item, { related: true, tagLimit: 0 }))
       .join("");
     bindImageFallbacks(relatedGrid);
