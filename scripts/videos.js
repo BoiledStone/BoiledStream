@@ -1645,7 +1645,7 @@
       accentColor: "#b99b37",
       description:
         "Un jeune cinéaste bascule dans une autre dimension vide et labyrinthique, qui semble abriter des êtres d'un autre monde.",
-      tags: ["Horreur", "Mystère", "Science-Fiction", "Psychologique", "CAMRip"]
+      tags: ["Horreur", "Liminale", "Mystère", "Psychologique", "CAMRip"]
     },
     {
       provider: "embed",

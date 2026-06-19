@@ -1329,6 +1329,12 @@
     return score;
   }
 
+  function hasMatchingTag(currentTags, candidateTags) {
+    const currentSet = new Set(currentTags);
+
+    return candidateTags.some((tag) => currentSet.has(tag));
+  }
+
   function getRelatedSeedItem(item) {
     return item.seriesId ? getSeriesForEpisode(item) || item : item;
   }
@@ -1339,23 +1345,21 @@
     const excludedIds = new Set([item.id, seedItem.id].filter(Boolean));
     const scoredItems = videos
       .filter((candidate) => !excludedIds.has(candidate.id))
-      .map((candidate, index) => ({
-        item: candidate,
-        index,
-        score: getRelatedTagScore(seedTags, getComparableTags(candidate))
-      }))
-      .filter((entry) => entry.score > 0)
+      .map((candidate, index) => {
+        const candidateTags = getComparableTags(candidate);
+
+        return {
+          item: candidate,
+          index,
+          tags: candidateTags,
+          score: getRelatedTagScore(seedTags, candidateTags)
+        };
+      })
+      .filter((entry) => hasMatchingTag(seedTags, entry.tags))
       .sort((first, second) => second.score - first.score || first.index - second.index)
       .map((entry) => entry.item);
 
-    if (scoredItems.length >= limit) {
-      return scoredItems.slice(0, limit);
-    }
-
-    const usedIds = new Set([...excludedIds, ...scoredItems.map((candidate) => candidate.id)]);
-    const fallbackItems = videos.filter((candidate) => !usedIds.has(candidate.id));
-
-    return [...scoredItems, ...fallbackItems].slice(0, limit);
+    return scoredItems.slice(0, limit);
   }
 
   function renderRelated() {
