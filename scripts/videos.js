@@ -1751,6 +1751,24 @@
           embedUrl: "https://vaplayer.ru/embed/movie/545611"
         }
       }
+    },
+    {
+      provider: "embed",
+      id: "iron-lung",
+      title: "Iron Lung",
+      category: "Film",
+      duration: "2:07:00",
+      resolution: "1080x720",
+      language: "En",
+      date: "2025",
+      sourceName: "",
+      sourceUrl: "",
+      embedUrl: "",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BYzkxOGU1YmQtNDc0Ni00M2JhLWFlZjktODMzOGU3MjQxMTQ0XkEyXkFqcGc@._V1_.jpg",
+      accentColor: "#a00000",
+      description:
+        "Les étoiles ne sont plus. Les planètes ont disparu. Seuls quelques individus subsistent, à bord de stations spatiales ou de vaisseaux errants. Ils ont survécu pour assister à la fin et lui donner un nom : Le Rapt silencieux. Après des années de déclin et d'infrastructures en perdition, l'Iron Consolidation fait une découverte sur une lune désolée, AT-5. Un océan de sang. L'Iron Consolidation lance immédiatement une expédition, avec l'espoir d'y trouver des ressources cruciales.",
+      tags: ["Famille", "Aventure", "Comédie"]
     }
   ];
 
