@@ -278,6 +278,19 @@
     return !hasPlayableSource(item);
   }
 
+  function isCamrip(video) {
+    const values = [
+      video?.title,
+      video?.sourceName,
+      video?.resolution,
+      video?.quality,
+      video?.format,
+      ...(video?.tags || [])
+    ];
+
+    return values.some((value) => normalizeKey(value).includes("camrip"));
+  }
+
   function renderVideoCard(video, options = {}) {
     const { related = false, tagLimit = 2 } = options;
     const cardType = getCardTypeLabel(video);
@@ -285,7 +298,7 @@
     const accentStyle = buildAccentStyle(video.accentColor);
     const accentLock = video.accentColor ? ' data-accent-lock="true"' : "";
     const missingSource = hasMissingPlayableSource(video);
-    const stateClass = missingSource ? " missing-source" : "";
+    const stateClass = `${missingSource ? " missing-source" : ""}${isCamrip(video) ? " camrip-source" : ""}`;
 
     return `
       <a class="video-card${related ? " related-card" : ""}${stateClass}" href="${playerHref}" data-video-id="${escapeHtml(video.id)}" data-type="${escapeHtml(video.type || "movie")}"${accentLock}${accentStyle} aria-label="Ouvrir ${escapeHtml(video.title)}">
@@ -546,6 +559,7 @@
     getVideoLanguages,
     hasPlayableSource,
     hasMissingPlayableSource,
+    isCamrip,
     hasCategoryOrTag,
     normalizeKey,
     renderPosterImage,

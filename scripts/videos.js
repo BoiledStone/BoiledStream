@@ -1415,7 +1415,7 @@
       accentColor: "#b99b37",
       description:
         "Un jeune cinéaste bascule dans une autre dimension vide et labyrinthique, qui semble abriter des êtres d'un autre monde.",
-      tags: ["Horreur", "Mystère", "Science-Fiction"]
+      tags: ["Horreur", "Mystère", "Science-Fiction", "CAMRip"]
     },
     {
       provider: "embed",
@@ -1433,7 +1433,7 @@
       accentColor: "#b13e5a",
       description:
         "Et si vous pouviez réaliser votre rêve le plus fou ? Un jeune introverti met la main sur un objet magique capable d’exaucer n’importe quel souhait. Son crush de toujours tombe alors raide dingue de lui… jusqu’à l’obsession la plus totale. Faites attention à ce que vous souhaitez !",
-      tags: ["Horreur"]
+      tags: ["Horreur", "CAMRip"]
     },
     {
       provider: "embed",

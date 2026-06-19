@@ -1045,6 +1045,65 @@ h3 {
   border-color: rgba(255, 119, 119, 0.38);
 }
 
+.video-card.camrip-source {
+  --card-accent: #ff8a1f;
+  background:
+    linear-gradient(180deg, rgba(255, 138, 31, 0.18), rgba(255, 138, 31, 0.045) 46%, transparent),
+    #0d1118;
+  border-color: rgba(255, 151, 55, 0.46);
+}
+
+.video-card.camrip-source::before {
+  background:
+    linear-gradient(180deg, rgba(255, 138, 31, 0.26), rgba(255, 138, 31, 0.07) 50%, transparent),
+    linear-gradient(90deg, rgba(255, 138, 31, 0.16), transparent 64%);
+  opacity: 1;
+}
+
+.video-card.camrip-source.is-hovered,
+.video-card.camrip-source:hover,
+.video-card.camrip-source:focus-visible {
+  background:
+    linear-gradient(180deg, rgba(255, 138, 31, 0.28), rgba(255, 138, 31, 0.1) 46%, transparent),
+    #17120c;
+  border-color: rgba(255, 151, 55, 0.78);
+  box-shadow:
+    0 22px 54px rgba(0, 0, 0, 0.46),
+    0 0 0 1px rgba(255, 151, 55, 0.2),
+    0 0 28px rgba(255, 138, 31, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.video-card.camrip-source .thumb::before {
+  border-color: rgba(255, 151, 55, 0.5);
+  opacity: 0.82;
+}
+
+.video-card.camrip-source .thumb::after {
+  background:
+    linear-gradient(180deg, rgba(255, 138, 31, 0.24), rgba(255, 138, 31, 0.1) 34%, rgba(48, 21, 0, 0.72) 100%),
+    linear-gradient(90deg, rgba(255, 138, 31, 0.28), transparent 58%);
+  opacity: 0.94;
+}
+
+.video-card.camrip-source:hover .thumb::after,
+.video-card.camrip-source:focus-visible .thumb::after,
+.video-card.camrip-source.is-hovered .thumb::after {
+  background:
+    linear-gradient(180deg, rgba(255, 138, 31, 0.38), rgba(255, 138, 31, 0.16) 38%, rgba(64, 26, 0, 0.8) 100%),
+    linear-gradient(90deg, rgba(255, 138, 31, 0.38), transparent 62%);
+  opacity: 0.97;
+}
+
+.video-card.camrip-source .thumb img {
+  filter: saturate(1.05) contrast(1.04) brightness(0.9);
+}
+
+.video-card.camrip-source .type-pill {
+  background: rgba(231, 111, 23, 0.94);
+  border-color: rgba(255, 190, 111, 0.42);
+}
+
 .type-pill {
   display: inline-flex;
   align-items: center;
