@@ -503,7 +503,7 @@
       resolution: "1280x720"
     },
     {
-      id: "supernatural-s01e20",
+      id: "supernatural-s01e21",
       provider: "dailymotion",
       title: "Salvation",
       seasonNumber: 1,
@@ -513,11 +513,34 @@
       resolution: "1280x720"
     },
     {
-      id: "supernatural-s01e20",
+      id: "supernatural-s01e22",
       provider: "dailymotion",
       title: "Devil's Trap",
       seasonNumber: 1,
       episodeNumber: 22,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+  ];
+
+  const SUPERNATURAL_S02_EPISODES = [
+    {
+      id: "supernatural-s02e01",
+      provider: "dailymotion",
+      title: "In My Time of Dying",
+      seasonNumber: 2,
+      episodeNumber: 1,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e02",
+      provider: "dailymotion",
+      title: "Everybody Loves a Clown",
+      seasonNumber: 2,
+      episodeNumber: 2,
       videoId: "",
       duration: "--:--:--",
       resolution: "1280x720"
@@ -534,6 +557,13 @@
       languages: ["EN"],
       description:
         "Sam et Dean Winchester parcourent les États-Unis pour traquer les forces du Mal responsables de la mort de leur mère, vingt ans plus tôt."
+    },
+    {
+      number: 2,
+      episodeNumbers: SUPERNATURAL_S02_EPISODES.map(e => e.episodeNumber),
+      episodeSources: buildProviderEpisodeSources("EN", SUPERNATURAL_S02_EPISODES),
+      posterUrl: "https://m.media-amazon.com/images/I/91ZAdK0wsiL._AC_UF1000,1000_QL80_.jpg",
+      languages: ["EN"]
     }
   ];
 
