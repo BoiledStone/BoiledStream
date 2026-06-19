@@ -1627,7 +1627,7 @@
       accentColor: "#65715f",
       description:
         "Jacob Singer, un employé des postes new-yorkaises, est assailli par de nombreux cauchemars durant ses journées. Il voit des hommes aux visages déformés et se retrouve dans des lieux qu'il ne connaît pas. Jacob est victime des flashbacks incessants de son premier mariage, de la mort de son fils et de son service au Vietnam. Jours après jours, Jacob s'enfonce dans la folie en essayant de comprendre ce qui lui arrive avec l'aide de Jezebel, son épouse.",
-      tags: ["Drame", "Mystère", "Horreur"]
+      tags: ["Horreur", "Psychologique", "Drame", "Mystère"]
     },
     {
       provider: "embed",
@@ -1645,7 +1645,7 @@
       accentColor: "#b99b37",
       description:
         "Un jeune cinéaste bascule dans une autre dimension vide et labyrinthique, qui semble abriter des êtres d'un autre monde.",
-      tags: ["Horreur", "Mystère", "Science-Fiction", "CAMRip"]
+      tags: ["Horreur", "Mystère", "Science-Fiction", "Psychologique", "CAMRip"]
     },
     {
       provider: "embed",
@@ -1663,7 +1663,7 @@
       accentColor: "#b13e5a",
       description:
         "Et si vous pouviez réaliser votre rêve le plus fou ? Un jeune introverti met la main sur un objet magique capable d’exaucer n’importe quel souhait. Son crush de toujours tombe alors raide dingue de lui… jusqu’à l’obsession la plus totale. Faites attention à ce que vous souhaitez !",
-      tags: ["Horreur", "CAMRip"]
+      tags: ["Horreur", "Psychologique", "CAMRip"]
     },
     {
       provider: "embed",
