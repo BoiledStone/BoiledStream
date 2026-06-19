@@ -217,6 +217,7 @@
     }
 
     root.dataset.hoverEffectsBound = "true";
+    const catalogSection = root.closest(".catalog-section");
 
     const resetCard = (card) => {
       card?.classList.remove("is-hovered");
@@ -224,6 +225,22 @@
       card?.style.removeProperty("--hover-y");
       card?.style.removeProperty("--tilt-x");
       card?.style.removeProperty("--tilt-y");
+    };
+    const moveGridGlow = (event) => {
+      if (!catalogSection) {
+        return;
+      }
+
+      const sectionRect = catalogSection.getBoundingClientRect();
+      const x = event.clientX - sectionRect.left;
+      const y = event.clientY - sectionRect.top;
+
+      catalogSection.classList.add("is-grid-glowing");
+      catalogSection.style.setProperty("--catalog-glow-x", `${Math.round(x)}px`);
+      catalogSection.style.setProperty("--catalog-glow-y", `${Math.round(y)}px`);
+    };
+    const resetGridGlow = () => {
+      catalogSection?.classList.remove("is-grid-glowing");
     };
 
     root.addEventListener("pointermove", (event) => {
@@ -242,6 +259,7 @@
       const tiltY = (x - 0.5) * 2.4;
       const tiltX = (0.5 - y) * 1.8;
 
+      moveGridGlow(event);
       card.classList.add("is-hovered");
       card.style.setProperty("--hover-x", `${Math.round(x * 100)}%`);
       card.style.setProperty("--hover-y", `${Math.round(y * 100)}%`);
@@ -257,6 +275,8 @@
 
       resetCard(card);
     });
+
+    root.addEventListener("pointerleave", resetGridGlow);
 
     root.addEventListener("focusout", (event) => {
       resetCard(event.target.closest(".video-card"));

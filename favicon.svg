@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <defs>
     <linearGradient id="mark" x1="9" y1="8" x2="55" y2="56" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#ff9b2e"/>
-      <stop offset="0.46" stop-color="#f48625"/>
+      <stop stop-color="#ff5a68"/>
+      <stop offset="0.46" stop-color="#d92d3e"/>
       <stop offset="1" stop-color="#d12f2f"/>
     </linearGradient>
     <radialGradient id="shine" cx="23" cy="14" r="28" gradientUnits="userSpaceOnUse">
