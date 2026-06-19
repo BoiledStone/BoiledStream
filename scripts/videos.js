@@ -546,7 +546,7 @@
       resolution: "1280x720"
     },
     {
-      id: "supernatural-s02e02",
+      id: "supernatural-s02e03",
       provider: "dailymotion",
       title: "Bloodlust",
       seasonNumber: 2,
@@ -554,7 +554,197 @@
       videoId: "",
       duration: "--:--:--",
       resolution: "1280x720"
-    } 
+    },
+    {
+      id: "supernatural-s02e04",
+      provider: "dailymotion",
+      title: "Children Shouldn't Play with Dead Things",
+      seasonNumber: 2,
+      episodeNumber: 4,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e05",
+      provider: "dailymotion",
+      title: "Simon Said",
+      seasonNumber: 2,
+      episodeNumber: 5,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e06",
+      provider: "dailymotion",
+      title: "No Exit",
+      seasonNumber: 2,
+      episodeNumber: 6,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e07",
+      provider: "dailymotion",
+      title: "The Usual Suspects",
+      seasonNumber: 2,
+      episodeNumber: 7,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e08",
+      provider: "dailymotion",
+      title: "Crossroad Blues",
+      seasonNumber: 2,
+      episodeNumber: 8,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e09",
+      provider: "dailymotion",
+      title: "Croatoan",
+      seasonNumber: 2,
+      episodeNumber: 9,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e10",
+      provider: "dailymotion",
+      title: "Hunted",
+      seasonNumber: 2,
+      episodeNumber: 10,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e11",
+      provider: "dailymotion",
+      title: "Playthings",
+      seasonNumber: 2,
+      episodeNumber: 11,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e12",
+      provider: "dailymotion",
+      title: "Nightshifter",
+      seasonNumber: 2,
+      episodeNumber: 12,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e13",
+      provider: "dailymotion",
+      title: "Houses of the Holy",
+      seasonNumber: 2,
+      episodeNumber: 13,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e14",
+      provider: "dailymotion",
+      title: "Born Under a Bad Sign",
+      seasonNumber: 2,
+      episodeNumber: 14,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e15",
+      provider: "dailymotion",
+      title: "Tall Tales",
+      seasonNumber: 2,
+      episodeNumber: 15,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e16",
+      provider: "dailymotion",
+      title: "Roadkill",
+      seasonNumber: 2,
+      episodeNumber: 16,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e17",
+      provider: "dailymotion",
+      title: "Heart",
+      seasonNumber: 2,
+      episodeNumber: 17,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e18",
+      provider: "dailymotion",
+      title: "Hollywood Babylon",
+      seasonNumber: 2,
+      episodeNumber: 18,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e19",
+      provider: "dailymotion",
+      title: "Folsom Prison Blues",
+      seasonNumber: 2,
+      episodeNumber: 19,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e20",
+      provider: "dailymotion",
+      title: "What Is and What Should Never Be",
+      seasonNumber: 2,
+      episodeNumber: 20,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e21",
+      provider: "dailymotion",
+      title: "All Hell Breaks Loose: Part 1",
+      seasonNumber: 2,
+      episodeNumber: 21,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e22",
+      provider: "dailymotion",
+      title: "All Hell Breaks Loose: Part 2",
+      seasonNumber: 2,
+      episodeNumber: 22,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    }
   ];
 
   const SUPERNATURAL_SEASONS = [

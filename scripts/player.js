@@ -130,8 +130,14 @@
 
     const lightbox = createPosterLightbox();
     const image = lightbox.querySelector(".poster-lightbox-image");
+    const stage = lightbox.querySelector(".poster-lightbox-stage");
 
     lastFocusedElement = document.activeElement;
+    image.onload = () => {
+      if (image.naturalWidth && image.naturalHeight) {
+        stage?.style.setProperty("--lightbox-aspect", String(image.naturalWidth / image.naturalHeight));
+      }
+    };
     image.src = src;
     image.alt = label ? `Affiche de ${label}` : "Affiche agrandie";
     lightbox.setAttribute("aria-label", image.alt);
@@ -146,7 +152,12 @@
     }
 
     posterLightbox.hidden = true;
-    posterLightbox.querySelector(".poster-lightbox-image")?.removeAttribute("src");
+    posterLightbox.querySelector(".poster-lightbox-stage")?.style.removeProperty("--lightbox-aspect");
+    const image = posterLightbox.querySelector(".poster-lightbox-image");
+    if (image) {
+      image.onload = null;
+      image.removeAttribute("src");
+    }
     document.body.classList.remove("poster-lightbox-open");
     lastFocusedElement?.focus?.();
   }
