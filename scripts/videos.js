@@ -1761,9 +1761,9 @@
       resolution: "1080x720",
       language: "En",
       date: "2026",
-      sourceName: "",
-      sourceUrl: "",
-      embedUrl: "",
+      sourceName: "Vaplayer",
+      sourceUrl: "https://vaplayer.ru/embed/movie/1116201",
+      embedUrl: "https://vaplayer.ru/embed/movie/1116201",
       posterUrl: "https://m.media-amazon.com/images/M/MV5BYzkxOGU1YmQtNDc0Ni00M2JhLWFlZjktODMzOGU3MjQxMTQ0XkEyXkFqcGc@._V1_.jpg",
       accentColor: "#a00000",
       description:
