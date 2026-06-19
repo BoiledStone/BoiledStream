@@ -1718,6 +1718,39 @@
       description:
         "Four unlikely friends face everyday challenges until a mysterious portal transports them to the Overworld, a whimsical, blocky realm fueled by creativity. To return home, they must navigate this fantastical landscape, tackling unique obstacles along the way. With the help of the skilled crafter, Steve, the group embarks on an enchanting adventure that tests their ingenuity and teamwork. As they explore this vibrant world, they learn to embrace their differences and discover the power of friendship in overcoming adversity.",
       tags: ["Famille", "Aventure", "Comédie"]
+    },
+    {
+      provider: "embed",
+      id: "everything-everywhere-all-at-once",
+      title: "Everything Everywhere All at Once",
+      category: "Film",
+      duration: "2h19",
+      resolution: "HD",
+      language: "FR+EN",
+      languages: ["FR", "EN"],
+      date: "2022",
+      sourceName: "Vidzy",
+      sourceUrl: "https://vidzy.org/embed-iglebwn5j0u8.html",
+      embedUrl: "https://vidzy.org/embed-iglebwn5j0u8.html",
+      posterUrl: "https://image.tmdb.org/t/p/w400/rKvCys0fMIIi1X9rmJBxTPLAtoU.jpg",
+      accentColor: "#c76b4d",
+      description:
+        "Evelyn Wang est à bout : elle ne comprend plus sa famille, son travail et croule sous les impôts… Soudain, elle se retrouve plongée dans le multivers, des mondes parallèles où elle explore toutes les vies qu’elle aurait pu mener. Face à des forces obscures, elle seule peut sauver le monde mais aussi préserver la chose la plus précieuse : sa famille.",
+      tags: ["Action", "Aventure", "Science-Fiction"],
+      sources: {
+        FR: {
+          language: "FR",
+          sourceName: "Vidzy",
+          sourceUrl: "https://vidzy.org/embed-iglebwn5j0u8.html",
+          embedUrl: "https://vidzy.org/embed-iglebwn5j0u8.html"
+        },
+        EN: {
+          language: "EN",
+          sourceName: "Vaplayer",
+          sourceUrl: "https://vaplayer.ru/embed/movie/545611",
+          embedUrl: "https://vaplayer.ru/embed/movie/545611"
+        }
+      }
     }
   ];
 
