@@ -1329,7 +1329,7 @@
       accentColor: "#8f3a2f",
       description:
         "Horreur brumeuse et oppressante autour d'une mère qui cherche sa fille dans une ville fantôme hantée par des visions cauchemardesques.",
-      tags: ["Horreur", "Survie"]
+      tags: ["Horreur", "Survie", "Psychologique"]
     },
     {
       provider: "uqload",
@@ -1346,7 +1346,7 @@
       accentColor: "#8a2f33",
       description:
         "Retour dans l'univers Silent Hill avec une héroïne poursuivie par son passé, des cultes inquiétants et des créatures sorties du brouillard.",
-      tags: ["Horreur", "Survie"]
+      tags: ["Horreur", "Survie", "Psychologique"]
     },
     {
       provider: "youtube",
@@ -1496,7 +1496,7 @@
       accentColor: "#8a3038",
       description:
         "Retour dans l'univers Silent Hill, exploration psychologique et horreur atmosphérique centrée sur la mémoire, la perte et les manifestations de la ville.",
-      tags: ["Horreur"]
+      tags: ["Horreur", "Psychologique"]
     },
     buildSeries({
       id: "rick-et-morty-vf",
@@ -1768,7 +1768,7 @@
       accentColor: "#a00000",
       description:
         "Les étoiles ne sont plus. Les planètes ont disparu. Seuls quelques individus subsistent, à bord de stations spatiales ou de vaisseaux errants. Ils ont survécu pour assister à la fin et lui donner un nom : Le Rapt silencieux. Après des années de déclin et d'infrastructures en perdition, l'Iron Consolidation fait une découverte sur une lune désolée, AT-5. Un océan de sang. L'Iron Consolidation lance immédiatement une expédition, avec l'espoir d'y trouver des ressources cruciales.",
-      tags: ["Famille", "Aventure", "Comédie"]
+      tags: ["Horreur", "Science-Fiction", "Psychologique"]
     }
   ];
 
