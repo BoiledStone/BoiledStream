@@ -81,6 +81,7 @@ body::before {
 main,
 .site-footer {
   position: relative;
+  z-index: 1;
 }
 
 body.modal-open {
@@ -89,6 +90,91 @@ body.modal-open {
 
 body.poster-lightbox-open {
   overflow: hidden;
+}
+
+.site-cursor-dot,
+.site-cursor-ring,
+.site-cursor-particle {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 0;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+.site-cursor-dot {
+  width: 5px;
+  height: 5px;
+  background: rgba(var(--accent-strong-rgb), 0.72);
+  box-shadow:
+    0 0 8px rgba(var(--accent-strong-rgb), 0.42),
+    0 0 16px rgba(var(--accent-rgb), 0.18);
+  transition: opacity 160ms ease;
+}
+
+.site-cursor-ring {
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(var(--accent-strong-rgb), 0.3);
+  background:
+    radial-gradient(circle, rgba(var(--accent-rgb), 0.075), transparent 62%);
+  box-shadow:
+    0 0 16px rgba(var(--accent-rgb), 0.12),
+    inset 0 0 10px rgba(var(--accent-rgb), 0.045);
+  transition:
+    width 180ms ease,
+    height 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease,
+    opacity 160ms ease;
+}
+
+body.custom-cursor-ready .site-cursor-dot {
+  opacity: 0.68;
+}
+
+body.custom-cursor-ready .site-cursor-ring {
+  opacity: 0.72;
+}
+
+body.custom-cursor-active .site-cursor-ring {
+  width: 42px;
+  height: 42px;
+  border-color: rgba(var(--accent-strong-rgb), 0.48);
+  background:
+    radial-gradient(circle, rgba(var(--accent-rgb), 0.11), rgba(var(--accent-rgb), 0.025) 58%, transparent 70%);
+  box-shadow:
+    0 0 22px rgba(var(--accent-rgb), 0.22),
+    inset 0 0 12px rgba(var(--accent-strong-rgb), 0.07);
+}
+
+.site-cursor-particle {
+  width: var(--cursor-particle-size, 2px);
+  height: var(--cursor-particle-size, 2px);
+  background: rgba(var(--accent-strong-rgb), 0.56);
+  box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.22);
+  animation: cursor-particle-fade 520ms ease-out forwards;
+}
+
+@keyframes cursor-particle-fade {
+  from {
+    opacity: 0.46;
+    transform: translate3d(-50%, -50%, 0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(
+        calc(-50% + var(--cursor-particle-drift-x, 0px)),
+        calc(-50% + var(--cursor-particle-drift-y, 0px)),
+        0
+      )
+      scale(0);
+  }
 }
 
 [hidden] {
@@ -784,9 +870,9 @@ h3 {
 }
 
 .video-grid.is-cursor-glowing {
-  --poster-cursor-glow-core: 0.34;
-  --poster-cursor-glow-mid: 0.15;
-  --poster-cursor-glow-tail: 0.07;
+  --poster-cursor-glow-core: 0.26;
+  --poster-cursor-glow-mid: 0.13;
+  --poster-cursor-glow-tail: 0.052;
 }
 
 .video-grid::before {
@@ -815,7 +901,7 @@ h3 {
   opacity: 1;
   pointer-events: none;
   transform: translateX(-50%);
-  animation: catalog-grid-drift-right 7.6s linear infinite;
+  animation: catalog-grid-drift-right 3.8s linear infinite;
   -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 32px, #000 86%, transparent 100%);
   mask-image: linear-gradient(180deg, transparent 0, #000 32px, #000 86%, transparent 100%);
   will-change: background-position;
@@ -830,11 +916,11 @@ h3 {
   width: var(--poster-grid-effect-width);
   background:
     radial-gradient(
-      ellipse min(640px, 64vw) 340px at var(--poster-cursor-glow-x) var(--poster-cursor-glow-y),
+      circle 250px at var(--poster-cursor-glow-x) var(--poster-cursor-glow-y),
       rgba(var(--accent-strong-rgb), var(--poster-cursor-glow-core)),
-      rgba(var(--accent-rgb), var(--poster-cursor-glow-mid)) 34%,
-      rgba(var(--accent-rgb), var(--poster-cursor-glow-tail)) 52%,
-      transparent 74%
+      rgba(var(--accent-rgb), var(--poster-cursor-glow-mid)) 28%,
+      rgba(var(--accent-rgb), var(--poster-cursor-glow-tail)) 56%,
+      transparent 82%
     ),
     radial-gradient(
       ellipse min(1320px, 86vw) 360px at var(--poster-grid-glow-x) var(--poster-grid-glow-y),
@@ -2168,10 +2254,12 @@ h3 {
   --lightbox-tilt-x: 0deg;
   --lightbox-tilt-y: 0deg;
   position: relative;
-  width: min(520px, 82vw);
-  max-height: min(82vh, 780px);
-  aspect-ratio: 2 / 3;
+  display: grid;
+  width: fit-content;
+  max-width: min(86vw, 760px);
+  max-height: min(84vh, 820px);
   perspective: 1200px;
+  place-items: center;
 }
 
 .poster-lightbox-stage::before {
@@ -2205,9 +2293,11 @@ h3 {
 }
 
 .poster-lightbox-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: auto;
+  height: auto;
+  max-width: min(86vw, 760px);
+  max-height: min(84vh, 820px);
+  object-fit: contain;
   border: 1px solid rgba(var(--accent-strong-rgb), 0.34);
   border-radius: 14px;
   box-shadow:
@@ -2393,9 +2483,11 @@ h3 {
 }
 
 .video-card.related-card .card-body {
-  /* Les cartes "À regarder ensuite" n'affichent pas les tags : on évite donc
-     la ligne vide réservée aux tags dans la grille standard. */
-  grid-template-rows: auto auto;
+  grid-template-rows: auto auto auto;
+}
+
+.video-card.related-card .card-tags {
+  max-height: 46px;
 }
 
 .video-card.related-card .card-meta {

@@ -1376,7 +1376,7 @@
     }
 
     relatedGrid.innerHTML = relatedItems
-      .map((item) => renderVideoCard(item, { related: true, tagLimit: 0 }))
+      .map((item) => renderVideoCard(item, { related: true, tagLimit: 2 }))
       .join("");
     bindImageFallbacks(relatedGrid);
     bindCardHoverEffects(relatedGrid);
