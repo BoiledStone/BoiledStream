@@ -16,7 +16,8 @@
     "uhd",
     "4k",
     "youtube",
-    "uqload"
+    "uqload",
+    "camrip"
   ]);
 
   function escapeHtml(value) {
