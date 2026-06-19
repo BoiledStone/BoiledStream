@@ -1075,9 +1075,7 @@ h3 {
 .video-card.is-hovered .thumb img,
 .video-card:hover .thumb img,
 .video-card:focus-visible .thumb img {
-  background: #080b10;
   filter: saturate(1.06) contrast(1.02) brightness(1.012);
-  object-fit: contain;
   transform: scale(1);
 }
 
@@ -2030,7 +2028,6 @@ h3 {
 
 .season-button:hover,
 .season-button:focus-visible,
-.season-button.active,
 .language-button:hover,
 .language-button:focus-visible,
 .language-button.active,
@@ -2059,8 +2056,7 @@ h3 {
 }
 
 .season-button:hover,
-.season-button:focus-visible,
-.season-button.active {
+.season-button:focus-visible {
   background: #0b0f16;
   border-color: rgba(var(--accent-rgb), 0.54);
   box-shadow:
@@ -2069,13 +2065,6 @@ h3 {
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
   filter: saturate(1.04);
   transform: translateY(-2px);
-}
-
-.season-button:hover .season-button-poster img,
-.season-button:focus-visible .season-button-poster img,
-.season-button.active .season-button-poster img {
-  background: #080b10;
-  object-fit: contain;
 }
 
 .season-description {
