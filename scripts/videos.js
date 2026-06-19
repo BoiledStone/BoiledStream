@@ -1449,6 +1449,39 @@
       }
     },
     {
+      provider: "embed",
+      id: "weapons",
+      title: "Weapons",
+      category: "Film",
+      duration: "1h24",
+      resolution: "HD",
+      language: "FR+EN",
+      languages: ["FR", "EN"],
+      date: "2006",
+      sourceName: "Vidzy",
+      sourceUrl: "https://vaplayer.ru/embed/movie/1078605",
+      embedUrl: "https://vaplayer.ru/embed/movie/1078605",
+      posterUrl: "https://image.tmdb.org/t/p/w500/cpf7vsRZ0MYRQcnLWteD5jK9ymT.jpg",
+      accentColor: "#FF0000",
+      description:
+        "Lorsque tous les enfants d’une même classe, à l’exception d’un, disparaissent mystérieusement la même nuit, à la même heure, la ville entière cherche à découvrir qui — ou quoi — est à l’origine de ce phénomène inexpliqué.",
+      tags: ["Horreur", "Mystère"],
+      sources: {
+        FR: {
+          language: "FR",
+          sourceName: "Vidzy",
+          sourceUrl: "https://vidzy.org/embed-uoch8b317kjw.html",
+          embedUrl: "https://vidzy.org/embed-uoch8b317kjw.html"
+        },
+        EN: {
+          language: "EN",
+          sourceName: "Vaplayer",
+          sourceUrl: "https://vaplayer.ru/embed/movie/1078605",
+          embedUrl: "https://vaplayer.ru/embed/movie/1078605"
+        }
+      }
+    },
+    {
       provider: "uqload",
       id: "blade-runner-2049",
       title: "Blade Runner 2049",
