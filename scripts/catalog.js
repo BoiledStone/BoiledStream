@@ -234,9 +234,14 @@
     };
     const setCursorGlow = (pointer) => {
       const gridRect = root.getBoundingClientRect();
+      const gridStyles = window.getComputedStyle(root);
+      const effectWidth = Math.max(gridRect.width, window.innerWidth);
+      const effectLeft = gridRect.left + (gridRect.width - effectWidth) / 2;
+      const effectTop = Number.parseFloat(gridStyles.getPropertyValue("--poster-grid-effect-top")) || 0;
+
       root.classList.add("is-cursor-glowing");
-      root.style.setProperty("--poster-cursor-glow-x", `${Math.round(pointer.clientX - gridRect.left)}px`);
-      root.style.setProperty("--poster-cursor-glow-y", `${Math.round(pointer.clientY - gridRect.top)}px`);
+      root.style.setProperty("--poster-cursor-glow-x", `${Math.round(pointer.clientX - effectLeft)}px`);
+      root.style.setProperty("--poster-cursor-glow-y", `${Math.round(pointer.clientY - gridRect.top - effectTop)}px`);
     };
     const resetCursorGlow = () => {
       root.classList.remove("is-cursor-glowing");
