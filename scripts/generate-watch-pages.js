@@ -5,7 +5,7 @@ const vm = require("vm");
 const ROOT = path.resolve(__dirname, "..");
 const SITE_URL = "https://boiledstone.github.io/BoiledStream";
 const WATCH_DIR = path.join(ROOT, "watch");
-const ASSET_VERSION = "20260618-camrip-cards";
+const ASSET_VERSION = "20260619-red-grid-glow";
 
 function escapeHtml(value) {
   return String(value ?? "")

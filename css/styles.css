@@ -66,7 +66,6 @@ body::before {
       0 0,
       0 0,
       0 0,
-      0 0,
       0 0;
   }
 
@@ -74,9 +73,8 @@ body::before {
     background-position:
       0 0,
       0 0,
-      0 0,
-      14px 0,
-      14px 0;
+      16px 0,
+      16px 0;
   }
 }
 
@@ -719,56 +717,10 @@ h3 {
 }
 
 .catalog-section {
-  --catalog-glow-x: 50%;
-  --catalog-glow-y: 168px;
   position: relative;
   isolation: isolate;
   overflow: hidden;
   scroll-margin-top: 96px;
-}
-
-.catalog-section::before {
-  position: absolute;
-  top: clamp(92px, 8vw, 116px);
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 0;
-  background:
-    radial-gradient(
-      circle at var(--catalog-glow-x) var(--catalog-glow-y),
-      rgba(var(--accent-strong-rgb), 0.32),
-      rgba(var(--accent-rgb), 0.16) 16%,
-      transparent 34%
-    ),
-    linear-gradient(
-      180deg,
-      #050609 0%,
-      rgba(5, 6, 9, 0.88) 8%,
-      rgba(5, 6, 9, 0.22) 34%,
-      rgba(5, 6, 9, 0) 72%
-    ),
-    radial-gradient(circle at 52% 10%, rgba(var(--accent-rgb), 0.13), transparent 30%),
-    linear-gradient(rgba(var(--accent-rgb), 0.14) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(var(--accent-rgb), 0.12) 1px, transparent 1px);
-  background-size:
-    auto,
-    auto,
-    auto,
-    14px 14px,
-    14px 14px;
-  content: "";
-  opacity: 0.64;
-  pointer-events: none;
-  animation: catalog-grid-drift-right 8.5s linear infinite;
-  transition: opacity 180ms ease;
-  will-change: background-position, opacity;
-  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 42px, #000 82%, transparent 100%);
-  mask-image: linear-gradient(180deg, transparent 0, #000 42px, #000 82%, transparent 100%);
-}
-
-.catalog-section.is-grid-glowing::before {
-  opacity: 0.9;
 }
 
 .section-heading {
@@ -789,6 +741,15 @@ h3 {
 }
 
 .video-grid {
+  --poster-grid-glow-x: 50%;
+  --poster-grid-glow-y: 42%;
+  --poster-grid-glow-core: 0.14;
+  --poster-grid-glow-mid: 0.058;
+  --poster-cursor-glow-x: 50%;
+  --poster-cursor-glow-y: 42%;
+  --poster-cursor-glow-core: 0;
+  --poster-cursor-glow-mid: 0;
+  --poster-cursor-glow-tail: 0;
   position: relative;
   z-index: 1;
   isolation: isolate;
@@ -802,8 +763,72 @@ h3 {
   perspective: 1000px;
 }
 
+.video-grid.is-grid-glowing {
+  --poster-grid-glow-core: 0.14;
+  --poster-grid-glow-mid: 0.058;
+}
+
+.video-grid.is-cursor-glowing {
+  --poster-cursor-glow-core: 0.3;
+  --poster-cursor-glow-mid: 0.13;
+  --poster-cursor-glow-tail: 0.055;
+}
+
 .video-grid::before {
-  display: none;
+  position: absolute;
+  inset: -34px -58px -54px;
+  z-index: -2;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(5, 6, 9, 0.86) 0%,
+      rgba(5, 6, 9, 0.28) 48%,
+      rgba(5, 6, 9, 0) 100%
+    ),
+    radial-gradient(circle at 50% 10%, rgba(var(--accent-rgb), 0.055), transparent 34%),
+    linear-gradient(rgba(var(--accent-rgb), 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--accent-rgb), 0.135) 1px, transparent 1px);
+  background-size:
+    auto,
+    auto,
+    16px 16px,
+    16px 16px;
+  content: "";
+  opacity: 0.92;
+  pointer-events: none;
+  animation: catalog-grid-drift-right 7.6s linear infinite;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 32px, #000 86%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 32px, #000 86%, transparent 100%);
+  will-change: background-position;
+}
+
+.video-grid::after {
+  position: absolute;
+  inset: -40px -54px -58px;
+  z-index: -1;
+  background:
+    radial-gradient(
+      ellipse 560px 340px at var(--poster-cursor-glow-x) var(--poster-cursor-glow-y),
+      rgba(var(--accent-strong-rgb), var(--poster-cursor-glow-core)),
+      rgba(var(--accent-rgb), var(--poster-cursor-glow-mid)) 34%,
+      rgba(var(--accent-rgb), var(--poster-cursor-glow-tail)) 52%,
+      transparent 74%
+    ),
+    radial-gradient(
+      ellipse 760px 340px at var(--poster-grid-glow-x) var(--poster-grid-glow-y),
+      rgba(var(--accent-strong-rgb), var(--poster-grid-glow-core)),
+      rgba(var(--accent-rgb), var(--poster-grid-glow-mid)) 38%,
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 680px 260px at 50% 82%,
+      rgba(var(--accent-rgb), 0.07),
+      transparent 74%
+    );
+  content: "";
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 36px, #000 84%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 36px, #000 84%, transparent 100%);
 }
 
 .video-card {
@@ -815,6 +840,7 @@ h3 {
   --tilt-x: 0deg;
   --tilt-y: 0deg;
   position: relative;
+  z-index: 0;
   isolation: isolate;
   display: grid;
   grid-template-rows: 1fr;
@@ -824,7 +850,7 @@ h3 {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 42%),
     #0d1118;
-  border: 1px solid rgba(243, 241, 237, 0.09);
+  border: 1px solid transparent;
   border-radius: var(--card-radius);
   contain: layout paint;
   box-shadow:
@@ -894,7 +920,7 @@ h3 {
   background:
     linear-gradient(180deg, rgba(255, 59, 59, 0.16), rgba(255, 59, 59, 0.035) 46%, transparent),
     #0d1118;
-  border-color: rgba(255, 79, 79, 0.38);
+  border-color: transparent;
 }
 
 .video-card.missing-source::before {
@@ -911,9 +937,11 @@ h3 {
   background:
     linear-gradient(180deg, rgba(var(--accent-rgb), 0.08), transparent 44%),
     #111722;
-  border-color: rgba(var(--accent-rgb), 0.46);
+  border-color: var(--poster-color);
   box-shadow:
     0 22px 54px rgba(0, 0, 0, 0.46),
+    0 0 0 1px color-mix(in srgb, var(--poster-color) 18%, transparent),
+    0 0 22px color-mix(in srgb, var(--poster-color) 16%, transparent),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
   filter: saturate(1.025);
   outline: 0;
@@ -2009,10 +2037,10 @@ h3 {
 .season-button:focus-visible,
 .season-button.active {
   background: #0b0f16;
-  border-color: rgba(244, 134, 37, 0.54);
+  border-color: rgba(var(--accent-rgb), 0.54);
   box-shadow:
     0 22px 54px rgba(0, 0, 0, 0.46),
-    0 0 0 1px rgba(244, 134, 37, 0.16),
+    0 0 0 1px rgba(var(--accent-rgb), 0.16),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
   filter: saturate(1.04);
   transform: translateY(-2px);

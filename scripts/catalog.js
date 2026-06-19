@@ -217,8 +217,14 @@
     }
 
     root.dataset.hoverEffectsBound = "true";
-    const catalogSection = root.closest(".catalog-section");
+    root.classList.add("is-grid-glowing");
+    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let activeCard = null;
+    let pendingPointer = null;
+    let hoverFrame = 0;
 
+    const getCardFromTarget = (target) =>
+      target instanceof Element ? target.closest(".video-card") : null;
     const resetCard = (card) => {
       card?.classList.remove("is-hovered");
       card?.style.removeProperty("--hover-x");
@@ -226,60 +232,111 @@
       card?.style.removeProperty("--tilt-x");
       card?.style.removeProperty("--tilt-y");
     };
-    const moveGridGlow = (event) => {
-      if (!catalogSection) {
+    const setCursorGlow = (pointer) => {
+      const gridRect = root.getBoundingClientRect();
+      root.classList.add("is-cursor-glowing");
+      root.style.setProperty("--poster-cursor-glow-x", `${Math.round(pointer.clientX - gridRect.left)}px`);
+      root.style.setProperty("--poster-cursor-glow-y", `${Math.round(pointer.clientY - gridRect.top)}px`);
+    };
+    const resetCursorGlow = () => {
+      root.classList.remove("is-cursor-glowing");
+    };
+    const resetActiveCard = () => {
+      resetCard(activeCard);
+      activeCard = null;
+    };
+    const resetHoverState = () => {
+      if (hoverFrame) {
+        window.cancelAnimationFrame(hoverFrame);
+        hoverFrame = 0;
+      }
+      pendingPointer = null;
+      resetActiveCard();
+      resetCursorGlow();
+    };
+    const applyHoverFrame = () => {
+      hoverFrame = 0;
+      const pointer = pendingPointer;
+      pendingPointer = null;
+
+      if (!pointer) {
         return;
       }
 
-      const sectionRect = catalogSection.getBoundingClientRect();
-      const x = event.clientX - sectionRect.left;
-      const y = event.clientY - sectionRect.top;
+      setCursorGlow(pointer);
 
-      catalogSection.classList.add("is-grid-glowing");
-      catalogSection.style.setProperty("--catalog-glow-x", `${Math.round(x)}px`);
-      catalogSection.style.setProperty("--catalog-glow-y", `${Math.round(y)}px`);
-    };
-    const resetGridGlow = () => {
-      catalogSection?.classList.remove("is-grid-glowing");
-    };
-
-    root.addEventListener("pointermove", (event) => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        return;
-      }
-
-      const card = event.target.closest(".video-card");
+      const card = getCardFromTarget(pointer.target);
       if (!card || !root.contains(card)) {
+        resetActiveCard();
         return;
       }
+
+      if (activeCard && activeCard !== card) {
+        resetCard(activeCard);
+      }
+      activeCard = card;
 
       const rect = card.getBoundingClientRect();
-      const x = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
-      const y = Math.min(1, Math.max(0, (event.clientY - rect.top) / rect.height));
+      const x = Math.min(1, Math.max(0, (pointer.clientX - rect.left) / rect.width));
+      const y = Math.min(1, Math.max(0, (pointer.clientY - rect.top) / rect.height));
       const tiltY = (x - 0.5) * 2.4;
       const tiltX = (0.5 - y) * 1.8;
 
-      moveGridGlow(event);
       card.classList.add("is-hovered");
       card.style.setProperty("--hover-x", `${Math.round(x * 100)}%`);
       card.style.setProperty("--hover-y", `${Math.round(y * 100)}%`);
       card.style.setProperty("--tilt-x", `${tiltX.toFixed(2)}deg`);
       card.style.setProperty("--tilt-y", `${tiltY.toFixed(2)}deg`);
+    };
+
+    root.addEventListener("pointermove", (event) => {
+      if (reducedMotionQuery.matches) {
+        return;
+      }
+
+      if (!root.contains(event.target)) {
+        return;
+      }
+
+      pendingPointer = {
+        clientX: event.clientX,
+        clientY: event.clientY,
+        target: event.target
+      };
+      if (!hoverFrame) {
+        hoverFrame = window.requestAnimationFrame(applyHoverFrame);
+      }
     });
 
     root.addEventListener("pointerout", (event) => {
-      const card = event.target.closest(".video-card");
-      if (!card || card.contains(event.relatedTarget)) {
+      const card = getCardFromTarget(event.target);
+      if (!card) {
+        if (!root.contains(event.relatedTarget)) {
+          resetHoverState();
+        }
+        return;
+      }
+      if (card.contains(event.relatedTarget)) {
         return;
       }
 
       resetCard(card);
+      if (activeCard === card) {
+        activeCard = null;
+      }
+      if (!root.contains(event.relatedTarget)) {
+        resetHoverState();
+      }
     });
 
-    root.addEventListener("pointerleave", resetGridGlow);
+    root.addEventListener("pointerleave", resetHoverState);
 
     root.addEventListener("focusout", (event) => {
-      resetCard(event.target.closest(".video-card"));
+      const card = getCardFromTarget(event.target);
+      resetCard(card);
+      if (activeCard === card) {
+        activeCard = null;
+      }
     });
   }
 
