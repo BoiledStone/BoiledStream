@@ -544,7 +544,17 @@
       videoId: "",
       duration: "--:--:--",
       resolution: "1280x720"
-    }
+    },
+    {
+      id: "supernatural-s02e02",
+      provider: "dailymotion",
+      title: "Bloodlust",
+      seasonNumber: 2,
+      episodeNumber: 3,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    } 
   ];
 
   const SUPERNATURAL_SEASONS = [
