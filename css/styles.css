@@ -3065,6 +3065,15 @@ h3 {
     padding: 14px;
   }
 
+  .series-controls {
+    gap: 12px;
+  }
+
+  .series-control-block {
+    overflow: hidden;
+    padding: 12px;
+  }
+
   .series-panel-head {
     align-items: stretch;
     flex-direction: column;
@@ -3084,8 +3093,26 @@ h3 {
     font-size: 0.95rem;
   }
 
+  .season-block {
+    grid-row: auto;
+  }
+
+  .season-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    max-height: none;
+    overflow: visible;
+    padding: 0;
+  }
+
   .season-button {
     min-width: 0;
+    aspect-ratio: 2 / 3;
+  }
+
+  .season-button-label {
+    padding: 8px;
+    font-size: 0.84rem;
   }
 
   .episode-button {
