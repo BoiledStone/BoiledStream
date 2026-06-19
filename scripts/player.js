@@ -44,6 +44,8 @@
     getEpisodeCount,
     getDisplayTags,
     getVideoLanguages,
+    hasPlayableSource,
+    hasMissingPlayableSource,
     normalizeKey,
     renderPosterImage,
     renderVideoCard,
@@ -525,8 +527,15 @@
     const episodeButtons = (season.episodes || [])
       .map((entry) => {
         const isActive = hasEpisodeSelection && entry.number === episode.number;
+        const entryPlayback = getEpisodePlaybackSource(entry, language);
+        const hasEpisodeSource = hasPlayableSource({
+          ...entry,
+          ...entryPlayback,
+          sourceUrl: entryPlayback.sourceUrl || entry.sourceUrl || season.sourceUrl || item.sourceUrl
+        });
+        const missingSourceClass = hasEpisodeSource ? "" : " missing-source";
         return `
-          <button class="episode-button${isActive ? " active" : ""}" type="button" data-episode="${entry.number}" aria-pressed="${isActive}">
+          <button class="episode-button${isActive ? " active" : ""}${missingSourceClass}" type="button" data-episode="${entry.number}" aria-pressed="${isActive}">
             <span>Ep ${entry.number}</span>
           </button>
         `;
@@ -676,8 +685,13 @@
     const languageButtons = languages
       .map((entry) => {
         const isActive = !requiresLanguageSelection && normalizeKey(entry) === normalizeKey(language);
+        const sourceForLanguage = getDeclaredSourceForLanguage(item.sources, entry);
+        const isMissingSource = sourceForLanguage
+          ? hasMissingPlayableSource(sourceForLanguage)
+          : !hasPlayableSource(item);
+        const missingSourceClass = isMissingSource ? " missing-source" : "";
         return `
-          <button class="language-button${isActive ? " active" : ""}" type="button" data-language="${escapeHtml(entry)}" aria-pressed="${isActive}">
+          <button class="language-button${isActive ? " active" : ""}${missingSourceClass}" type="button" data-language="${escapeHtml(entry)}" aria-pressed="${isActive}">
             ${escapeHtml(entry)}
           </button>
         `;
@@ -722,6 +736,22 @@
         renderMetadata(item);
       });
     });
+  }
+
+  function getDeclaredSourceForLanguage(sources, language) {
+    if (Array.isArray(sources)) {
+      return sources.find((entry) => normalizeKey(entry.language) === normalizeKey(language)) || null;
+    }
+
+    if (sources && typeof sources === "object") {
+      const selectedKey = Object.keys(sources).find(
+        (key) => normalizeKey(key) === normalizeKey(language)
+      );
+
+      return selectedKey ? sources[selectedKey] || null : null;
+    }
+
+    return null;
   }
 
   function getEpisodePlaybackSource(episode, language) {

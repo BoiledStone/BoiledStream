@@ -261,6 +261,10 @@
             sources: {
               [language]: {
                 language,
+                ...(episode.videoId !== undefined ? { videoId: episode.videoId } : {}),
+                ...(episode.sourceUrl !== undefined && !String(episode.sourceUrl || "").trim()
+                  ? { missingSourceUrl: true }
+                  : {}),
                 ...source
               }
             }
@@ -1523,7 +1527,11 @@
     const { provider: _provider, fileId, videoId, ...details } = item;
     const video = {
       ...details,
+      ...(videoId !== undefined ? { videoId } : {}),
       ...buildSource(item),
+      ...(item.sourceUrl !== undefined && !String(item.sourceUrl || "").trim()
+        ? { missingSourceUrl: true }
+        : {}),
       tags: Object.freeze([...(item.tags || [])])
     };
 

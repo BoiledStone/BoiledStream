@@ -198,15 +198,97 @@
     return `<div class="card-tags" aria-label="Tags">${tagList}</div>`;
   }
 
+  function hasUsableMediaValue(value) {
+    const text = String(value || "").trim();
+
+    return Boolean(text) && !/(?:[?&]video=|\/video\/|\/embed-|\/d\/|watch\?v=)$/.test(text);
+  }
+
+  function hasEmptySourceField(item) {
+    if (!item) {
+      return false;
+    }
+
+    if (item.missingSourceUrl) {
+      return true;
+    }
+
+    return (
+      Object.prototype.hasOwnProperty.call(item, "videoId") && !String(item.videoId || "").trim()
+    ) || (
+      Object.prototype.hasOwnProperty.call(item, "sourceUrl") && !String(item.sourceUrl || "").trim()
+    );
+  }
+
+  function hasPlayableSource(item) {
+    if (!item) {
+      return false;
+    }
+
+    if (item.type === "series") {
+      return (item.seasons || []).some((season) =>
+        (season.episodes || []).some((episode) => hasPlayableSource(episode))
+      );
+    }
+
+    if (
+      hasUsableMediaValue(item.embedUrl) ||
+      hasUsableMediaValue(item.videoUrl) ||
+      hasUsableMediaValue(item.sourceUrl)
+    ) {
+      return true;
+    }
+
+    if (Array.isArray(item.sources)) {
+      return item.sources.some((source) => hasPlayableSource(source));
+    }
+
+    if (item.sources && typeof item.sources === "object") {
+      return Object.values(item.sources).some((source) => hasPlayableSource(source));
+    }
+
+    return false;
+  }
+
+  function hasMissingPlayableSource(item) {
+    if (!item) {
+      return true;
+    }
+
+    if (item.type === "series") {
+      return false;
+    }
+
+    if (hasEmptySourceField(item)) {
+      return true;
+    }
+
+    if (Array.isArray(item.sources) && item.sources.length) {
+      return item.sources.some((source) => hasEmptySourceField(source) || !hasPlayableSource(source));
+    }
+
+    if (item.sources && typeof item.sources === "object") {
+      const sources = Object.values(item.sources);
+
+      return sources.length
+        ? sources.some((source) => hasEmptySourceField(source) || !hasPlayableSource(source))
+        : !hasPlayableSource(item);
+    }
+
+    return !hasPlayableSource(item);
+  }
+
   function renderVideoCard(video, options = {}) {
     const { related = false, tagLimit = 2 } = options;
     const cardType = getCardTypeLabel(video);
     const playerHref = buildPlayerUrl(video.id);
     const accentStyle = buildAccentStyle(video.accentColor);
     const accentLock = video.accentColor ? ' data-accent-lock="true"' : "";
+    const missingSource = hasMissingPlayableSource(video);
+    const stateClass = missingSource ? " missing-source" : "";
 
     return `
-      <a class="video-card${related ? " related-card" : ""}" href="${playerHref}" data-video-id="${escapeHtml(video.id)}" data-type="${escapeHtml(video.type || "movie")}"${accentLock}${accentStyle} aria-label="Ouvrir ${escapeHtml(video.title)}">
+      <a class="video-card${related ? " related-card" : ""}${stateClass}" href="${playerHref}" data-video-id="${escapeHtml(video.id)}" data-type="${escapeHtml(video.type || "movie")}"${accentLock}${accentStyle} aria-label="Ouvrir ${escapeHtml(video.title)}">
         <div class="thumb">
           <div class="generated-poster" aria-hidden="true"></div>
           ${renderPosterImage(video.posterUrl)}
@@ -462,6 +544,8 @@
     getSeasonLabel,
     getDisplayTags,
     getVideoLanguages,
+    hasPlayableSource,
+    hasMissingPlayableSource,
     hasCategoryOrTag,
     normalizeKey,
     renderPosterImage,

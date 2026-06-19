@@ -870,6 +870,21 @@ h3 {
     transform 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+.video-card.missing-source {
+  --card-accent: #ff3b3b;
+  background:
+    linear-gradient(180deg, rgba(255, 59, 59, 0.16), rgba(255, 59, 59, 0.035) 46%, transparent),
+    #0d1118;
+  border-color: rgba(255, 79, 79, 0.38);
+}
+
+.video-card.missing-source::before {
+  background:
+    linear-gradient(180deg, rgba(255, 59, 59, 0.22), rgba(255, 59, 59, 0.055) 50%, transparent),
+    linear-gradient(90deg, rgba(255, 59, 59, 0.14), transparent 64%);
+  opacity: 1;
+}
+
 .video-card.is-hovered,
 .video-card:hover,
 .video-card:focus-visible {
@@ -890,10 +905,30 @@ h3 {
     scale(1.052);
 }
 
+.video-card.missing-source.is-hovered,
+.video-card.missing-source:hover,
+.video-card.missing-source:focus-visible {
+  background:
+    linear-gradient(180deg, rgba(255, 59, 59, 0.22), rgba(255, 59, 59, 0.08) 46%, transparent),
+    #141116;
+  border-color: rgba(255, 79, 79, 0.7);
+  box-shadow:
+    0 22px 54px rgba(0, 0, 0, 0.46),
+    0 0 0 1px rgba(255, 79, 79, 0.18),
+    0 0 28px rgba(255, 59, 59, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
 .video-card.is-hovered::before,
 .video-card:hover::before,
 .video-card:focus-visible::before {
   opacity: 0;
+}
+
+.video-card.missing-source.is-hovered::before,
+.video-card.missing-source:hover::before,
+.video-card.missing-source:focus-visible::before {
+  opacity: 1;
 }
 
 .video-card.is-hovered::after,
@@ -978,6 +1013,36 @@ h3 {
 .video-card:hover .thumb::after,
 .video-card:focus-visible .thumb::after {
   opacity: 0.8;
+}
+
+.video-card.missing-source .thumb::before {
+  border-color: rgba(255, 79, 79, 0.44);
+  opacity: 0.8;
+}
+
+.video-card.missing-source .thumb::after {
+  background:
+    linear-gradient(180deg, rgba(255, 59, 59, 0.2), rgba(255, 59, 59, 0.08) 34%, rgba(30, 0, 0, 0.72) 100%),
+    linear-gradient(90deg, rgba(255, 59, 59, 0.24), transparent 58%);
+  opacity: 0.92;
+}
+
+.video-card.missing-source:hover .thumb::after,
+.video-card.missing-source:focus-visible .thumb::after,
+.video-card.missing-source.is-hovered .thumb::after {
+  background:
+    linear-gradient(180deg, rgba(255, 59, 59, 0.34), rgba(255, 59, 59, 0.14) 38%, rgba(46, 0, 0, 0.78) 100%),
+    linear-gradient(90deg, rgba(255, 59, 59, 0.34), transparent 62%);
+  opacity: 0.96;
+}
+
+.video-card.missing-source .thumb img {
+  filter: saturate(0.92) contrast(1.05) brightness(0.86);
+}
+
+.video-card.missing-source .type-pill {
+  background: rgba(224, 38, 38, 0.92);
+  border-color: rgba(255, 119, 119, 0.38);
 }
 
 .type-pill {
@@ -1823,6 +1888,15 @@ h3 {
   padding: 0;
 }
 
+.language-button.missing-source,
+.episode-button.missing-source {
+  color: rgba(255, 255, 255, 0.9);
+  background:
+    linear-gradient(180deg, rgba(255, 59, 59, 0.18), rgba(255, 59, 59, 0.08)),
+    #120b0d;
+  border-color: rgba(255, 79, 79, 0.4);
+}
+
 .season-button:hover,
 .season-button:focus-visible,
 .season-button.active,
@@ -1835,6 +1909,21 @@ h3 {
   color: #fff;
   background: var(--accent);
   border-color: var(--accent);
+  outline: 0;
+}
+
+.language-button.missing-source:hover,
+.language-button.missing-source:focus-visible,
+.language-button.missing-source.active,
+.episode-button.missing-source:hover,
+.episode-button.missing-source:focus-visible,
+.episode-button.missing-source.active {
+  color: #fff;
+  background: rgba(224, 38, 38, 0.88);
+  border-color: rgba(255, 91, 91, 0.95);
+  box-shadow:
+    0 0 0 1px rgba(255, 79, 79, 0.16),
+    0 12px 24px rgba(95, 0, 0, 0.28);
   outline: 0;
 }
 
