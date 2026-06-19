@@ -1362,7 +1362,7 @@
       accentColor: "#b71825",
       description:
         "Comédie noire volontairement excessive, adaptée du jeu culte, avec satire, chaos et humour provocateur en version YouTube intégrée.",
-      tags: ["Action", "Comédie noire"]
+      tags: ["Action", "Comédie"]
     },
     {
       provider: "embed",
