@@ -755,8 +755,8 @@ h3 {
 .video-grid {
   --poster-grid-glow-x: 50%;
   --poster-grid-glow-y: 42%;
-  --poster-grid-glow-core: 0.14;
-  --poster-grid-glow-mid: 0.058;
+  --poster-grid-glow-core: 0.17;
+  --poster-grid-glow-mid: 0.072;
   --poster-cursor-glow-x: 50%;
   --poster-cursor-glow-y: 42%;
   --poster-cursor-glow-core: 0;
@@ -779,14 +779,14 @@ h3 {
 }
 
 .video-grid.is-grid-glowing {
-  --poster-grid-glow-core: 0.14;
-  --poster-grid-glow-mid: 0.058;
+  --poster-grid-glow-core: 0.17;
+  --poster-grid-glow-mid: 0.072;
 }
 
 .video-grid.is-cursor-glowing {
-  --poster-cursor-glow-core: 0.3;
-  --poster-cursor-glow-mid: 0.13;
-  --poster-cursor-glow-tail: 0.055;
+  --poster-cursor-glow-core: 0.34;
+  --poster-cursor-glow-mid: 0.15;
+  --poster-cursor-glow-tail: 0.07;
 }
 
 .video-grid::before {
@@ -799,20 +799,20 @@ h3 {
   background:
     linear-gradient(
       180deg,
-      rgba(5, 6, 9, 0.86) 0%,
-      rgba(5, 6, 9, 0.28) 48%,
+      rgba(5, 6, 9, 0.58) 0%,
+      rgba(5, 6, 9, 0.18) 48%,
       rgba(5, 6, 9, 0) 100%
     ),
-    radial-gradient(circle at 50% 10%, rgba(var(--accent-rgb), 0.055), transparent 34%),
-    linear-gradient(rgba(var(--accent-rgb), 0.16) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(var(--accent-rgb), 0.135) 1px, transparent 1px);
+    radial-gradient(circle at 50% 10%, rgba(var(--accent-rgb), 0.075), transparent 34%),
+    linear-gradient(rgba(var(--accent-rgb), 0.24) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--accent-rgb), 0.2) 1px, transparent 1px);
   background-size:
     auto,
     auto,
     16px 16px,
     16px 16px;
   content: "";
-  opacity: 0.92;
+  opacity: 1;
   pointer-events: none;
   transform: translateX(-50%);
   animation: catalog-grid-drift-right 7.6s linear infinite;
@@ -830,7 +830,7 @@ h3 {
   width: var(--poster-grid-effect-width);
   background:
     radial-gradient(
-      ellipse 640px 360px at var(--poster-cursor-glow-x) var(--poster-cursor-glow-y),
+      ellipse min(640px, 64vw) 340px at var(--poster-cursor-glow-x) var(--poster-cursor-glow-y),
       rgba(var(--accent-strong-rgb), var(--poster-cursor-glow-core)),
       rgba(var(--accent-rgb), var(--poster-cursor-glow-mid)) 34%,
       rgba(var(--accent-rgb), var(--poster-cursor-glow-tail)) 52%,
@@ -884,13 +884,14 @@ h3 {
     border-color 220ms ease,
     box-shadow 220ms ease,
     filter 220ms ease,
-    transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
   transform:
     perspective(900px)
     rotateX(0deg)
     rotateY(0deg)
     scale(1);
   transform-style: preserve-3d;
+  backface-visibility: hidden;
 }
 
 .video-card::before {
@@ -971,7 +972,7 @@ h3 {
     perspective(900px)
     rotateX(var(--tilt-x, -2deg))
     rotateY(var(--tilt-y, 2deg))
-    scale(1.052);
+    scale(1.035);
   will-change: transform;
 }
 
@@ -1004,7 +1005,7 @@ h3 {
 .video-card.is-hovered::after,
 .video-card:hover::after,
 .video-card:focus-visible::after {
-  opacity: 0.34;
+  opacity: 0.4;
   transform: translateX(18%);
 }
 

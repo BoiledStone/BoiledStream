@@ -545,6 +545,160 @@
     });
   }
 
+  function bindCardHoverEffects(root) {
+    if (!root || root.dataset.hoverEffectsBound === "true") {
+      return;
+    }
+
+    root.dataset.hoverEffectsBound = "true";
+    root.classList.add("is-grid-glowing");
+
+    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let activeCard = null;
+    let pendingPointer = null;
+    let hoverFrame = 0;
+
+    const containsNode = (target) => target instanceof Node && root.contains(target);
+    const getCardFromTarget = (target) =>
+      target instanceof Element ? target.closest(".video-card") : null;
+    const resetCard = (card) => {
+      card?.classList.remove("is-hovered");
+      card?.style.removeProperty("--hover-x");
+      card?.style.removeProperty("--hover-y");
+      card?.style.removeProperty("--tilt-x");
+      card?.style.removeProperty("--tilt-y");
+    };
+    const resetCursorGlow = () => {
+      root.classList.remove("is-cursor-glowing");
+      root.style.removeProperty("--poster-cursor-glow-x");
+      root.style.removeProperty("--poster-cursor-glow-y");
+    };
+    const resetActiveCard = () => {
+      resetCard(activeCard);
+      activeCard = null;
+    };
+    const resetHoverState = () => {
+      if (hoverFrame) {
+        window.cancelAnimationFrame(hoverFrame);
+        hoverFrame = 0;
+      }
+      pendingPointer = null;
+      resetActiveCard();
+      resetCursorGlow();
+    };
+    const setCursorGlow = (clientX, clientY) => {
+      const gridRect = root.getBoundingClientRect();
+      const gridStyles = window.getComputedStyle(root);
+      const effectWidth = Math.max(gridRect.width, window.innerWidth);
+      const effectLeft = gridRect.left + (gridRect.width - effectWidth) / 2;
+      const effectTop = Number.parseFloat(gridStyles.getPropertyValue("--poster-grid-effect-top")) || 0;
+
+      root.classList.add("is-cursor-glowing");
+      root.style.setProperty("--poster-cursor-glow-x", `${Math.round(clientX - effectLeft)}px`);
+      root.style.setProperty("--poster-cursor-glow-y", `${Math.round(clientY - gridRect.top - effectTop)}px`);
+    };
+    const activateCard = (card, clientX, clientY, useTilt = true) => {
+      if (!card || !root.contains(card)) {
+        resetActiveCard();
+        return;
+      }
+
+      if (activeCard && activeCard !== card) {
+        resetCard(activeCard);
+      }
+      activeCard = card;
+
+      const rect = card.getBoundingClientRect();
+      const x = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+      const y = Math.min(1, Math.max(0, (clientY - rect.top) / rect.height));
+      const tiltY = useTilt ? (x - 0.5) * 2.2 : 0;
+      const tiltX = useTilt ? (0.5 - y) * 1.65 : 0;
+
+      card.classList.add("is-hovered");
+      card.style.setProperty("--hover-x", `${Math.round(x * 100)}%`);
+      card.style.setProperty("--hover-y", `${Math.round(y * 100)}%`);
+      card.style.setProperty("--tilt-x", `${tiltX.toFixed(2)}deg`);
+      card.style.setProperty("--tilt-y", `${tiltY.toFixed(2)}deg`);
+    };
+    const applyHoverFrame = () => {
+      hoverFrame = 0;
+      const pointer = pendingPointer;
+      pendingPointer = null;
+
+      if (!pointer) {
+        return;
+      }
+
+      setCursorGlow(pointer.clientX, pointer.clientY);
+      activateCard(getCardFromTarget(pointer.target), pointer.clientX, pointer.clientY);
+    };
+
+    root.addEventListener("pointermove", (event) => {
+      if (reducedMotionQuery.matches || !root.contains(event.target)) {
+        return;
+      }
+
+      pendingPointer = {
+        clientX: event.clientX,
+        clientY: event.clientY,
+        target: event.target
+      };
+      if (!hoverFrame) {
+        hoverFrame = window.requestAnimationFrame(applyHoverFrame);
+      }
+    });
+
+    root.addEventListener("pointerout", (event) => {
+      const card = getCardFromTarget(event.target);
+      const nextTargetIsInside = containsNode(event.relatedTarget);
+
+      if (!card) {
+        if (!nextTargetIsInside) {
+          resetHoverState();
+        }
+        return;
+      }
+      if (containsNode(event.relatedTarget) && card.contains(event.relatedTarget)) {
+        return;
+      }
+
+      resetCard(card);
+      if (activeCard === card) {
+        activeCard = null;
+      }
+      if (!nextTargetIsInside) {
+        resetHoverState();
+      }
+    });
+
+    root.addEventListener("pointerleave", resetHoverState);
+
+    root.addEventListener("focusin", (event) => {
+      const card = getCardFromTarget(event.target);
+      if (!card) {
+        return;
+      }
+
+      const rect = card.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height * 0.38;
+
+      setCursorGlow(centerX, centerY);
+      activateCard(card, centerX, centerY, false);
+    });
+
+    root.addEventListener("focusout", (event) => {
+      const card = getCardFromTarget(event.target);
+      resetCard(card);
+      if (activeCard === card) {
+        activeCard = null;
+      }
+      if (!containsNode(event.relatedTarget)) {
+        resetHoverState();
+      }
+    });
+  }
+
   window.BOILED_UTILS = Object.freeze({
     buildPlayerUrl,
     buildDirectPlayerUrl,
@@ -565,6 +719,7 @@
     normalizeKey,
     renderPosterImage,
     renderVideoCard,
-    bindImageFallbacks
+    bindImageFallbacks,
+    bindCardHoverEffects
   });
 })();

@@ -21,6 +21,7 @@
   const nextLink = document.querySelector("#next-link");
   const playerActions = document.querySelector("#player-actions");
   const relatedGrid = document.querySelector("#related-grid");
+  const relatedTitle = document.querySelector("#related-title");
   const playerHelp = document.querySelector("#player-help");
   const seriesPanel = document.querySelector("#series-panel");
 
@@ -49,8 +50,29 @@
     normalizeKey,
     renderPosterImage,
     renderVideoCard,
-    bindImageFallbacks
+    bindImageFallbacks,
+    bindCardHoverEffects
   } = utils;
+  const RELATED_TAG_STOP_WORDS = new Set([
+    "film",
+    "serie",
+    "series",
+    "francais",
+    "anglais",
+    "english",
+    "vf",
+    "vostfr",
+    "multi",
+    "hevc",
+    "sd",
+    "hd",
+    "uhd",
+    "4k",
+    "youtube",
+    "uqload",
+    "camrip"
+  ]);
+  const RELATED_LIMIT = 3;
   const video = allVideos.find((item) => item.id === requestedId) || videos[0] || episodes[0];
   const currentIndex = allVideos.findIndex((item) => item.id === video.id);
   const previousVideo = allVideos[(currentIndex - 1 + allVideos.length) % allVideos.length];
@@ -1280,20 +1302,84 @@
     nextLink.setAttribute("aria-label", `Lire ${nextVideo.title}`);
   }
 
+  function getRelatedReferenceItem() {
+    return video.seriesId ? getSeriesForEpisode(video) || video : video;
+  }
+
+  function getRelatedGenreTokens(item) {
+    return (item?.tags || [])
+      .map(normalizeKey)
+      .filter(
+        (tag, index, list) =>
+          tag &&
+          !RELATED_TAG_STOP_WORDS.has(tag) &&
+          !/^\d+x\d+$/i.test(tag) &&
+          !/^(19|20)\d{2}$/.test(tag) &&
+          list.indexOf(tag) === index
+      );
+  }
+
+  function scoreRelatedItem(reference, candidate, index) {
+    const referenceTokens = getRelatedGenreTokens(reference);
+    const candidateTokens = getRelatedGenreTokens(candidate);
+    const primaryToken = referenceTokens[0] || "";
+    const sharedTokens = candidateTokens.filter((tag) => referenceTokens.includes(tag));
+
+    if (!sharedTokens.length) {
+      return null;
+    }
+
+    const sharedScore = sharedTokens.reduce(
+      (score, tag) => score + (tag === primaryToken ? 8 : 5),
+      0
+    );
+    const typeScore = reference.type === candidate.type ? 0.35 : 0;
+
+    return {
+      item: candidate,
+      score: sharedScore + typeScore,
+      sharedCount: sharedTokens.length,
+      index
+    };
+  }
+
+  function getRelatedItems() {
+    const reference = getRelatedReferenceItem();
+
+    return videos
+      .filter((item) => item.id !== video.id && item.id !== reference.id)
+      .map((item, index) => scoreRelatedItem(reference, item, index))
+      .filter(Boolean)
+      .sort(
+        (first, second) =>
+          second.score - first.score ||
+          second.sharedCount - first.sharedCount ||
+          first.index - second.index
+      )
+      .slice(0, RELATED_LIMIT)
+      .map((entry) => entry.item);
+  }
+
   function renderRelated() {
     if (!relatedGrid) {
       return;
     }
 
-    const relatedItems = video.seriesId
-      ? getSeriesEpisodes(getSeriesForEpisode(video)).filter((item) => item.id !== video.id)
-      : videos.filter((item) => item.id !== video.id);
+    const relatedItems = getRelatedItems();
+    const relatedSection = relatedGrid.closest(".related-section");
+
+    if (relatedTitle) {
+      relatedTitle.textContent = "Même genre";
+    }
+    if (relatedSection) {
+      relatedSection.hidden = relatedItems.length === 0;
+    }
 
     relatedGrid.innerHTML = relatedItems
-      .slice(0, 3)
       .map((item) => renderVideoCard(item, { related: true, tagLimit: 0 }))
       .join("");
     bindImageFallbacks(relatedGrid);
+    bindCardHoverEffects(relatedGrid);
   }
 
   function isTypingTarget(target) {
