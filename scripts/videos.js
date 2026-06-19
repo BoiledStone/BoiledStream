@@ -1733,7 +1733,7 @@
       sourceUrl: "https://vidzy.org/embed-iglebwn5j0u8.html",
       embedUrl: "https://vidzy.org/embed-iglebwn5j0u8.html",
       posterUrl: "https://image.tmdb.org/t/p/w400/rKvCys0fMIIi1X9rmJBxTPLAtoU.jpg",
-      accentColor: "#c76b4d",
+      accentColor: "#FF0000",
       description:
         "Evelyn Wang est à bout : elle ne comprend plus sa famille, son travail et croule sous les impôts… Soudain, elle se retrouve plongée dans le multivers, des mondes parallèles où elle explore toutes les vies qu’elle aurait pu mener. Face à des forces obscures, elle seule peut sauver le monde mais aussi préserver la chose la plus précieuse : sa famille.",
       tags: ["Action", "Aventure", "Science-Fiction"],
