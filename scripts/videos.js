@@ -418,8 +418,8 @@
       title: "Faith",
       seasonNumber: 1,
       episodeNumber: 12,
-      videoId: "",
-      duration: "--:--:--",
+      videoId: "k29RBG9IvWg4MsH9lqS",
+      duration: "00:43:21",
       resolution: "1280x720"
     },
     {
@@ -428,8 +428,8 @@
       title: "Route 666",
       seasonNumber: 1,
       episodeNumber: 13,
-      videoId: "",
-      duration: "--:--:--",
+      videoId: "k4e5UUJNHDQeDpH9lZs",
+      duration: "00:40:13",
       resolution: "1280x720"
     },
     {
@@ -448,8 +448,8 @@
       title: "The Benders",
       seasonNumber: 1,
       episodeNumber: 15,
-      videoId: "",
-      duration: "--:--:--",
+      videoId: "k5iQzIB5Dd8bb1H9lZo",
+      duration: "00:43:11",
       resolution: "1280x720"
     },
     {
@@ -498,8 +498,8 @@
       title: "Dead Man's Blood",
       seasonNumber: 1,
       episodeNumber: 20,
-      videoId: "",
-      duration: "--:--:--",
+      videoId: "kWiHOEGVrVjs5EH9lr0",
+      duration: "00:41:57",
       resolution: "1280x720"
     },
     {
@@ -508,8 +508,8 @@
       title: "Salvation",
       seasonNumber: 1,
       episodeNumber: 21,
-      videoId: "",
-      duration: "--:--:--",
+      videoId: "k53eDeMGPMwtPKH9lqW",
+      duration: "00:40:43",
       resolution: "1280x720"
     },
     {
@@ -518,8 +518,8 @@
       title: "Devil's Trap",
       seasonNumber: 1,
       episodeNumber: 22,
-      videoId: "",
-      duration: "--:--:--",
+      videoId: "k6iPGmB8cGoR9dH9lrc",
+      duration: "00:42:41",
       resolution: "1280x720"
     },
   ];
@@ -531,8 +531,8 @@
       title: "In My Time of Dying",
       seasonNumber: 2,
       episodeNumber: 1,
-      videoId: "",
-      duration: "--:--:--",
+      videoId: "k4M9PiDZ383IF0H9mm6",
+      duration: "00:41:56",
       resolution: "1280x720"
     },
     {
