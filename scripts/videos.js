@@ -541,8 +541,8 @@
       title: "Everybody Loves a Clown",
       seasonNumber: 2,
       episodeNumber: 2,
-      videoId: "",
-      duration: "--:--:--",
+      videoId: "k1LoWNtIBz52snH9mCS",
+      duration: "00:41:42",
       resolution: "1280x720"
     },
     {
