@@ -1552,7 +1552,7 @@
       sourceName: "Dailymotion",
       allowExternalSource: false,
       posterUrl: "https://image.tmdb.org/t/p/w400/rffL4ayOB0NaY3jcD1L2VsVoh0n.jpg",
-      accentColor: "#52657d",
+      accentColor: "#2f5d8a",
       description:
         "Sam et Dean Winchester sillonnent les \u00c9tats-Unis pour enqu\u00eater sur des ph\u00e9nom\u00e8nes paranormaux et affronter des cr\u00e9atures surnaturelles.",
       tags: ["Fantastique", "Horreur", "Surnaturel"],
@@ -1824,7 +1824,7 @@
       language: "EN",
       date: "2005",
       posterUrl: "miniatures/posters/Supernatural.jpg",
-      accentColor: "#52657d",
+      accentColor: "#8f4a1d",
       description:
         "Sam et Dean Winchester parcourent les États-Unis pour traquer les forces du Mal.",
       tags: Object.freeze(["Fantastique", "Horreur", "Surnaturel"])

@@ -198,6 +198,55 @@ function getThemeColor(video) {
   return /^#[0-9a-f]{6}$/i.test(color) ? color : "#d95b43";
 }
 
+function hexToRgb(color) {
+  const value = String(color || "").trim();
+  const match = value.match(/^#?([a-f\d]{6})$/i);
+
+  if (!match) {
+    return [217, 45, 62];
+  }
+
+  const hex = match[1];
+
+  return [
+    Number.parseInt(hex.slice(0, 2), 16),
+    Number.parseInt(hex.slice(2, 4), 16),
+    Number.parseInt(hex.slice(4, 6), 16)
+  ];
+}
+
+function adjustHexColor(color, amount) {
+  const [red, green, blue] = hexToRgb(color);
+  const mix = (channel) => Math.max(0, Math.min(255, Math.round(channel + (amount > 0 ? 255 - channel : channel) * amount)));
+
+  return `#${[mix(red), mix(green), mix(blue)]
+    .map((channel) => channel.toString(16).padStart(2, "0"))
+    .join("")}`;
+}
+
+function mixHexColors(color, baseColor, amount) {
+  const [red, green, blue] = hexToRgb(color);
+  const [baseRed, baseGreen, baseBlue] = hexToRgb(baseColor);
+  const blend = (channel, baseChannel) => Math.round(channel * amount + baseChannel * (1 - amount));
+
+  return `#${[blend(red, baseRed), blend(green, baseGreen), blend(blue, baseBlue)]
+    .map((channel) => channel.toString(16).padStart(2, "0"))
+    .join("")}`;
+}
+
+function getThemeStyle(video) {
+  const accent = getThemeColor(video);
+  const [red, green, blue] = hexToRgb(accent);
+  const accentStrong = adjustHexColor(accent, 0.16);
+
+  return [
+    `--accent:${accent}`,
+    `--accent-strong:${accentStrong}`,
+    `--accent-rgb:${red}, ${green}, ${blue}`,
+    `--accent-strong-rgb:${hexToRgb(accentStrong).join(", ")}`
+  ].join("; ");
+}
+
 function renderOptionalMeta(video) {
   const tags = (video.tags || [])
     .slice(0, 6)
@@ -260,7 +309,7 @@ ${optionalMeta ? `${optionalMeta}\n` : ""}    <meta name="twitter:site" content=
     <script src="../scripts/supabase-config.js?v=${ASSET_VERSION}" defer></script>
     <script src="../scripts/community.js?v=${ASSET_VERSION}" defer></script>
   </head>
-  <body>${body}</body>
+  <body style="${getThemeStyle(video)}">${body}</body>
 </html>
 `;
 }

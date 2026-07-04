@@ -45,7 +45,7 @@ body {
   overflow-x: clip;
   color: var(--ink);
   background:
-    linear-gradient(250deg, rgba(229, 72, 77, 0.055), transparent 48%),
+    linear-gradient(250deg, rgba(var(--accent-rgb), 0.065), transparent 56%),
     var(--page);
 }
 
@@ -119,7 +119,7 @@ iframe {
   padding: 12px 48px;
   background:
     linear-gradient(180deg, rgba(18, 18, 18, 0.94), rgba(9, 9, 9, 0.86));
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid rgba(var(--accent-rgb), 0.18);
   box-shadow: 0 16px 44px rgba(0, 0, 0, 0.26);
   backdrop-filter: blur(18px) saturate(1.2);
 }
@@ -1728,8 +1728,8 @@ h3 {
   margin-top: 14px;
   padding: 14px;
   color: var(--muted);
-  background: rgba(255, 77, 109, 0.09);
-  border: 1px solid rgba(255, 77, 109, 0.26);
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.22);
   border-radius: var(--radius);
 }
 

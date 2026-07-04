@@ -58,6 +58,72 @@
   let posterLightbox = null;
   let lastFocusedElement = null;
 
+  function normalizeHexColor(value) {
+    const color = String(value || "").trim();
+    const match = color.match(/^#?([a-f\d]{6})$/i);
+
+    return match ? `#${match[1].toLowerCase()}` : null;
+  }
+
+  function hexToRgbValues(color) {
+    const match = String(color || "").trim().match(/^#?([a-f\d]{6})$/i);
+
+    if (!match) {
+      return [217, 45, 62];
+    }
+
+    const hex = match[1];
+
+    return [
+      Number.parseInt(hex.slice(0, 2), 16),
+      Number.parseInt(hex.slice(2, 4), 16),
+      Number.parseInt(hex.slice(4, 6), 16)
+    ];
+  }
+
+  function adjustHexColor(color, amount) {
+    const [red, green, blue] = hexToRgbValues(color);
+    const mix = (channel) => Math.max(0, Math.min(255, Math.round(channel + (amount > 0 ? 255 - channel : channel) * amount)));
+
+    return `#${[mix(red), mix(green), mix(blue)]
+      .map((channel) => channel.toString(16).padStart(2, "0"))
+      .join("")}`;
+  }
+
+  function mixHexColors(color, baseColor, amount) {
+    const [red, green, blue] = hexToRgbValues(color);
+    const [baseRed, baseGreen, baseBlue] = hexToRgbValues(baseColor);
+    const blend = (channel, baseChannel) => Math.round(channel * amount + baseChannel * (1 - amount));
+
+    return `#${[blend(red, baseRed), blend(green, baseGreen), blend(blue, baseBlue)]
+      .map((channel) => channel.toString(16).padStart(2, "0"))
+      .join("")}`;
+  }
+
+  function applyVideoTheme(item) {
+    const accentColor = normalizeHexColor(item?.accentColor) || normalizeHexColor(document.querySelector('meta[name="theme-color"]')?.content) || "#d95b43";
+    const [red, green, blue] = hexToRgbValues(accentColor);
+    const accentStrong = adjustHexColor(accentColor, 0.16);
+
+    [
+      ["--accent", accentColor],
+      ["--accent-strong", accentStrong],
+      ["--accent-rgb", `${red}, ${green}, ${blue}`],
+      ["--accent-strong-rgb", hexToRgbValues(accentStrong).join(", ")]
+    ].forEach(([name, value]) => {
+      document.documentElement.style.setProperty(name, value);
+      document.body?.style.setProperty(name, value);
+    });
+
+    document.body?.setAttribute("data-theme-accent", accentColor);
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
+    if (themeMeta) {
+      themeMeta.setAttribute("content", accentColor);
+    }
+  }
+
+  applyVideoTheme(video);
+
   function showPlayerMount() {
     playerMount.hidden = false;
   }
