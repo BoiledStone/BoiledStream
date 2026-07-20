@@ -45,7 +45,7 @@ body {
   overflow-x: clip;
   color: var(--ink);
   background:
-    linear-gradient(250deg, rgba(229, 72, 77, 0.055), transparent 48%),
+    linear-gradient(250deg, rgba(var(--accent-rgb), 0.065), transparent 56%),
     var(--page);
 }
 
@@ -205,7 +205,7 @@ iframe {
   padding: 12px 48px;
   background:
     linear-gradient(180deg, rgba(18, 18, 18, 0.94), rgba(9, 9, 9, 0.86));
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid rgba(var(--accent-rgb), 0.18);
   box-shadow: 0 16px 44px rgba(0, 0, 0, 0.26);
   backdrop-filter: blur(18px) saturate(1.2);
 }
@@ -1815,8 +1815,8 @@ h3 {
   margin-top: 14px;
   padding: 14px;
   color: var(--muted);
-  background: rgba(255, 77, 109, 0.09);
-  border: 1px solid rgba(255, 77, 109, 0.26);
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.22);
   border-radius: var(--radius);
 }
 
@@ -2115,7 +2115,6 @@ h3 {
 
 .season-button:hover,
 .season-button:focus-visible,
-.season-button.active,
 .language-button:hover,
 .language-button:focus-visible,
 .language-button.active,
@@ -2144,8 +2143,7 @@ h3 {
 }
 
 .season-button:hover,
-.season-button:focus-visible,
-.season-button.active {
+.season-button:focus-visible {
   background: #0b0f16;
   border-color: rgba(var(--accent-rgb), 0.54);
   box-shadow:
@@ -2249,6 +2247,7 @@ h3 {
 }
 
 .poster-lightbox-stage {
+  --lightbox-aspect: 0.6667;
   --lightbox-x: 50%;
   --lightbox-y: 38%;
   --lightbox-tilt-x: 0deg;
@@ -3158,6 +3157,15 @@ h3 {
     padding: 14px;
   }
 
+  .series-controls {
+    gap: 12px;
+  }
+
+  .series-control-block {
+    overflow: hidden;
+    padding: 12px;
+  }
+
   .series-panel-head {
     align-items: stretch;
     flex-direction: column;
@@ -3177,8 +3185,26 @@ h3 {
     font-size: 0.95rem;
   }
 
+  .season-block {
+    grid-row: auto;
+  }
+
+  .season-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    max-height: none;
+    overflow: visible;
+    padding: 0;
+  }
+
   .season-button {
     min-width: 0;
+    aspect-ratio: 2 / 3;
+  }
+
+  .season-button-label {
+    padding: 8px;
+    font-size: 0.84rem;
   }
 
   .episode-button {

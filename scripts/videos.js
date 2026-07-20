@@ -418,8 +418,8 @@
       title: "Faith",
       seasonNumber: 1,
       episodeNumber: 12,
-      videoId: "",
-      duration: "--:--:--",
+      videoId: "k29RBG9IvWg4MsH9lqS",
+      duration: "00:43:21",
       resolution: "1280x720"
     },
     {
@@ -428,8 +428,8 @@
       title: "Route 666",
       seasonNumber: 1,
       episodeNumber: 13,
-      videoId: "",
-      duration: "--:--:--",
+      videoId: "k4e5UUJNHDQeDpH9lZs",
+      duration: "00:40:13",
       resolution: "1280x720"
     },
     {
@@ -448,8 +448,8 @@
       title: "The Benders",
       seasonNumber: 1,
       episodeNumber: 15,
-      videoId: "",
-      duration: "--:--:--",
+      videoId: "k5iQzIB5Dd8bb1H9lZo",
+      duration: "00:43:11",
       resolution: "1280x720"
     },
     {
@@ -498,25 +498,248 @@
       title: "Dead Man's Blood",
       seasonNumber: 1,
       episodeNumber: 20,
+      videoId: "kWiHOEGVrVjs5EH9lr0",
+      duration: "00:41:57",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e21",
+      provider: "dailymotion",
+      title: "Salvation",
+      seasonNumber: 1,
+      episodeNumber: 21,
+      videoId: "k53eDeMGPMwtPKH9lqW",
+      duration: "00:40:43",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s01e22",
+      provider: "dailymotion",
+      title: "Devil's Trap",
+      seasonNumber: 1,
+      episodeNumber: 22,
+      videoId: "k6iPGmB8cGoR9dH9lrc",
+      duration: "00:42:41",
+      resolution: "1280x720"
+    },
+  ];
+
+  const SUPERNATURAL_S02_EPISODES = [
+    {
+      id: "supernatural-s02e01",
+      provider: "dailymotion",
+      title: "In My Time of Dying",
+      seasonNumber: 2,
+      episodeNumber: 1,
+      videoId: "k4M9PiDZ383IF0H9mm6",
+      duration: "00:41:56",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e02",
+      provider: "dailymotion",
+      title: "Everybody Loves a Clown",
+      seasonNumber: 2,
+      episodeNumber: 2,
+      videoId: "k1LoWNtIBz52snH9mCS",
+      duration: "00:41:42",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e03",
+      provider: "dailymotion",
+      title: "Bloodlust",
+      seasonNumber: 2,
+      episodeNumber: 3,
       videoId: "",
       duration: "--:--:--",
       resolution: "1280x720"
     },
     {
-      id: "supernatural-s01e20",
+      id: "supernatural-s02e04",
       provider: "dailymotion",
-      title: "Salvation",
-      seasonNumber: 1,
+      title: "Children Shouldn't Play with Dead Things",
+      seasonNumber: 2,
+      episodeNumber: 4,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e05",
+      provider: "dailymotion",
+      title: "Simon Said",
+      seasonNumber: 2,
+      episodeNumber: 5,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e06",
+      provider: "dailymotion",
+      title: "No Exit",
+      seasonNumber: 2,
+      episodeNumber: 6,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e07",
+      provider: "dailymotion",
+      title: "The Usual Suspects",
+      seasonNumber: 2,
+      episodeNumber: 7,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e08",
+      provider: "dailymotion",
+      title: "Crossroad Blues",
+      seasonNumber: 2,
+      episodeNumber: 8,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e09",
+      provider: "dailymotion",
+      title: "Croatoan",
+      seasonNumber: 2,
+      episodeNumber: 9,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e10",
+      provider: "dailymotion",
+      title: "Hunted",
+      seasonNumber: 2,
+      episodeNumber: 10,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e11",
+      provider: "dailymotion",
+      title: "Playthings",
+      seasonNumber: 2,
+      episodeNumber: 11,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e12",
+      provider: "dailymotion",
+      title: "Nightshifter",
+      seasonNumber: 2,
+      episodeNumber: 12,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e13",
+      provider: "dailymotion",
+      title: "Houses of the Holy",
+      seasonNumber: 2,
+      episodeNumber: 13,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e14",
+      provider: "dailymotion",
+      title: "Born Under a Bad Sign",
+      seasonNumber: 2,
+      episodeNumber: 14,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e15",
+      provider: "dailymotion",
+      title: "Tall Tales",
+      seasonNumber: 2,
+      episodeNumber: 15,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e16",
+      provider: "dailymotion",
+      title: "Roadkill",
+      seasonNumber: 2,
+      episodeNumber: 16,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e17",
+      provider: "dailymotion",
+      title: "Heart",
+      seasonNumber: 2,
+      episodeNumber: 17,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e18",
+      provider: "dailymotion",
+      title: "Hollywood Babylon",
+      seasonNumber: 2,
+      episodeNumber: 18,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e19",
+      provider: "dailymotion",
+      title: "Folsom Prison Blues",
+      seasonNumber: 2,
+      episodeNumber: 19,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e20",
+      provider: "dailymotion",
+      title: "What Is and What Should Never Be",
+      seasonNumber: 2,
+      episodeNumber: 20,
+      videoId: "",
+      duration: "--:--:--",
+      resolution: "1280x720"
+    },
+    {
+      id: "supernatural-s02e21",
+      provider: "dailymotion",
+      title: "All Hell Breaks Loose: Part 1",
+      seasonNumber: 2,
       episodeNumber: 21,
       videoId: "",
       duration: "--:--:--",
       resolution: "1280x720"
     },
     {
-      id: "supernatural-s01e20",
+      id: "supernatural-s02e22",
       provider: "dailymotion",
-      title: "Devil's Trap",
-      seasonNumber: 1,
+      title: "All Hell Breaks Loose: Part 2",
+      seasonNumber: 2,
       episodeNumber: 22,
       videoId: "",
       duration: "--:--:--",
@@ -534,6 +757,13 @@
       languages: ["EN"],
       description:
         "Sam et Dean Winchester parcourent les États-Unis pour traquer les forces du Mal responsables de la mort de leur mère, vingt ans plus tôt."
+    },
+    {
+      number: 2,
+      episodeNumbers: SUPERNATURAL_S02_EPISODES.map(e => e.episodeNumber),
+      episodeSources: buildProviderEpisodeSources("EN", SUPERNATURAL_S02_EPISODES),
+      posterUrl: "https://m.media-amazon.com/images/I/91ZAdK0wsiL._AC_UF1000,1000_QL80_.jpg",
+      languages: ["EN"]
     }
   ];
 
@@ -1099,7 +1329,7 @@
       accentColor: "#8f3a2f",
       description:
         "Horreur brumeuse et oppressante autour d'une mère qui cherche sa fille dans une ville fantôme hantée par des visions cauchemardesques.",
-      tags: ["Horreur", "Survie"]
+      tags: ["Horreur", "Survie", "Psychologique"]
     },
     {
       provider: "uqload",
@@ -1116,7 +1346,7 @@
       accentColor: "#8a2f33",
       description:
         "Retour dans l'univers Silent Hill avec une héroïne poursuivie par son passé, des cultes inquiétants et des créatures sorties du brouillard.",
-      tags: ["Horreur", "Survie"]
+      tags: ["Horreur", "Survie", "Psychologique"]
     },
     {
       provider: "youtube",
@@ -1132,7 +1362,7 @@
       accentColor: "#b71825",
       description:
         "Comédie noire volontairement excessive, adaptée du jeu culte, avec satire, chaos et humour provocateur en version YouTube intégrée.",
-      tags: ["Action", "Comédie noire"]
+      tags: ["Action", "Comédie"]
     },
     {
       provider: "embed",
@@ -1219,6 +1449,39 @@
       }
     },
     {
+      provider: "embed",
+      id: "weapons",
+      title: "Weapons",
+      category: "Film",
+      duration: "1h24",
+      resolution: "HD",
+      language: "FR+EN",
+      languages: ["FR", "EN"],
+      date: "2006",
+      sourceName: "Vidzy",
+      sourceUrl: "https://vaplayer.ru/embed/movie/1078605",
+      embedUrl: "https://vaplayer.ru/embed/movie/1078605",
+      posterUrl: "https://image.tmdb.org/t/p/w500/cpf7vsRZ0MYRQcnLWteD5jK9ymT.jpg",
+      accentColor: "#FF0000",
+      description:
+        "Lorsque tous les enfants d’une même classe, à l’exception d’un, disparaissent mystérieusement la même nuit, à la même heure, la ville entière cherche à découvrir qui — ou quoi — est à l’origine de ce phénomène inexpliqué.",
+      tags: ["Horreur", "Mystère"],
+      sources: {
+        FR: {
+          language: "FR",
+          sourceName: "Vidzy",
+          sourceUrl: "https://vidzy.org/embed-uoch8b317kjw.html",
+          embedUrl: "https://vidzy.org/embed-uoch8b317kjw.html"
+        },
+        EN: {
+          language: "EN",
+          sourceName: "Vaplayer",
+          sourceUrl: "https://vaplayer.ru/embed/movie/1078605",
+          embedUrl: "https://vaplayer.ru/embed/movie/1078605"
+        }
+      }
+    },
+    {
       provider: "uqload",
       id: "blade-runner-2049",
       title: "Blade Runner 2049",
@@ -1266,7 +1529,7 @@
       accentColor: "#8a3038",
       description:
         "Retour dans l'univers Silent Hill, exploration psychologique et horreur atmosphérique centrée sur la mémoire, la perte et les manifestations de la ville.",
-      tags: ["Horreur"]
+      tags: ["Horreur", "Psychologique"]
     },
     buildSeries({
       id: "rick-et-morty-vf",
@@ -1289,7 +1552,7 @@
       sourceName: "Dailymotion",
       allowExternalSource: false,
       posterUrl: "https://image.tmdb.org/t/p/w400/rffL4ayOB0NaY3jcD1L2VsVoh0n.jpg",
-      accentColor: "#52657d",
+      accentColor: "#2f5d8a",
       description:
         "Sam et Dean Winchester sillonnent les \u00c9tats-Unis pour enqu\u00eater sur des ph\u00e9nom\u00e8nes paranormaux et affronter des cr\u00e9atures surnaturelles.",
       tags: ["Fantastique", "Horreur", "Surnaturel"],
@@ -1327,7 +1590,7 @@
       accentColor: "#5e55a3",
       description:
         "Coraline Jones est une fillette intrépide et douée d'une curiosité sans limites. Ses parents, qui ont tout juste emménagé avec elle dans une étrange maison, n'ont guère de temps à lui consacrer. Pour tromper son ennui, Coraline décide donc de jouer les exploratrices. Ouvrant une porte condamnée, elle pénètre dans un appartement identique au sien, mais où tout est différent. Dans cet Autre Monde, chaque chose lui paraît plus belle, plus colorée et plus attrayante. Son Autre Mère est pleinement disponible, son Autre Père prend la peine de lui mitonner des plats exquis, et même le Chat, si hautain dans la Vraie vie, daigne s'entretenir avec elle. Coraline est bien tentée d'élire domicile dans ce Monde merveilleux, qui répond à toutes ses attentes. Mais le rêve va très vite tourner au cauchemar. Prisonnière de l'Autre Mère, Coraline va devoir déployer des trésors de bravoure, d'imagination et de ténacité pour rentrer chez elle et sauver sa Vraie famille.",
-      tags: ["Animation", "Familial", "Fantastique"]
+      tags: ["Animation", "Horreur", "Familial", "Fantastique"]
     },
     {
       provider: "embed",
@@ -1345,7 +1608,7 @@
       accentColor: "#b62d39",
       description:
         "Après son licenciement, Elisabeth Sparkle teste une substance promettant une version plus jeune et parfaite d'elle-même, avec des conséquences physiques extrêmes.",
-      tags: ["Horreur", "Science-fiction", "Body horror"]
+      tags: ["Horreur", "Body horror"]
     },
     {
       provider: "embed",
@@ -1397,7 +1660,7 @@
       accentColor: "#65715f",
       description:
         "Jacob Singer, un employé des postes new-yorkaises, est assailli par de nombreux cauchemars durant ses journées. Il voit des hommes aux visages déformés et se retrouve dans des lieux qu'il ne connaît pas. Jacob est victime des flashbacks incessants de son premier mariage, de la mort de son fils et de son service au Vietnam. Jours après jours, Jacob s'enfonce dans la folie en essayant de comprendre ce qui lui arrive avec l'aide de Jezebel, son épouse.",
-      tags: ["Drame", "Mystère", "Horreur"]
+      tags: ["Horreur", "Psychologique", "Drame", "Mystère"]
     },
     {
       provider: "embed",
@@ -1405,17 +1668,32 @@
       title: "Backrooms",
       category: "Film",
       duration: "01:42:56",
-      resolution: "1080x720",
-      language: "En",
+      resolution: "HD",
+      language: "FR+VOSTFR",
+      languages: ["FR", "VOSTFR"],
       date: "2026",
       sourceName: "Vidzy",
-      sourceUrl: "https://vidzy.org/embed-e525be2gf8bi.html",
-      embedUrl: "https://vidzy.org/embed-e525be2gf8bi.html",
+      sourceUrl: "https://vidzy.org/embed-h8lbsqc4wo9l.html",
+      embedUrl: "https://vidzy.org/embed-h8lbsqc4wo9l.html",
       posterUrl: "https://image.tmdb.org/t/p/w600_and_h900_bestv2/thQQ3BBBhGDtWm3UTtabhyDJd8U.jpg",
       accentColor: "#b99b37",
       description:
         "Un jeune cinéaste bascule dans une autre dimension vide et labyrinthique, qui semble abriter des êtres d'un autre monde.",
-      tags: ["Horreur", "Mystère", "Science-Fiction", "CAMRip"]
+      tags: ["Horreur", "Horreur liminale", "Mystère", "Psychologique"],
+      sources: {
+        FR: {
+          language: "FR",
+          sourceName: "Vidzy",
+          sourceUrl: "https://vidzy.org/embed-h8lbsqc4wo9l.html",
+          embedUrl: "https://vidzy.org/embed-h8lbsqc4wo9l.html"
+        },
+        VOSTFR: {
+          language: "VOSTFR",
+          sourceName: "Vidzy",
+          sourceUrl: "https://vidzy.org/embed-2n2l9ciowf3g.html",
+          embedUrl: "https://vidzy.org/embed-2n2l9ciowf3g.html"
+        }
+      }
     },
     {
       provider: "embed",
@@ -1423,17 +1701,83 @@
       title: "Obsession",
       category: "Film",
       duration: "1:45:29",
-      resolution: "1080x720",
-      language: "Fr",
+      resolution: "HD",
+      language: "FR+VOSTFR",
+      languages: ["FR", "VOSTFR"],
       date: "2026",
       sourceName: "Vidzy",
-      sourceUrl: "https://vidzy.org/embed-kdd8mtwq0j1i.html",
-      embedUrl: "https://vidzy.org/embed-kdd8mtwq0j1i.html",
+      sourceUrl: "https://vidzy.org/embed-b7ipyzipi7np.html",
+      embedUrl: "https://vidzy.org/embed-b7ipyzipi7np.html",
       posterUrl: "https://image.tmdb.org/t/p/w600_and_h900_bestv2/mDCR1frpUvGfIKksuM440VLb7X9.jpg",
       accentColor: "#b13e5a",
       description:
         "Et si vous pouviez réaliser votre rêve le plus fou ? Un jeune introverti met la main sur un objet magique capable d’exaucer n’importe quel souhait. Son crush de toujours tombe alors raide dingue de lui… jusqu’à l’obsession la plus totale. Faites attention à ce que vous souhaitez !",
-      tags: ["Horreur", "CAMRip"]
+      tags: ["Horreur", "Psychologique"],
+      sources: {
+        FR: {
+          language: "FR",
+          sourceName: "Vidzy",
+          sourceUrl: "https://vidzy.org/embed-b7ipyzipi7np.html",
+          embedUrl: "https://vidzy.org/embed-b7ipyzipi7np.html"
+        },
+        VOSTFR: {
+          language: "VOSTFR",
+          sourceName: "Vidzy",
+          sourceUrl: "https://vidzy.org/embed-22yob2ubs60x.html",
+          embedUrl: "https://vidzy.org/embed-22yob2ubs60x.html"
+        }
+      }
+    },
+    {
+      provider: "embed",
+      id: "the-shining",
+      title: "The Shining",
+      category: "Film",
+      duration: "2h24",
+      resolution: "HD",
+      language: "FR+EN",
+      languages: ["FR", "EN"],
+      date: "1980",
+      sourceName: "Vidzy",
+      sourceUrl: "https://vidzy.org/embed-lv4j9887jop7.html",
+      embedUrl: "https://vidzy.org/embed-lv4j9887jop7.html",
+      posterUrl: "https://image.tmdb.org/t/p/w500/xazWoLealQwEgqZ89MLZklLZD3k.jpg",
+      accentColor: "#b12f2f",
+      description:
+        "Jack Torrance accepte un poste de gardien dans un hôtel isolé avec sa femme et son fils. L'hiver, l'isolement et les forces du lieu font peu à peu basculer la famille dans l'horreur.",
+      tags: ["Horreur", "Psychologique", "Thriller"],
+      sources: {
+        FR: {
+          language: "FR",
+          sourceName: "Vidzy",
+          sourceUrl: "https://vidzy.org/embed-lv4j9887jop7.html",
+          embedUrl: "https://vidzy.org/embed-lv4j9887jop7.html"
+        },
+        EN: {
+          language: "EN",
+          sourceName: "Vaplayer",
+          sourceUrl: "https://vaplayer.ru/embed/movie/694",
+          embedUrl: "https://vaplayer.ru/embed/movie/694"
+        }
+      }
+    },
+    {
+      provider: "embed",
+      id: "jusqu-au-declin",
+      title: "Jusqu'au déclin",
+      category: "Film",
+      duration: "1h23",
+      resolution: "HD",
+      language: "FR",
+      date: "2020",
+      sourceName: "Vidzy",
+      sourceUrl: "https://vidzy.org/embed-ofogtnowoway.html",
+      embedUrl: "https://vidzy.org/embed-ofogtnowoway.html",
+      posterUrl: "https://image.tmdb.org/t/p/w600_and_h900_bestv2/v9OZJiasqxL192JUzxGDDmzEV8C.jpg",
+      accentColor: "#9b3f32",
+      description:
+        "Un groupe participe à un stage survivaliste dans un camp isolé. Après un accident, la méfiance et les tensions transforment la préparation en lutte pour survivre.",
+      tags: ["Thriller", "Survie"]
     },
     {
       provider: "embed",
@@ -1488,6 +1832,57 @@
       description:
         "Four unlikely friends face everyday challenges until a mysterious portal transports them to the Overworld, a whimsical, blocky realm fueled by creativity. To return home, they must navigate this fantastical landscape, tackling unique obstacles along the way. With the help of the skilled crafter, Steve, the group embarks on an enchanting adventure that tests their ingenuity and teamwork. As they explore this vibrant world, they learn to embrace their differences and discover the power of friendship in overcoming adversity.",
       tags: ["Famille", "Aventure", "Comédie"]
+    },
+    {
+      provider: "embed",
+      id: "everything-everywhere-all-at-once",
+      title: "Everything Everywhere All at Once",
+      category: "Film",
+      duration: "2h19",
+      resolution: "HD",
+      language: "FR+EN",
+      languages: ["FR", "EN"],
+      date: "2022",
+      sourceName: "Vidzy",
+      sourceUrl: "https://vidzy.org/embed-iglebwn5j0u8.html",
+      embedUrl: "https://vidzy.org/embed-iglebwn5j0u8.html",
+      posterUrl: "https://image.tmdb.org/t/p/w400/rKvCys0fMIIi1X9rmJBxTPLAtoU.jpg",
+      accentColor: "#FF0000",
+      description:
+        "Evelyn Wang est à bout : elle ne comprend plus sa famille, son travail et croule sous les impôts… Soudain, elle se retrouve plongée dans le multivers, des mondes parallèles où elle explore toutes les vies qu’elle aurait pu mener. Face à des forces obscures, elle seule peut sauver le monde mais aussi préserver la chose la plus précieuse : sa famille.",
+      tags: ["Action", "Aventure", "Science-Fiction"],
+      sources: {
+        FR: {
+          language: "FR",
+          sourceName: "Vidzy",
+          sourceUrl: "https://vidzy.org/embed-iglebwn5j0u8.html",
+          embedUrl: "https://vidzy.org/embed-iglebwn5j0u8.html"
+        },
+        EN: {
+          language: "EN",
+          sourceName: "Vaplayer",
+          sourceUrl: "https://vaplayer.ru/embed/movie/545611",
+          embedUrl: "https://vaplayer.ru/embed/movie/545611"
+        }
+      }
+    },
+    {
+      provider: "embed",
+      id: "iron-lung",
+      title: "Iron Lung",
+      category: "Film",
+      duration: "2:07:00",
+      resolution: "1080x720",
+      language: "En",
+      date: "2026",
+      sourceName: "Vaplayer",
+      sourceUrl: "https://vaplayer.ru/embed/movie/1116201",
+      embedUrl: "https://vaplayer.ru/embed/movie/1116201",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BYzkxOGU1YmQtNDc0Ni00M2JhLWFlZjktODMzOGU3MjQxMTQ0XkEyXkFqcGc@._V1_.jpg",
+      accentColor: "#a00000",
+      description:
+        "Les étoiles ne sont plus. Les planètes ont disparu. Seuls quelques individus subsistent, à bord de stations spatiales ou de vaisseaux errants. Ils ont survécu pour assister à la fin et lui donner un nom : Le Rapt silencieux. Après des années de déclin et d'infrastructures en perdition, l'Iron Consolidation fait une découverte sur une lune désolée, AT-5. Un océan de sang. L'Iron Consolidation lance immédiatement une expédition, avec l'espoir d'y trouver des ressources cruciales.",
+      tags: ["Horreur", "Science-Fiction", "Psychologique"]
     }
   ];
 
@@ -1510,7 +1905,7 @@
       language: "EN",
       date: "2005",
       posterUrl: "miniatures/posters/Supernatural.jpg",
-      accentColor: "#52657d",
+      accentColor: "#8f4a1d",
       description:
         "Sam et Dean Winchester parcourent les États-Unis pour traquer les forces du Mal.",
       tags: Object.freeze(["Fantastique", "Horreur", "Surnaturel"])

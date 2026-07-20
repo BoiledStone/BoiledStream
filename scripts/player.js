@@ -53,25 +53,6 @@
     bindImageFallbacks,
     bindCardHoverEffects
   } = utils;
-  const RELATED_TAG_STOP_WORDS = new Set([
-    "film",
-    "serie",
-    "series",
-    "francais",
-    "anglais",
-    "english",
-    "vf",
-    "vostfr",
-    "multi",
-    "hevc",
-    "sd",
-    "hd",
-    "uhd",
-    "4k",
-    "youtube",
-    "uqload",
-    "camrip"
-  ]);
   const RELATED_LIMIT = 3;
   const video = allVideos.find((item) => item.id === requestedId) || videos[0] || episodes[0];
   const currentIndex = allVideos.findIndex((item) => item.id === video.id);
@@ -79,6 +60,72 @@
   const nextVideo = allVideos[(currentIndex + 1) % allVideos.length];
   let posterLightbox = null;
   let lastFocusedElement = null;
+
+  function normalizeHexColor(value) {
+    const color = String(value || "").trim();
+    const match = color.match(/^#?([a-f\d]{6})$/i);
+
+    return match ? `#${match[1].toLowerCase()}` : null;
+  }
+
+  function hexToRgbValues(color) {
+    const match = String(color || "").trim().match(/^#?([a-f\d]{6})$/i);
+
+    if (!match) {
+      return [217, 45, 62];
+    }
+
+    const hex = match[1];
+
+    return [
+      Number.parseInt(hex.slice(0, 2), 16),
+      Number.parseInt(hex.slice(2, 4), 16),
+      Number.parseInt(hex.slice(4, 6), 16)
+    ];
+  }
+
+  function adjustHexColor(color, amount) {
+    const [red, green, blue] = hexToRgbValues(color);
+    const mix = (channel) => Math.max(0, Math.min(255, Math.round(channel + (amount > 0 ? 255 - channel : channel) * amount)));
+
+    return `#${[mix(red), mix(green), mix(blue)]
+      .map((channel) => channel.toString(16).padStart(2, "0"))
+      .join("")}`;
+  }
+
+  function mixHexColors(color, baseColor, amount) {
+    const [red, green, blue] = hexToRgbValues(color);
+    const [baseRed, baseGreen, baseBlue] = hexToRgbValues(baseColor);
+    const blend = (channel, baseChannel) => Math.round(channel * amount + baseChannel * (1 - amount));
+
+    return `#${[blend(red, baseRed), blend(green, baseGreen), blend(blue, baseBlue)]
+      .map((channel) => channel.toString(16).padStart(2, "0"))
+      .join("")}`;
+  }
+
+  function applyVideoTheme(item) {
+    const accentColor = normalizeHexColor(item?.accentColor) || normalizeHexColor(document.querySelector('meta[name="theme-color"]')?.content) || "#d95b43";
+    const [red, green, blue] = hexToRgbValues(accentColor);
+    const accentStrong = adjustHexColor(accentColor, 0.16);
+
+    [
+      ["--accent", accentColor],
+      ["--accent-strong", accentStrong],
+      ["--accent-rgb", `${red}, ${green}, ${blue}`],
+      ["--accent-strong-rgb", hexToRgbValues(accentStrong).join(", ")]
+    ].forEach(([name, value]) => {
+      document.documentElement.style.setProperty(name, value);
+      document.body?.style.setProperty(name, value);
+    });
+
+    document.body?.setAttribute("data-theme-accent", accentColor);
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
+    if (themeMeta) {
+      themeMeta.setAttribute("content", accentColor);
+    }
+  }
+
+  applyVideoTheme(video);
 
   function showPlayerMount() {
     playerMount.hidden = false;
@@ -152,8 +199,14 @@
 
     const lightbox = createPosterLightbox();
     const image = lightbox.querySelector(".poster-lightbox-image");
+    const stage = lightbox.querySelector(".poster-lightbox-stage");
 
     lastFocusedElement = document.activeElement;
+    image.onload = () => {
+      if (image.naturalWidth && image.naturalHeight) {
+        stage?.style.setProperty("--lightbox-aspect", String(image.naturalWidth / image.naturalHeight));
+      }
+    };
     image.src = src;
     image.alt = label ? `Affiche de ${label}` : "Affiche agrandie";
     lightbox.setAttribute("aria-label", image.alt);
@@ -168,7 +221,12 @@
     }
 
     posterLightbox.hidden = true;
-    posterLightbox.querySelector(".poster-lightbox-image")?.removeAttribute("src");
+    posterLightbox.querySelector(".poster-lightbox-stage")?.style.removeProperty("--lightbox-aspect");
+    const image = posterLightbox.querySelector(".poster-lightbox-image");
+    if (image) {
+      image.onload = null;
+      image.removeAttribute("src");
+    }
     document.body.classList.remove("poster-lightbox-open");
     lastFocusedElement?.focus?.();
   }
@@ -1302,62 +1360,75 @@
     nextLink.setAttribute("aria-label", `Lire ${nextVideo.title}`);
   }
 
-  function getRelatedReferenceItem() {
-    return video.seriesId ? getSeriesForEpisode(video) || video : video;
-  }
+  const RELATED_TAG_GROUPS = [
+    ["horreur", "surnaturel", "fantastique", "mystere", "thriller", "psychologique", "survie", "body horror"],
+    ["science-fiction", "science fiction", "espace", "anticipation", "satire"],
+    ["action", "aventure", "thriller", "survie"],
+    ["comedie", "satire", "musique", "animation", "famille", "familial"],
+    ["drame", "psychologique", "mystere", "thriller"],
+    ["anime", "animation", "fantastique", "science-fiction", "science fiction"]
+  ];
 
-  function getRelatedGenreTokens(item) {
-    return (item?.tags || [])
+  function getComparableTags(item) {
+    return getDisplayTags(item)
       .map(normalizeKey)
-      .filter(
-        (tag, index, list) =>
-          tag &&
-          !RELATED_TAG_STOP_WORDS.has(tag) &&
-          !/^\d+x\d+$/i.test(tag) &&
-          !/^(19|20)\d{2}$/.test(tag) &&
-          list.indexOf(tag) === index
-      );
+      .filter(Boolean);
   }
 
-  function scoreRelatedItem(reference, candidate, index) {
-    const referenceTokens = getRelatedGenreTokens(reference);
-    const candidateTokens = getRelatedGenreTokens(candidate);
-    const primaryToken = referenceTokens[0] || "";
-    const sharedTokens = candidateTokens.filter((tag) => referenceTokens.includes(tag));
+  function getRelatedTagScore(currentTags, candidateTags) {
+    const currentSet = new Set(currentTags);
+    const candidateSet = new Set(candidateTags);
+    let score = 0;
 
-    if (!sharedTokens.length) {
-      return null;
-    }
+    candidateSet.forEach((tag) => {
+      if (currentSet.has(tag)) {
+        score += 12;
+      }
+    });
 
-    const sharedScore = sharedTokens.reduce(
-      (score, tag) => score + (tag === primaryToken ? 8 : 5),
-      0
-    );
-    const typeScore = reference.type === candidate.type ? 0.35 : 0;
+    RELATED_TAG_GROUPS.forEach((group) => {
+      const currentMatches = group.filter((tag) => currentSet.has(tag)).length;
+      const candidateMatches = group.filter((tag) => candidateSet.has(tag)).length;
 
-    return {
-      item: candidate,
-      score: sharedScore + typeScore,
-      sharedCount: sharedTokens.length,
-      index
-    };
+      if (currentMatches && candidateMatches) {
+        score += Math.min(currentMatches, candidateMatches) * 5;
+      }
+    });
+
+    return score;
   }
 
-  function getRelatedItems() {
-    const reference = getRelatedReferenceItem();
+  function hasMatchingTag(currentTags, candidateTags) {
+    const currentSet = new Set(currentTags);
 
-    return videos
-      .filter((item) => item.id !== video.id && item.id !== reference.id)
-      .map((item, index) => scoreRelatedItem(reference, item, index))
-      .filter(Boolean)
-      .sort(
-        (first, second) =>
-          second.score - first.score ||
-          second.sharedCount - first.sharedCount ||
-          first.index - second.index
-      )
-      .slice(0, RELATED_LIMIT)
+    return candidateTags.some((tag) => currentSet.has(tag));
+  }
+
+  function getRelatedSeedItem(item) {
+    return item.seriesId ? getSeriesForEpisode(item) || item : item;
+  }
+
+  function getRelatedItems(item, limit = RELATED_LIMIT) {
+    const seedItem = getRelatedSeedItem(item);
+    const seedTags = getComparableTags(seedItem);
+    const excludedIds = new Set([item.id, seedItem.id].filter(Boolean));
+    const scoredItems = videos
+      .filter((candidate) => !excludedIds.has(candidate.id))
+      .map((candidate, index) => {
+        const candidateTags = getComparableTags(candidate);
+
+        return {
+          item: candidate,
+          index,
+          tags: candidateTags,
+          score: getRelatedTagScore(seedTags, candidateTags)
+        };
+      })
+      .filter((entry) => hasMatchingTag(seedTags, entry.tags))
+      .sort((first, second) => second.score - first.score || first.index - second.index)
       .map((entry) => entry.item);
+
+    return scoredItems.slice(0, limit);
   }
 
   function renderRelated() {
@@ -1365,7 +1436,7 @@
       return;
     }
 
-    const relatedItems = getRelatedItems();
+    const relatedItems = getRelatedItems(video);
     const relatedSection = relatedGrid.closest(".related-section");
 
     if (relatedTitle) {
