@@ -1653,7 +1653,7 @@
       id: "supernatural",
       title: "Supernatural",
       date: "2005",
-      sourceName: "Dailymotion",
+      sourceName: "Google Drive",
       allowExternalSource: false,
       posterUrl: "https://image.tmdb.org/t/p/w400/rffL4ayOB0NaY3jcD1L2VsVoh0n.jpg",
       accentColor: "#2f5d8a",
