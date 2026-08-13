@@ -1648,7 +1648,7 @@
       tags: ["Animation", "Science-fiction", "Com\u00e9die"],
       languages: ["FR"],
       seasons: RICK_AND_MORTY_SEASONS
-    }),
+    }), //suck my dick
     buildSeries({
       id: "supernatural",
       title: "Supernatural",
