@@ -2031,36 +2031,56 @@
       }
     },
     {
-      provider: "externalPage",
+      provider: "embed",
       id: "hyper-tension-2006",
       title: "Hyper tension",
       category: "Film",
+      duration: "1h28",
       language: "FR",
       languages: ["FR"],
       date: "2006",
-      sourceName: "FS3",
+      sourceName: "Vidzy",
       sourceUrl: "https://fs3.lol/209-hyper-tension-film-streaming-complet-vf.html",
+      embedUrl: "https://vidzy.org/embed-pxasigrx2wn1.html?autoplay=1",
       posterUrl: "https://image.tmdb.org/t/p/w500/lN395W1NPfiChHmMIUCa4oFBWGi.jpg",
       accentColor: "#cf4c2f",
       description:
         "Chev Chelios, tueur à gages, se réveille empoisonné et doit maintenir son adrénaline à un niveau extrême pour survivre.",
-      tags: ["Action", "Thriller", "Crime"]
+      tags: ["Action", "Thriller", "Crime"],
+      sources: {
+        FR: {
+          language: "FR",
+          sourceName: "Vidzy",
+          sourceUrl: "https://fs3.lol/209-hyper-tension-film-streaming-complet-vf.html",
+          embedUrl: "https://vidzy.org/embed-pxasigrx2wn1.html?autoplay=1"
+        }
+      }
     },
     {
-      provider: "externalPage",
+      provider: "embed",
       id: "hyper-tension-2-2009",
       title: "Hyper tension 2",
       category: "Film",
+      duration: "1h35",
       language: "FR",
       languages: ["FR"],
       date: "2009",
-      sourceName: "FS3",
+      sourceName: "Vidzy",
       sourceUrl: "https://fs3.lol/292-hyper-tension-2-film-streaming-complet-vf.html",
+      embedUrl: "https://vidzy.org/embed-wmh9m055beqs.html?autoplay=1",
       posterUrl: "https://image.tmdb.org/t/p/w500/wWrf8WuysQydx6RlPmdY1ZFezFS.jpg",
       accentColor: "#b62325",
       description:
         "Chev Chelios affronte un parrain de la mafia chinoise qui lui a dérobé son cœur et l'a remplacé par une prothèse qu'il doit stimuler avec des décharges électriques.",
-      tags: ["Action", "Thriller", "Crime"]
+      tags: ["Action", "Thriller", "Crime"],
+      sources: {
+        FR: {
+          language: "FR",
+          sourceName: "Vidzy",
+          sourceUrl: "https://fs3.lol/292-hyper-tension-2-film-streaming-complet-vf.html",
+          embedUrl: "https://vidzy.org/embed-wmh9m055beqs.html?autoplay=1"
+        }
+      }
     }
   ];
 
