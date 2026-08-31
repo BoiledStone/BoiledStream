@@ -1120,6 +1120,10 @@
   }
 
   async function init() {
+    if (!communitySection && !accountMount) {
+      return;
+    }
+
     renderAuthPanel();
 
     if (!config?.url || !config?.anonKey || !window.supabase) {
