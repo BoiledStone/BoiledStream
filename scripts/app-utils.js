@@ -699,146 +699,34 @@
     });
   }
 
-  function initCustomCursor() {
-    if (!document.body || document.body.dataset.customCursorBound === "true") {
-      return;
-    }
-
-    const finePointerQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
-    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (!finePointerQuery.matches || reducedMotionQuery.matches) {
-      return;
-    }
-
-    const cursorZoneSelector = ".video-grid";
-    if (!document.querySelector(cursorZoneSelector)) {
-      return;
-    }
-
-    const dot = document.createElement("div");
-    const ring = document.createElement("div");
-    const interactiveSelector = ".video-grid a, .video-grid button, .video-grid [role='button'], .video-grid .video-card";
-    const particles = new Set();
-    const maxParticles = 8;
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let dotX = mouseX;
-    let dotY = mouseY;
-    let ringX = mouseX;
-    let ringY = mouseY;
-    let lastParticleTime = 0;
-
-    dot.className = "site-cursor-dot";
-    ring.className = "site-cursor-ring";
-    document.body.append(dot, ring);
-    document.body.dataset.customCursorBound = "true";
-    document.body.classList.add("has-custom-cursor");
-
-    function createParticle(x, y) {
-      if (particles.size >= maxParticles) {
-        return;
-      }
-
-      const particle = document.createElement("span");
-      const angle = Math.random() * Math.PI * 2;
-      const drift = 5 + Math.random() * 8;
-      const size = 1.4 + Math.random() * 1.5;
-
-      particle.className = "site-cursor-particle";
-      particle.style.left = `${x}px`;
-      particle.style.top = `${y}px`;
-      particle.style.setProperty("--cursor-particle-size", `${size.toFixed(1)}px`);
-      particle.style.setProperty("--cursor-particle-drift-x", `${(Math.cos(angle) * drift).toFixed(1)}px`);
-      particle.style.setProperty("--cursor-particle-drift-y", `${(Math.sin(angle) * drift).toFixed(1)}px`);
-      particles.add(particle);
-      document.body.append(particle);
-      window.setTimeout(() => {
-        particles.delete(particle);
-        particle.remove();
-      }, 540);
-    }
-
-    function setCursorVisibility(isVisible) {
-      document.body.classList.toggle("custom-cursor-ready", isVisible);
-      dot.style.opacity = isVisible ? "0.68" : "0";
-      ring.style.opacity = isVisible ? "0.72" : "0";
-    }
-
-    function setCursorActive(isActive) {
-      document.body.classList.toggle("custom-cursor-active", isActive);
-    }
-
-    function updateCursor() {
-      dotX += (mouseX - dotX) * 0.32;
-      dotY += (mouseY - dotY) * 0.32;
-      ringX += (mouseX - ringX) * 0.16;
-      ringY += (mouseY - ringY) * 0.16;
-
-      dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`;
-      ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
-      window.requestAnimationFrame(updateCursor);
-    }
-
-    document.addEventListener("pointermove", (event) => {
-      if (event.pointerType && event.pointerType !== "mouse") {
-        return;
-      }
-
-      mouseX = event.clientX;
-      mouseY = event.clientY;
-      const cursorZone =
-        event.target instanceof Element ? event.target.closest(cursorZoneSelector) : null;
-      const isInCursorZone = Boolean(cursorZone);
-
-      setCursorVisibility(isInCursorZone);
-      setCursorActive(
-        isInCursorZone &&
-          event.target instanceof Element &&
-          Boolean(event.target.closest(interactiveSelector)),
-      );
-
-      if (!cursorZone) {
-        return;
-      }
-
-      const now = Date.now();
-      if (now - lastParticleTime > 92 && Math.random() > 0.56) {
-        createParticle(mouseX, mouseY);
-        lastParticleTime = now;
-      }
-    });
-
-    document.addEventListener("pointerover", (event) => {
-      if (
-        event.target instanceof Element &&
-        event.target.closest(cursorZoneSelector) &&
-        event.target.closest(interactiveSelector)
-      ) {
-        setCursorVisibility(true);
-        setCursorActive(true);
-      }
-    });
-
-    document.addEventListener("pointerout", (event) => {
-      const nextTarget = event.relatedTarget;
-      if (nextTarget instanceof Element && nextTarget.closest(cursorZoneSelector)) {
-        setCursorVisibility(true);
-        setCursorActive(Boolean(nextTarget.closest(interactiveSelector)));
-        return;
-      }
-      setCursorVisibility(false);
-      setCursorActive(false);
-    });
-
-    document.addEventListener("pointerleave", () => {
-      setCursorVisibility(false);
-      setCursorActive(false);
-    });
-
-    updateCursor();
+  function cleanLegacyAccountControls() {
+    document.querySelectorAll("#account-controls").forEach((element) => element.remove());
   }
 
-  initCustomCursor();
+  function addLegacySourceDirectory() {
+    document.querySelectorAll(".site-footer#sources").forEach((footer) => {
+      if (footer.querySelector(".source-directory")) {
+        return;
+      }
+
+      footer.insertAdjacentHTML("beforeend", `<section class="source-directory" aria-labelledby="source-directory-title">
+  <p class="source-title" id="source-directory-title">Sources de redirection</p>
+  <p class="source-warning" role="note">
+    <span aria-hidden="true">⚠️</span>
+    <span><strong>Attention :</strong> ces lecteurs externes peuvent afficher des publicités à caractère sexuel. Utilisez un bloqueur de publicités et ne communiquez aucune information personnelle.</span>
+  </p>
+  <ul class="source-list">
+    <li><a href="https://french-stream.one/" target="_blank" rel="noopener noreferrer nofollow">French-Stream</a></li>
+    <li><a href="https://fs2.lol/" target="_blank" rel="noopener noreferrer nofollow">FS2</a></li>
+    <li><a href="https://fs3.lol/" target="_blank" rel="noopener noreferrer nofollow">FS3</a></li>
+    <li><a href="https://fmoviesto.me/" target="_blank" rel="noopener noreferrer nofollow">FMoviesTo</a></li>
+  </ul>
+</section>`);
+    });
+  }
+
+  cleanLegacyAccountControls();
+  addLegacySourceDirectory();
 
   window.BOILED_UTILS = Object.freeze({
     buildPlayerUrl,
