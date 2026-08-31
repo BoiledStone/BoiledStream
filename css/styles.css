@@ -758,11 +758,6 @@ h3 {
   --poster-grid-glow-y: 42%;
   --poster-grid-glow-core: 0.17;
   --poster-grid-glow-mid: 0.072;
-  --poster-cursor-glow-x: 50%;
-  --poster-cursor-glow-y: 42%;
-  --poster-cursor-glow-core: 0;
-  --poster-cursor-glow-mid: 0;
-  --poster-cursor-glow-tail: 0;
   --poster-grid-effect-top: -44px;
   --poster-grid-effect-bottom: -70px;
   --poster-grid-effect-width: max(100%, 100vw);
@@ -779,16 +774,6 @@ h3 {
   perspective: 1000px;
 }
 
-.video-grid.is-grid-glowing {
-  --poster-grid-glow-core: 0.17;
-  --poster-grid-glow-mid: 0.072;
-}
-
-.video-grid.is-cursor-glowing {
-  --poster-cursor-glow-core: 0.26;
-  --poster-cursor-glow-mid: 0.13;
-  --poster-cursor-glow-tail: 0.052;
-}
 
 .video-grid::before {
   position: absolute;
@@ -830,13 +815,6 @@ h3 {
   z-index: -1;
   width: var(--poster-grid-effect-width);
   background:
-    radial-gradient(
-      circle 250px at var(--poster-cursor-glow-x) var(--poster-cursor-glow-y),
-      rgba(var(--accent-strong-rgb), var(--poster-cursor-glow-core)),
-      rgba(var(--accent-rgb), var(--poster-cursor-glow-mid)) 28%,
-      rgba(var(--accent-rgb), var(--poster-cursor-glow-tail)) 56%,
-      transparent 82%
-    ),
     radial-gradient(
       ellipse min(1320px, 86vw) 360px at var(--poster-grid-glow-x) var(--poster-grid-glow-y),
       rgba(var(--accent-strong-rgb), var(--poster-grid-glow-core)),
