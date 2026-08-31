@@ -50,8 +50,7 @@
     normalizeKey,
     renderPosterImage,
     renderVideoCard,
-    bindImageFallbacks,
-    bindCardHoverEffects
+    bindImageFallbacks
   } = utils;
   const RELATED_LIMIT = 3;
   const video = allVideos.find((item) => item.id === requestedId) || videos[0] || episodes[0];
@@ -1450,7 +1449,6 @@
       .map((item) => renderVideoCard(item, { related: true, tagLimit: 2 }))
       .join("");
     bindImageFallbacks(relatedGrid);
-    bindCardHoverEffects(relatedGrid);
   }
 
   function isTypingTarget(target) {
