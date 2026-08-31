@@ -1987,6 +1987,80 @@
       description:
         "Les étoiles ne sont plus. Les planètes ont disparu. Seuls quelques individus subsistent, à bord de stations spatiales ou de vaisseaux errants. Ils ont survécu pour assister à la fin et lui donner un nom : Le Rapt silencieux. Après des années de déclin et d'infrastructures en perdition, l'Iron Consolidation fait une découverte sur une lune désolée, AT-5. Un océan de sang. L'Iron Consolidation lance immédiatement une expédition, avec l'espoir d'y trouver des ressources cruciales.",
       tags: ["Horreur", "Science-Fiction", "Psychologique"]
+    },
+    {
+      provider: "embed",
+      id: "electroma-2006",
+      title: "Electroma",
+      category: "Film",
+      language: "Sans dialogue",
+      date: "2006",
+      sourceName: "Vaplayer",
+      sourceUrl: "https://vaplayer.ru/embed/movie/13529",
+      embedUrl: "https://vaplayer.ru/embed/movie/13529",
+      posterUrl: "https://image.tmdb.org/t/p/w500/m60OOcOVzniybIuVxzsMORMZNME.jpg",
+      accentColor: "#c79f64",
+      description:
+        "Two robots set out on a transformative journey to attain humanity. Driven by their desire for personal evolution, they navigate a surreal landscape filled with challenges and revelations. As they seek to shed their mechanical identities, the duo encounters a world that tests their aspirations and beliefs. Through a series of visually striking, abstract experiences, they confront the essence of existence and what it truly means to be human. Ultimately, their quest reflects a poignant exploration of identity, longing, and the complexities of life beyond mere circuitry.",
+      tags: ["Science-Fiction", "Drame"]
+    },
+    {
+      provider: "embed",
+      id: "seul-au-monde-2000",
+      title: "Seul au monde",
+      category: "Film",
+      duration: "2h24",
+      language: "FR",
+      languages: ["FR"],
+      date: "2000",
+      sourceName: "Vidzy",
+      sourceUrl: "https://fs3.lol/2839-seul-au-monde-film-streaming-complet-vf.html",
+      embedUrl: "https://vidzy.org/embed-dvsmd74eu8hu.html?autoplay=1",
+      posterUrl: "https://image.tmdb.org/t/p/w500/7lLJgKnAicAcR5UEuo8xhSMj18w.jpg",
+      accentColor: "#5e87a1",
+      description:
+        "Chuck Noland, cadre absorbé par son travail, se retrouve seul sur une île déserte après un accident d'avion.",
+      tags: ["Aventure", "Drame"],
+      sources: {
+        FR: {
+          language: "FR",
+          sourceName: "Vidzy",
+          sourceUrl: "https://fs3.lol/2839-seul-au-monde-film-streaming-complet-vf.html",
+          embedUrl: "https://vidzy.org/embed-dvsmd74eu8hu.html?autoplay=1"
+        }
+      }
+    },
+    {
+      provider: "externalPage",
+      id: "hyper-tension-2006",
+      title: "Hyper tension",
+      category: "Film",
+      language: "FR",
+      languages: ["FR"],
+      date: "2006",
+      sourceName: "FS3",
+      sourceUrl: "https://fs3.lol/209-hyper-tension-film-streaming-complet-vf.html",
+      posterUrl: "https://image.tmdb.org/t/p/w500/lN395W1NPfiChHmMIUCa4oFBWGi.jpg",
+      accentColor: "#cf4c2f",
+      description:
+        "Chev Chelios, tueur à gages, se réveille empoisonné et doit maintenir son adrénaline à un niveau extrême pour survivre.",
+      tags: ["Action", "Thriller", "Crime"]
+    },
+    {
+      provider: "externalPage",
+      id: "hyper-tension-2-2009",
+      title: "Hyper tension 2",
+      category: "Film",
+      language: "FR",
+      languages: ["FR"],
+      date: "2009",
+      sourceName: "FS3",
+      sourceUrl: "https://fs3.lol/292-hyper-tension-2-film-streaming-complet-vf.html",
+      posterUrl: "https://image.tmdb.org/t/p/w500/wWrf8WuysQydx6RlPmdY1ZFezFS.jpg",
+      accentColor: "#b62325",
+      description:
+        "Chev Chelios affronte un parrain de la mafia chinoise qui lui a dérobé son cœur et l'a remplacé par une prothèse qu'il doit stimuler avec des décharges électriques.",
+      tags: ["Action", "Thriller", "Crime"]
     }
   ];
 
