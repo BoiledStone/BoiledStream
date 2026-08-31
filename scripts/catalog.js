@@ -34,8 +34,7 @@
     normalizeKey,
     renderPosterImage,
     renderVideoCard,
-    bindImageFallbacks,
-    bindCardHoverEffects
+    bindImageFallbacks
   } = utils;
 
   const seriesItems = videos.filter((video) => video.type === "series");
@@ -242,7 +241,6 @@
       emptyState.hidden = filteredVideos.length > 0;
     }
     bindImageFallbacks(grid);
-    bindCardHoverEffects(grid);
     renderActiveFilters();
   }
 
